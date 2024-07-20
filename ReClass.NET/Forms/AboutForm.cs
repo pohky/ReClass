@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ReClassNET.UI;
@@ -16,7 +16,7 @@ namespace ReClassNET.Forms
 			bannerBox.Text = $"Version: {Constants.ApplicationVersion}";
 
 			platformValueLabel.Text = Constants.Platform;
-			buildTimeValueLabel.Text = Properties.Resources.BuildDate;
+			buildTimeValueLabel.Text = string.Empty; // TODO: build date stuff? or just delete
 			authorValueLabel.Text = Constants.Author;
 			homepageValueLabel.Text = Constants.HomepageUrl;
 		}

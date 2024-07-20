@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
@@ -100,23 +100,6 @@ namespace ReClassNET.Extensions
 				if (!predicate(item))
 				{
 					yield break;
-				}
-			}
-		}
-
-		[DebuggerStepThrough]
-		public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
-		{
-			Contract.Requires(source != null);
-			Contract.Requires(keySelector != null);
-			Contract.Ensures(Contract.Result<IEnumerable<TSource>>() != null);
-
-			var knownKeys = new HashSet<TKey>();
-			foreach (var element in source)
-			{
-				if (knownKeys.Add(keySelector(element)))
-				{
-					yield return element;
 				}
 			}
 		}

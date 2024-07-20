@@ -90,7 +90,13 @@ public partial class MainForm {
         ProjectView.Clear();
         ProjectView.AddEnums(currentProject.Enums);
         ProjectView.AddClasses(currentProject.Classes);
-        CurrentClassNode = currentProject.Classes.FirstOrDefault();
+
+        var lastSelectedClassName = currentProject.CustomData.GetString("LastSelectedClass");
+        var lastSelectedClass = !string.IsNullOrEmpty(lastSelectedClassName)
+            ? currentProject.Classes.FirstOrDefault((c) => c.Name == lastSelectedClassName)
+            : null;
+
+        CurrentClassNode = lastSelectedClass ?? currentProject.Classes.FirstOrDefault();
     }
 
     /// <summary>Opens the <see cref="InputBytesForm" /> and calls <paramref name="callback" /> with the result.</summary>

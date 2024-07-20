@@ -196,6 +196,7 @@ public partial class MainForm : IconForm {
 
     private void classesView_ClassSelected(object sender, ClassNode node) {
         CurrentClassNode = node;
+        CurrentProject.CustomData.SetString("LastSelectedClass", node.Name);
     }
 
     private void memoryViewControl_KeyDown(object sender, KeyEventArgs args) {

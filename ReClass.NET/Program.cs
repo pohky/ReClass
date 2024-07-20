@@ -65,8 +65,8 @@ public static class Program {
         }
 
 #if !DEBUG
-			try
-			{
+            try
+            {
 #endif
         using (var coreFunctions = new CoreFunctionsManager()) {
             RemoteProcess = new RemoteProcess(coreFunctions);
@@ -78,11 +78,11 @@ public static class Program {
             RemoteProcess.Dispose();
         }
 #if !DEBUG
-			}
-			catch (Exception ex)
-			{
-				ShowException(ex);
-			}
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex);
+            }
 #endif
 
         SettingsSerializer.Save(Settings);

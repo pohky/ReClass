@@ -79,16 +79,4 @@
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\BuildDate.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="AddressParser\AstBuilder.cs" />
-    <Compile Remove="AddressParser\Operations.cs" />
-    <Compile Remove="Forms\ProcessMemoryViewForm.cs" />
-    <Compile Remove="Forms\ProcessMemoryViewForm.Designer.cs" />
-    <Compile Remove="Nodes\ClassInstanceArrayNode.cs" />
-    <Compile Remove="Nodes\FunctionNode.Tokenizer.cs" />
-    <EmbeddedResource Remove="Forms\ProcessMemoryViewForm.resx" />
-  </ItemGroup>
 </Project>

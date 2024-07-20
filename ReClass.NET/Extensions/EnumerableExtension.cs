@@ -145,7 +145,7 @@ public static class EnumerableExtension {
                 if (condition(previous, item) == false) {
                     yield return list;
 
-                    list = new List<T>();
+                    list = [];
                 }
 
                 list.Add(item);

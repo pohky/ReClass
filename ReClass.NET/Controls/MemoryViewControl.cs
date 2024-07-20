@@ -11,10 +11,10 @@ public partial class MemoryViewControl : UserControl {
 
     private readonly FontEx font;
 
-    private readonly List<HotSpot> hotSpots = new();
+    private readonly List<HotSpot> hotSpots = [];
 
     private readonly MemoryPreviewPopUp memoryPreviewPopUp;
-    private readonly List<HotSpot> selectedNodes = new();
+    private readonly List<HotSpot> selectedNodes = [];
     private HotSpot selectionAnchor;
 
     private HotSpot selectionCaret;

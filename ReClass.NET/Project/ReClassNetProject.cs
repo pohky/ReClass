@@ -9,9 +9,9 @@ public class ReClassNetProject : IDisposable {
 
     public delegate void EnumsChangedEvent(EnumDescription sender);
 
-    private readonly List<ClassNode> classes = new();
+    private readonly List<ClassNode> classes = [];
 
-    private readonly List<EnumDescription> enums = new();
+    private readonly List<EnumDescription> enums = [];
 
     public IReadOnlyList<EnumDescription> Enums => enums;
 

@@ -14,7 +14,7 @@ public delegate void NodeEventHandler(BaseNode sender);
 [ContractClass(typeof(BaseNodeContract))]
 public abstract class BaseNode {
 
-    internal static readonly List<INodeInfoReader> NodeInfoReader = new();
+    internal static readonly List<INodeInfoReader> NodeInfoReader = [];
 
     protected static readonly int HiddenHeight = 0;
 

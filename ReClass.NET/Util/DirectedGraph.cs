@@ -18,7 +18,7 @@ public class DirectedGraph<T> {
             return false;
         }
 
-        adjacencyList.Add(vertex, new HashSet<T>());
+        adjacencyList.Add(vertex, []);
 
         return true;
     }

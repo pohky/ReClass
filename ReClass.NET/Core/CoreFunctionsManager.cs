@@ -6,7 +6,7 @@ using ReClassNET.Memory;
 namespace ReClassNET.Core;
 
 public class CoreFunctionsManager : IDisposable {
-    private readonly Dictionary<string, ICoreProcessFunctions> functionsRegistry = new();
+    private readonly Dictionary<string, ICoreProcessFunctions> functionsRegistry = [];
 
     private readonly InternalCoreFunctions internalCoreFunctions;
 
@@ -97,8 +97,8 @@ public class CoreFunctionsManager : IDisposable {
     }
 
     public void EnumerateRemoteSectionsAndModules(IntPtr process, out List<Section> sections, out List<Module> modules) {
-        sections = new List<Section>();
-        modules = new List<Module>();
+        sections = [];
+        modules = [];
 
         EnumerateRemoteSectionsAndModules(process, sections.Add, modules.Add);
     }

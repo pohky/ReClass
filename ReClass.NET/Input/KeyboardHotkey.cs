@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 namespace ReClassNET.Input;
 
 public class KeyboardHotkey {
-    private readonly HashSet<Keys> keys = new();
+    private readonly HashSet<Keys> keys = [];
 
     public IEnumerable<Keys> Keys => keys;
 

@@ -14,14 +14,14 @@ public delegate void RemoteProcessEvent(RemoteProcess sender);
 
 public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWriter, IProcessReader {
 
-    private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = new();
+    private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = [];
 
-    private readonly List<Module> modules = new();
+    private readonly List<Module> modules = [];
     private readonly object processSync = new();
 
-    private readonly Dictionary<IntPtr, string> rttiCache = new();
+    private readonly Dictionary<IntPtr, string> rttiCache = [];
 
-    private readonly List<Section> sections = new();
+    private readonly List<Section> sections = [];
 
     private IntPtr handle;
 
@@ -52,7 +52,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     }
 
     /// <summary>A map of named addresses.</summary>
-    public Dictionary<IntPtr, string> NamedAddresses { get; } = new();
+    public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
 
     public bool IsValid => UnderlayingProcess != null && CoreFunctions.IsProcessValid(handle);
 
@@ -97,8 +97,8 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             return false;
         }
 
-        _sections = new List<Section>();
-        _modules = new List<Module>();
+        _sections = [];
+        _modules = [];
 
         CoreFunctions.EnumerateRemoteSectionsAndModules(handle, _sections.Add, _modules.Add);
 

@@ -311,13 +311,13 @@ public partial class ProjectView : UserControl {
             ImageIndex = 1;
             SelectedImageIndex = 1;
 
-            RebuildClassHierarchy(seen ?? new HashSet<ClassNode> { ClassNode });
+            RebuildClassHierarchy(seen ?? [ClassNode]);
         }
 
         public void Update() {
             Text = ClassNode.Name;
 
-            RebuildClassHierarchy(new HashSet<ClassNode> { ClassNode });
+            RebuildClassHierarchy([ClassNode]);
         }
 
         /// <summary>Rebuilds the class hierarchy.</summary>

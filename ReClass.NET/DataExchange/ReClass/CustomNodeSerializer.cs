@@ -88,7 +88,7 @@ internal abstract class CustomNodeSerializerContract : ICustomNodeSerializer {
 }
 
 internal class CustomNodeSerializer {
-    private static readonly List<ICustomNodeSerializer> converters = new();
+    private static readonly List<ICustomNodeSerializer> converters = [];
 
     public static void Add(ICustomNodeSerializer serializer) {
         Contract.Requires(serializer != null);

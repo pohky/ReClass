@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 namespace ReClassNET.Nodes;
 
 public abstract class BaseContainerNode : BaseNode {
-    private readonly List<BaseNode> nodes = new();
+    private readonly List<BaseNode> nodes = [];
 
     private int updateCount;
 

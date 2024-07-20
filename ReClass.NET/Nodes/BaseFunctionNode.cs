@@ -6,7 +6,7 @@ using ReClassNET.UI;
 namespace ReClassNET.Nodes;
 
 public abstract class BaseFunctionNode : BaseNode {
-    protected readonly List<FunctionNodeInstruction> Instructions = new();
+    protected readonly List<FunctionNodeInstruction> Instructions = [];
 
     protected IntPtr Address = IntPtr.Zero;
 

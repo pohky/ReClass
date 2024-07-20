@@ -6,8 +6,8 @@ using ReClassNET.Plugins;
 namespace ReClassNET.UI;
 
 internal static class NodeTypesBuilder {
-    private static readonly List<Type[]> defaultNodeTypeGroupList = new();
-    private static readonly Dictionary<Plugin, IReadOnlyList<Type>> pluginNodeTypes = new();
+    private static readonly List<Type[]> defaultNodeTypeGroupList = [];
+    private static readonly Dictionary<Plugin, IReadOnlyList<Type>> pluginNodeTypes = [];
 
     static NodeTypesBuilder() {
         defaultNodeTypeGroupList.Add([typeof(Hex64Node), typeof(Hex32Node), typeof(Hex16Node), typeof(Hex8Node)]);

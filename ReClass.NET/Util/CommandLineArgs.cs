@@ -239,8 +239,8 @@ namespace ReClassNET.Util;
 namespace ReClassNET.Util;
 
 public class CommandLineArgs {
-    private readonly List<string> fileNames = new();
-    private readonly SortedDictionary<string, string> parms = new();
+    private readonly List<string> fileNames = [];
+    private readonly SortedDictionary<string, string> parms = [];
 
     /// <summary>
     ///     Get the primary file name.

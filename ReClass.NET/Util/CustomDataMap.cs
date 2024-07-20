@@ -10,7 +10,7 @@ namespace ReClassNET.Util;
 ///     The naming convention for keys is "PluginName.[Group.]Item".
 /// </summary>
 public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
-    private readonly Dictionary<string, string> data = new();
+    private readonly Dictionary<string, string> data = [];
 
     public string this[string key] {
         get => GetString(key);

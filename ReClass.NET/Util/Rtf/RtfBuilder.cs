@@ -11,8 +11,8 @@ public partial class RtfBuilder {
 
     private readonly Color defaultForeColor = Color.Black;
 
-    private readonly List<Color> usedColors = new();
-    private readonly List<string> usedFonts = new();
+    private readonly List<Color> usedColors = [];
+    private readonly List<string> usedFonts = [];
     private Color backColor;
 
     private int fontIndex;

@@ -44,9 +44,9 @@ internal class DiaUtil : IDisposable {
 public class SymbolStore {
     private const string BlackListFile = "blacklist.txt";
 
-    private readonly HashSet<string> moduleBlacklist = new();
+    private readonly HashSet<string> moduleBlacklist = [];
 
-    private readonly Dictionary<string, SymbolReader> symbolReaders = new();
+    private readonly Dictionary<string, SymbolReader> symbolReaders = [];
 
     public string SymbolCachePath { get; private set; } = "./SymbolsCache";
 

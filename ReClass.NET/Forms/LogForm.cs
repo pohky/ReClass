@@ -7,7 +7,7 @@ namespace ReClassNET.Forms;
 
 public partial class LogForm : IconForm {
 
-    private readonly List<LogItem> items = new();
+    private readonly List<LogItem> items = [];
 
     public LogForm() {
         InitializeComponent();

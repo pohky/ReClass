@@ -17,7 +17,7 @@ public enum PatternMaskFormat {
 
 public class BytePattern {
 
-    private readonly List<IPatternByte> pattern = new();
+    private readonly List<IPatternByte> pattern = [];
 
     /// <summary>
     ///     Gets the length of the pattern in byte.

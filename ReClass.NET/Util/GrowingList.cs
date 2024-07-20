@@ -29,7 +29,7 @@ public class GrowingList<T> {
     public GrowingList() {
         Contract.Ensures(list != null);
 
-        list = new List<T>();
+        list = [];
     }
 
     public GrowingList(T defaultValue)

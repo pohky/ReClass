@@ -12,7 +12,7 @@ internal class ScanResultStore : IDisposable {
 
     private const int MaximumMemoryResultsCount = 10000000;
 
-    private readonly List<ScanResultBlock> store = new();
+    private readonly List<ScanResultBlock> store = [];
 
     private readonly string storePath;
 

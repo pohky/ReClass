@@ -13,7 +13,7 @@ public sealed class GlobalWindowManagerEventArgs : EventArgs {
 }
 
 public static class GlobalWindowManager {
-    private static readonly List<Form> windows = new();
+    private static readonly List<Form> windows = [];
 
     public static Form TopWindow => windows.LastOrDefault();
     public static IEnumerable<Form> Windows => windows;

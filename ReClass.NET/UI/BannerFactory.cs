@@ -9,7 +9,7 @@ public static class BannerFactory {
     private const int StdIconDim = 32;
 
     private const int MaxCacheEntries = 20;
-    private static readonly Dictionary<string, Image> imageCache = new();
+    private static readonly Dictionary<string, Image> imageCache = [];
 
     /// <summary>
     ///     Creates a banner with the given <paramref name="icon" />, <paramref name="title" /> and

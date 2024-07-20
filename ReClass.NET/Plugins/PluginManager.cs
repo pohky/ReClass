@@ -14,7 +14,7 @@ namespace ReClassNET.Plugins;
 internal sealed class PluginManager {
 
     private readonly IPluginHost host;
-    private readonly List<PluginInfo> plugins = new();
+    private readonly List<PluginInfo> plugins = [];
 
     public IEnumerable<PluginInfo> Plugins => plugins;
 

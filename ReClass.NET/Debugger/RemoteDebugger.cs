@@ -7,7 +7,7 @@ namespace ReClassNET.Debugger;
 
 public partial class RemoteDebugger {
 
-    private readonly HashSet<IBreakpoint> breakpoints = new();
+    private readonly HashSet<IBreakpoint> breakpoints = [];
 
     private readonly RemoteProcess process;
     private readonly object syncBreakpoint = new();

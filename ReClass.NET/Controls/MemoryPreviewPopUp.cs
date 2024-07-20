@@ -24,7 +24,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
 
             DoubleBuffered = true;
 
-            nodes = new List<BaseHexNode>();
+            nodes = [];
 
             DrawContext = new DrawContext {
                 Font = font,
@@ -32,7 +32,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
 
                 Memory = new MemoryBuffer(),
 
-                HotSpots = new List<HotSpot>()
+                HotSpots = []
             };
 
             SetNodeCount(MinNodeCount);

@@ -10,227 +10,187 @@ using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Native;
 
-namespace ReClassNET.Symbols
-{
-	class DiaUtil : IDisposable
-	{
-		public readonly IDiaDataSource DiaDataSource;
-		public readonly IDiaSession DiaSession;
+namespace ReClassNET.Symbols; 
+class DiaUtil : IDisposable {
+    public readonly IDiaDataSource DiaDataSource;
+    public readonly IDiaSession DiaSession;
 
-		public DiaUtil(string pdbName)
-		{
-			Contract.Requires(pdbName != null);
+    public DiaUtil(string pdbName) {
+        Contract.Requires(pdbName != null);
 
-			DiaDataSource = new DiaSource();
-			DiaDataSource.loadDataFromPdb(pdbName);
-			DiaDataSource.openSession(out DiaSession);
-		}
+        DiaDataSource = new DiaSource();
+        DiaDataSource.loadDataFromPdb(pdbName);
+        DiaDataSource.openSession(out DiaSession);
+    }
 
-		private bool isDisposed;
+    private bool isDisposed;
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (!isDisposed)
-			{
-				Marshal.ReleaseComObject(DiaSession);
-				Marshal.ReleaseComObject(DiaDataSource);
+    protected virtual void Dispose(bool disposing) {
+        if (!isDisposed) {
+            Marshal.ReleaseComObject(DiaSession);
+            Marshal.ReleaseComObject(DiaDataSource);
 
-				isDisposed = true;
-			}
-		}
+            isDisposed = true;
+        }
+    }
 
-		~DiaUtil()
-		{
-			Dispose(false);
-		}
+    ~DiaUtil() {
+        Dispose(false);
+    }
 
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-	}
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+}
 
-	public class SymbolStore
-	{
-		private const string BlackListFile = "blacklist.txt";
+public class SymbolStore {
+    private const string BlackListFile = "blacklist.txt";
 
-		public string SymbolCachePath { get; private set; } = "./SymbolsCache";
+    public string SymbolCachePath { get; private set; } = "./SymbolsCache";
 
-		public string SymbolDownloadPath { get; set; } = "http://msdl.microsoft.com/download/symbols";
+    public string SymbolDownloadPath { get; set; } = "http://msdl.microsoft.com/download/symbols";
 
-		public string SymbolSearchPath => $"srv*{SymbolCachePath}*{SymbolDownloadPath}";
+    public string SymbolSearchPath => $"srv*{SymbolCachePath}*{SymbolDownloadPath}";
 
-		private readonly Dictionary<string, SymbolReader> symbolReaders = new Dictionary<string, SymbolReader>();
+    private readonly Dictionary<string, SymbolReader> symbolReaders = new Dictionary<string, SymbolReader>();
 
-		private readonly HashSet<string> moduleBlacklist = new HashSet<string>();
+    private readonly HashSet<string> moduleBlacklist = new HashSet<string>();
 
-		public SymbolStore()
-		{
-			if (NativeMethods.IsUnix())
-			{
-				// TODO: Are there symbol files like on windows?
+    public SymbolStore() {
+        if (NativeMethods.IsUnix()) {
+            // TODO: Are there symbol files like on windows?
 
-				return;
-			}
+            return;
+        }
 
-			ResolveSearchPath();
+        ResolveSearchPath();
 
-			var blacklistPath = Path.Combine(SymbolCachePath, BlackListFile);
+        var blacklistPath = Path.Combine(SymbolCachePath, BlackListFile);
 
-			if (File.Exists(blacklistPath))
-			{
-				File.ReadAllLines(Path.Combine(SymbolCachePath, BlackListFile))
-					.Select(l => l.Trim().ToLower())
-					.ForEach(l => moduleBlacklist.Add(l));
-			}
-		}
+        if (File.Exists(blacklistPath)) {
+            File.ReadAllLines(Path.Combine(SymbolCachePath, BlackListFile))
+                .Select(l => l.Trim().ToLower())
+                .ForEach(l => moduleBlacklist.Add(l));
+        }
+    }
 
-		private void ResolveSearchPath()
-		{
-			using var vsKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\VisualStudio");
-			if (vsKey == null)
-			{
-				return;
-			}
+    private void ResolveSearchPath() {
+        using var vsKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\VisualStudio");
+        if (vsKey == null) {
+            return;
+        }
 
-			foreach (var subKeyName in vsKey.GetSubKeyNames())
-			{
-				using var debuggerKey = vsKey.OpenSubKey($@"{subKeyName}\Debugger");
-				if (debuggerKey?.GetValue("SymbolCacheDir") is string symbolCacheDir)
-				{
-					if (Directory.Exists(symbolCacheDir))
-					{
-						SymbolCachePath = symbolCacheDir;
-					}
+        foreach (var subKeyName in vsKey.GetSubKeyNames()) {
+            using var debuggerKey = vsKey.OpenSubKey($@"{subKeyName}\Debugger");
+            if (debuggerKey?.GetValue("SymbolCacheDir") is string symbolCacheDir) {
+                if (Directory.Exists(symbolCacheDir)) {
+                    SymbolCachePath = symbolCacheDir;
+                }
 
-					break;
-				}
-			}
-		}
+                break;
+            }
+        }
+    }
 
-		public void TryResolveSymbolsForModule(Module module)
-		{
-			Contract.Requires(module != null);
-			Contract.Requires(module.Name != null);
+    public void TryResolveSymbolsForModule(Module module) {
+        Contract.Requires(module != null);
+        Contract.Requires(module.Name != null);
 
-			if (NativeMethods.IsUnix())
-			{
-				return;
-			}
+        if (NativeMethods.IsUnix()) {
+            return;
+        }
 
-			var name = module.Name.ToLower();
+        var name = module.Name.ToLower();
 
-			bool isBlacklisted;
-			lock (symbolReaders)
-			{
-				isBlacklisted = moduleBlacklist.Contains(name);
-			}
+        bool isBlacklisted;
+        lock (symbolReaders) {
+            isBlacklisted = moduleBlacklist.Contains(name);
+        }
 
-			if (!isBlacklisted)
-			{
-				try
-				{
-					SymbolReader.TryResolveSymbolsForModule(module, SymbolSearchPath);
-				}
-				catch
-				{
-					lock (symbolReaders)
-					{
-						moduleBlacklist.Add(name);
+        if (!isBlacklisted) {
+            try {
+                SymbolReader.TryResolveSymbolsForModule(module, SymbolSearchPath);
+            } catch {
+                lock (symbolReaders) {
+                    moduleBlacklist.Add(name);
 
-						File.WriteAllLines(
-							Path.Combine(SymbolCachePath, BlackListFile),
-							moduleBlacklist.ToArray()
-						);
-					}
-				}
-			}
-		}
+                    File.WriteAllLines(
+                        Path.Combine(SymbolCachePath, BlackListFile),
+                        moduleBlacklist.ToArray()
+                    );
+                }
+            }
+        }
+    }
 
-		public void LoadSymbolsForModule(Module module)
-		{
-			Contract.Requires(module != null);
-			Contract.Requires(module.Name != null);
+    public void LoadSymbolsForModule(Module module) {
+        Contract.Requires(module != null);
+        Contract.Requires(module.Name != null);
 
-			if (NativeMethods.IsUnix())
-			{
-				return;
-			}
+        if (NativeMethods.IsUnix()) {
+            return;
+        }
 
-			var moduleName = module.Name.ToLower();
+        var moduleName = module.Name.ToLower();
 
-			bool createNew;
-			lock (symbolReaders)
-			{
-				createNew = !symbolReaders.ContainsKey(moduleName);
-			}
+        bool createNew;
+        lock (symbolReaders) {
+            createNew = !symbolReaders.ContainsKey(moduleName);
+        }
 
-			if (createNew)
-			{
-				var reader = SymbolReader.FromModule(module, SymbolSearchPath);
-				
-				lock(symbolReaders)
-				{
-					symbolReaders[moduleName] = reader;
-				}
-			}
-		}
+        if (createNew) {
+            var reader = SymbolReader.FromModule(module, SymbolSearchPath);
 
-		public void LoadSymbolsFromPDB(string path)
-		{
-			Contract.Requires(path != null);
+            lock (symbolReaders) {
+                symbolReaders[moduleName] = reader;
+            }
+        }
+    }
 
-			if (NativeMethods.IsUnix())
-			{
-				return;
-			}
+    public void LoadSymbolsFromPDB(string path) {
+        Contract.Requires(path != null);
 
-			var moduleName = Path.GetFileName(path)?.ToLower();
-			if (string.IsNullOrEmpty(moduleName))
-			{
-				return;
-			}
+        if (NativeMethods.IsUnix()) {
+            return;
+        }
 
-			bool createNew;
-			lock (symbolReaders)
-			{
-				createNew = !symbolReaders.ContainsKey(moduleName);
-			}
+        var moduleName = Path.GetFileName(path)?.ToLower();
+        if (string.IsNullOrEmpty(moduleName)) {
+            return;
+        }
 
-			if (createNew)
-			{
-				var reader = SymbolReader.FromDatabase(path);
+        bool createNew;
+        lock (symbolReaders) {
+            createNew = !symbolReaders.ContainsKey(moduleName);
+        }
 
-				lock (symbolReaders)
-				{
-					symbolReaders[moduleName] = reader;
-				}
-			}
-		}
+        if (createNew) {
+            var reader = SymbolReader.FromDatabase(path);
 
-		public SymbolReader GetSymbolsForModule(Module module)
-		{
-			Contract.Requires(module != null);
-			Contract.Requires(module.Name != null);
+            lock (symbolReaders) {
+                symbolReaders[moduleName] = reader;
+            }
+        }
+    }
 
-			if (NativeMethods.IsUnix())
-			{
-				return null;
-			}
+    public SymbolReader GetSymbolsForModule(Module module) {
+        Contract.Requires(module != null);
+        Contract.Requires(module.Name != null);
 
-			var name = module.Name.ToLower();
+        if (NativeMethods.IsUnix()) {
+            return null;
+        }
 
-			lock (symbolReaders)
-			{
-				if (!symbolReaders.TryGetValue(name, out var reader))
-				{
-					name = Path.ChangeExtension(name, ".pdb");
+        var name = module.Name.ToLower();
 
-					symbolReaders.TryGetValue(name, out reader);
-				}
-				return reader;
-			}
-		}
-	}
+        lock (symbolReaders) {
+            if (!symbolReaders.TryGetValue(name, out var reader)) {
+                name = Path.ChangeExtension(name, ".pdb");
+
+                symbolReaders.TryGetValue(name, out reader);
+            }
+            return reader;
+        }
+    }
 }

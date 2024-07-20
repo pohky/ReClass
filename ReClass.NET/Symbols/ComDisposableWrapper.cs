@@ -2,54 +2,43 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
-namespace ReClassNET.Symbols
-{
-	class DisposableWrapper : IDisposable
-	{
-		protected object Object;
+namespace ReClassNET.Symbols; 
+class DisposableWrapper : IDisposable {
+    protected object Object;
 
-		[ContractInvariantMethod]
-		private void ObjectInvariants()
-		{
-			Contract.Invariant(Object != null);
-		}
+    [ContractInvariantMethod]
+    private void ObjectInvariants() {
+        Contract.Invariant(Object != null);
+    }
 
-		public DisposableWrapper(object obj)
-		{
-			Contract.Requires(obj != null);
+    public DisposableWrapper(object obj) {
+        Contract.Requires(obj != null);
 
-			this.Object = obj;
-		}
+        this.Object = obj;
+    }
 
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				Marshal.ReleaseComObject(Object);
-			}
-		}
+    protected virtual void Dispose(bool disposing) {
+        if (disposing) {
+            Marshal.ReleaseComObject(Object);
+        }
+    }
 
-		~DisposableWrapper()
-		{
-			Dispose(false);
-		}
+    ~DisposableWrapper() {
+        Dispose(false);
+    }
 
-		public void Dispose()
-		{
-			Dispose(true);
+    public void Dispose() {
+        Dispose(true);
 
-			GC.SuppressFinalize(this);
-		}
-	}
+        GC.SuppressFinalize(this);
+    }
+}
 
-	class ComDisposableWrapper<T> : DisposableWrapper
-	{
-		public T Interface => (T)Object;
+class ComDisposableWrapper<T> : DisposableWrapper {
+    public T Interface => (T)Object;
 
-		public ComDisposableWrapper(T com)
-			: base(com)
-		{
-			Contract.Requires(com != null);
-		}
-	}
+    public ComDisposableWrapper(T com)
+        : base(com) {
+        Contract.Requires(com != null);
+    }
 }

@@ -1,18 +1,14 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Debugger
-{
-	public class BreakpointAlreadySetException : Exception
-	{
-		public IBreakpoint Breakpoint { get; }
+namespace ReClassNET.Debugger; 
+public class BreakpointAlreadySetException : Exception {
+    public IBreakpoint Breakpoint { get; }
 
-		public BreakpointAlreadySetException(IBreakpoint breakpoint)
-			: base("This breakpoint is already set.")
-		{
-			Contract.Requires(breakpoint != null);
+    public BreakpointAlreadySetException(IBreakpoint breakpoint)
+        : base("This breakpoint is already set.") {
+        Contract.Requires(breakpoint != null);
 
-			Breakpoint = breakpoint;
-		}
-	}
+        Breakpoint = breakpoint;
+    }
 }

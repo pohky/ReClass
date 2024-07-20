@@ -1,8 +1,5 @@
-﻿namespace ReClassNET.CodeGenerator
-{
-	public enum Language
-	{
-		Cpp,
-		CSharp
-	}
+namespace ReClassNET.CodeGenerator; 
+public enum Language {
+    Cpp,
+    CSharp
 }

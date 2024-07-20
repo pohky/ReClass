@@ -11,242 +11,203 @@ using ReClassNET.Memory;
 using ReClassNET.Native;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms
-{
-	public partial class ProcessInfoForm : IconForm
-	{
-		private readonly IProcessReader process;
+namespace ReClassNET.Forms; 
+public partial class ProcessInfoForm : IconForm {
+    private readonly IProcessReader process;
 
-		/// <summary>The context menu of the sections grid view.</summary>
-		public ContextMenuStrip GridContextMenu => contextMenuStrip;
+    /// <summary>The context menu of the sections grid view.</summary>
+    public ContextMenuStrip GridContextMenu => contextMenuStrip;
 
-		public ProcessInfoForm(IProcessReader process)
-		{
-			Contract.Requires(process != null);
+    public ProcessInfoForm(IProcessReader process) {
+        Contract.Requires(process != null);
 
-			this.process = process;
+        this.process = process;
 
-			InitializeComponent();
+        InitializeComponent();
 
-			tabControl.ImageList = new ImageList();
-			tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Category);
-			tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Page_White_Stack);
-			modulesTabPage.ImageIndex = 0;
-			sectionsTabPage.ImageIndex = 1;
+        tabControl.ImageList = new ImageList();
+        tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Category);
+        tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Page_White_Stack);
+        modulesTabPage.ImageIndex = 0;
+        sectionsTabPage.ImageIndex = 1;
 
-			modulesDataGridView.AutoGenerateColumns = false;
-			sectionsDataGridView.AutoGenerateColumns = false;
+        modulesDataGridView.AutoGenerateColumns = false;
+        sectionsDataGridView.AutoGenerateColumns = false;
 
-			// TODO: Workaround, Mono can't display a DataGridViewImageColumn.
-			if (NativeMethods.IsUnix())
-			{
-				moduleIconDataGridViewImageColumn.Visible = false;
-			}
-		}
+        // TODO: Workaround, Mono can't display a DataGridViewImageColumn.
+        if (NativeMethods.IsUnix()) {
+            moduleIconDataGridViewImageColumn.Visible = false;
+        }
+    }
 
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+    protected override void OnLoad(EventArgs e) {
+        base.OnLoad(e);
 
-			GlobalWindowManager.AddWindow(this);
-		}
+        GlobalWindowManager.AddWindow(this);
+    }
 
-		protected override void OnFormClosed(FormClosedEventArgs e)
-		{
-			base.OnFormClosed(e);
+    protected override void OnFormClosed(FormClosedEventArgs e) {
+        base.OnFormClosed(e);
 
-			GlobalWindowManager.RemoveWindow(this);
-		}
+        GlobalWindowManager.RemoveWindow(this);
+    }
 
-		#region Event Handler
+    #region Event Handler
 
-		private async void ProcessInfoForm_Load(object sender, EventArgs e)
-		{
-			var sectionsTable = new DataTable();
-			sectionsTable.Columns.Add("address", typeof(string));
-			sectionsTable.Columns.Add("size", typeof(string));
-			sectionsTable.Columns.Add("name", typeof(string));
-			sectionsTable.Columns.Add("protection", typeof(string));
-			sectionsTable.Columns.Add("type", typeof(string));
-			sectionsTable.Columns.Add("module", typeof(string));
-			sectionsTable.Columns.Add("section", typeof(Section));
+    private async void ProcessInfoForm_Load(object sender, EventArgs e) {
+        var sectionsTable = new DataTable();
+        sectionsTable.Columns.Add("address", typeof(string));
+        sectionsTable.Columns.Add("size", typeof(string));
+        sectionsTable.Columns.Add("name", typeof(string));
+        sectionsTable.Columns.Add("protection", typeof(string));
+        sectionsTable.Columns.Add("type", typeof(string));
+        sectionsTable.Columns.Add("module", typeof(string));
+        sectionsTable.Columns.Add("section", typeof(Section));
 
-			var modulesTable = new DataTable();
-			modulesTable.Columns.Add("icon", typeof(Icon));
-			modulesTable.Columns.Add("name", typeof(string));
-			modulesTable.Columns.Add("address", typeof(string));
-			modulesTable.Columns.Add("size", typeof(string));
-			modulesTable.Columns.Add("path", typeof(string));
-			modulesTable.Columns.Add("module", typeof(Module));
+        var modulesTable = new DataTable();
+        modulesTable.Columns.Add("icon", typeof(Icon));
+        modulesTable.Columns.Add("name", typeof(string));
+        modulesTable.Columns.Add("address", typeof(string));
+        modulesTable.Columns.Add("size", typeof(string));
+        modulesTable.Columns.Add("path", typeof(string));
+        modulesTable.Columns.Add("module", typeof(Module));
 
-			await Task.Run(() =>
-			{
-				if (process.EnumerateRemoteSectionsAndModules(out var sections, out var modules))
-				{
-					foreach (var section in sections)
-					{
-						var row = sectionsTable.NewRow();
-						row["address"] = section.Start.ToString(Constants.AddressHexFormat);
-						row["size"] = section.Size.ToString(Constants.AddressHexFormat);
-						row["name"] = section.Name;
-						row["protection"] = section.Protection.ToString();
-						row["type"] = section.Type.ToString();
-						row["module"] = section.ModuleName;
-						row["section"] = section;
-						sectionsTable.Rows.Add(row);
-					}
-					foreach (var module in modules)
-					{
-						var row = modulesTable.NewRow();
-						row["icon"] = NativeMethods.GetIconForFile(module.Path);
-						row["name"] = module.Name;
-						row["address"] = module.Start.ToString(Constants.AddressHexFormat);
-						row["size"] = module.Size.ToString(Constants.AddressHexFormat);
-						row["path"] = module.Path;
-						row["module"] = module;
-						modulesTable.Rows.Add(row);
-					}
-				}
-			});
+        await Task.Run(() => {
+            if (process.EnumerateRemoteSectionsAndModules(out var sections, out var modules)) {
+                foreach (var section in sections) {
+                    var row = sectionsTable.NewRow();
+                    row["address"] = section.Start.ToString(Constants.AddressHexFormat);
+                    row["size"] = section.Size.ToString(Constants.AddressHexFormat);
+                    row["name"] = section.Name;
+                    row["protection"] = section.Protection.ToString();
+                    row["type"] = section.Type.ToString();
+                    row["module"] = section.ModuleName;
+                    row["section"] = section;
+                    sectionsTable.Rows.Add(row);
+                }
+                foreach (var module in modules) {
+                    var row = modulesTable.NewRow();
+                    row["icon"] = NativeMethods.GetIconForFile(module.Path);
+                    row["name"] = module.Name;
+                    row["address"] = module.Start.ToString(Constants.AddressHexFormat);
+                    row["size"] = module.Size.ToString(Constants.AddressHexFormat);
+                    row["path"] = module.Path;
+                    row["module"] = module;
+                    modulesTable.Rows.Add(row);
+                }
+            }
+        });
 
-			sectionsDataGridView.DataSource = sectionsTable;
-			modulesDataGridView.DataSource = modulesTable;
-		}
+        sectionsDataGridView.DataSource = sectionsTable;
+        modulesDataGridView.DataSource = modulesTable;
+    }
 
-		private void SelectRow_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-		{
-			if (!(sender is DataGridView dgv))
-			{
-				return;
-			}
+    private void SelectRow_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e) {
+        if (!(sender is DataGridView dgv)) {
+            return;
+        }
 
-			if (e.Button == MouseButtons.Right)
-			{
-				int row = e.RowIndex;
-				if (e.RowIndex != -1)
-				{
-					dgv.Rows[row].Selected = true;
-				}
-			}
-		}
+        if (e.Button == MouseButtons.Right) {
+            int row = e.RowIndex;
+            if (e.RowIndex != -1) {
+                dgv.Rows[row].Selected = true;
+            }
+        }
+    }
 
-		private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
-		{
-			var sourceControl = (sender as ContextMenuStrip)?.SourceControl;
+    private void contextMenuStrip_Opening(object sender, CancelEventArgs e) {
+        var sourceControl = (sender as ContextMenuStrip)?.SourceControl;
 
-			e.Cancel = sourceControl == null || (sourceControl == modulesDataGridView && GetSelectedModule() == null) || (sourceControl == sectionsDataGridView && GetSelectedSection() == null);
-		}
+        e.Cancel = sourceControl == null || (sourceControl == modulesDataGridView && GetSelectedModule() == null) || (sourceControl == sectionsDataGridView && GetSelectedSection() == null);
+    }
 
-		private void setCurrentClassAddressToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			LinkedWindowFeatures.SetCurrentClassAddress(GetSelectedAddress(sender));
-		}
+    private void setCurrentClassAddressToolStripMenuItem_Click(object sender, EventArgs e) {
+        LinkedWindowFeatures.SetCurrentClassAddress(GetSelectedAddress(sender));
+    }
 
-		private void createClassAtAddressToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			LinkedWindowFeatures.CreateClassAtAddress(GetSelectedAddress(sender), true);
-		}
+    private void createClassAtAddressToolStripMenuItem_Click(object sender, EventArgs e) {
+        LinkedWindowFeatures.CreateClassAtAddress(GetSelectedAddress(sender), true);
+    }
 
-		private void dumpToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Func<SaveFileDialog> createDialogFn;
-			Action<IRemoteMemoryReader, Stream> dumpFn;
+    private void dumpToolStripMenuItem_Click(object sender, EventArgs e) {
+        Func<SaveFileDialog> createDialogFn;
+        Action<IRemoteMemoryReader, Stream> dumpFn;
 
-			if (GetToolStripSourceControl(sender) == modulesDataGridView)
-			{
-				var module = GetSelectedModule();
-				if (module == null)
-				{
-					return;
-				}
+        if (GetToolStripSourceControl(sender) == modulesDataGridView) {
+            var module = GetSelectedModule();
+            if (module == null) {
+                return;
+            }
 
-				createDialogFn = () => new SaveFileDialog
-				{
-					FileName = $"{Path.GetFileNameWithoutExtension(module.Name)}_Dumped{Path.GetExtension(module.Name)}",
-					InitialDirectory = Path.GetDirectoryName(module.Path)
-				};
+            createDialogFn = () => new SaveFileDialog {
+                FileName = $"{Path.GetFileNameWithoutExtension(module.Name)}_Dumped{Path.GetExtension(module.Name)}",
+                InitialDirectory = Path.GetDirectoryName(module.Path)
+            };
 
-				dumpFn = (reader, stream) =>
-				{
-					Dumper.DumpModule(reader, module, stream);
+            dumpFn = (reader, stream) => {
+                Dumper.DumpModule(reader, module, stream);
 
-					MessageBox.Show("Module successfully dumped.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-				};
-			}
-			else
-			{
-				var section = GetSelectedSection();
-				if (section == null)
-				{
-					return;
-				}
+                MessageBox.Show("Module successfully dumped.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+        } else {
+            var section = GetSelectedSection();
+            if (section == null) {
+                return;
+            }
 
-				createDialogFn = () => new SaveFileDialog
-				{
-					FileName = $"Section_{section.Start.ToString("X")}_{section.End.ToString("X")}.dat"
-				};
+            createDialogFn = () => new SaveFileDialog {
+                FileName = $"Section_{section.Start.ToString("X")}_{section.End.ToString("X")}.dat"
+            };
 
-				dumpFn = (reader, stream) =>
-				{
-					Dumper.DumpSection(reader, section, stream);
+            dumpFn = (reader, stream) => {
+                Dumper.DumpSection(reader, section, stream);
 
-					MessageBox.Show("Section successfully dumped.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Information);
-				};
-			}
+                MessageBox.Show("Section successfully dumped.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            };
+        }
 
-			using var sfd = createDialogFn();
-			sfd.Filter = "All|*.*";
+        using var sfd = createDialogFn();
+        sfd.Filter = "All|*.*";
 
-			if (sfd.ShowDialog() != DialogResult.OK)
-			{
-				return;
-			}
+        if (sfd.ShowDialog() != DialogResult.OK) {
+            return;
+        }
 
-			try
-			{
-				using var stream = sfd.OpenFile();
+        try {
+            using var stream = sfd.OpenFile();
 
-				dumpFn(process, stream);
-			}
-			catch (Exception ex)
-			{
-				Program.ShowException(ex);
-			}
-		}
+            dumpFn(process, stream);
+        } catch (Exception ex) {
+            Program.ShowException(ex);
+        }
+    }
 
-		private void sectionsDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-		{
-			setCurrentClassAddressToolStripMenuItem_Click(sender, e);
+    private void sectionsDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e) {
+        setCurrentClassAddressToolStripMenuItem_Click(sender, e);
 
-			Close();
-		}
+        Close();
+    }
 
-		#endregion
+    #endregion
 
-		private IntPtr GetSelectedAddress(object sender)
-		{
-			if (GetToolStripSourceControl(sender) == modulesDataGridView)
-			{
-				return GetSelectedModule()?.Start ?? IntPtr.Zero;
-			}
-			return GetSelectedSection()?.Start ?? IntPtr.Zero;
-		}
+    private IntPtr GetSelectedAddress(object sender) {
+        if (GetToolStripSourceControl(sender) == modulesDataGridView) {
+            return GetSelectedModule()?.Start ?? IntPtr.Zero;
+        }
+        return GetSelectedSection()?.Start ?? IntPtr.Zero;
+    }
 
-		private static Control GetToolStripSourceControl(object sender)
-		{
-			return ((sender as ToolStripMenuItem)?.GetCurrentParent() as ContextMenuStrip)?.SourceControl;
-		}
+    private static Control GetToolStripSourceControl(object sender) {
+        return ((sender as ToolStripMenuItem)?.GetCurrentParent() as ContextMenuStrip)?.SourceControl;
+    }
 
-		private Module GetSelectedModule()
-		{
-			var row = modulesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
-			return row?["module"] as Module;
-		}
+    private Module GetSelectedModule() {
+        var row = modulesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
+        return row?["module"] as Module;
+    }
 
-		private Section GetSelectedSection()
-		{
-			var row = sectionsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
-			return row?["section"] as Section;
-		}
-	}
+    private Section GetSelectedSection() {
+        var row = sectionsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
+        return row?["section"] as Section;
+    }
 }

@@ -1,61 +1,52 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms
-{
-	public partial class InputBytesForm : IconForm
-	{
-		private readonly int currentSize;
+namespace ReClassNET.Forms; 
+public partial class InputBytesForm : IconForm {
+    private readonly int currentSize;
 
-		public int Bytes => (int)bytesNumericUpDown.Value;
+    public int Bytes => (int)bytesNumericUpDown.Value;
 
-		public InputBytesForm(int currentSize)
-		{
-			this.currentSize = currentSize;
+    public InputBytesForm(int currentSize) {
+        this.currentSize = currentSize;
 
-			InitializeComponent();
+        InitializeComponent();
 
-			bytesNumericUpDown.Maximum = int.MaxValue;
+        bytesNumericUpDown.Maximum = int.MaxValue;
 
-			FormatLabelText(currentSizeLabel, currentSize);
-			FormatLabelText(newSizeLabel, currentSize);
-		}
+        FormatLabelText(currentSizeLabel, currentSize);
+        FormatLabelText(newSizeLabel, currentSize);
+    }
 
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+    protected override void OnLoad(EventArgs e) {
+        base.OnLoad(e);
 
-			GlobalWindowManager.AddWindow(this);
-		}
+        GlobalWindowManager.AddWindow(this);
+    }
 
-		protected override void OnFormClosed(FormClosedEventArgs e)
-		{
-			base.OnFormClosed(e);
+    protected override void OnFormClosed(FormClosedEventArgs e) {
+        base.OnFormClosed(e);
 
-			GlobalWindowManager.RemoveWindow(this);
-		}
+        GlobalWindowManager.RemoveWindow(this);
+    }
 
-		#region Event Handler
+    #region Event Handler
 
-		private void hexRadioButton_CheckedChanged(object sender, EventArgs e)
-		{
-			bytesNumericUpDown.Hexadecimal = hexRadioButton.Checked;
-		}
+    private void hexRadioButton_CheckedChanged(object sender, EventArgs e) {
+        bytesNumericUpDown.Hexadecimal = hexRadioButton.Checked;
+    }
 
-		private void bytesNumericUpDown_ValueChanged(object sender, EventArgs e)
-		{
-			FormatLabelText(newSizeLabel, currentSize + Bytes);
-		}
+    private void bytesNumericUpDown_ValueChanged(object sender, EventArgs e) {
+        FormatLabelText(newSizeLabel, currentSize + Bytes);
+    }
 
-		#endregion
+    #endregion
 
-		private void FormatLabelText(Label label, int size)
-		{
-			Contract.Requires(label != null);
+    private void FormatLabelText(Label label, int size) {
+        Contract.Requires(label != null);
 
-			label.Text = $"0x{size:X} / {size}";
-		}
-	}
+        label.Text = $"0x{size:X} / {size}";
+    }
 }

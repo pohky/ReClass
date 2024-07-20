@@ -1,12 +1,8 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
-namespace ReClassNET.Forms
-{
-	public class IconForm : Form
-	{
-		public IconForm()
-		{
-			Icon = Properties.Resources.ReClassNet;
-		}
-	}
+namespace ReClassNET.Forms; 
+public class IconForm : Form {
+    public IconForm() {
+        Icon = Properties.Resources.ReClassNet;
+    }
 }

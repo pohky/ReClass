@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
@@ -9,197 +9,170 @@ using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms
-{
-	public partial class InputCorrelatorForm : IconForm
-	{
-		private static readonly TimeSpan refineInterval = TimeSpan.FromMilliseconds(400);
+namespace ReClassNET.Forms; 
+public partial class InputCorrelatorForm : IconForm {
+    private static readonly TimeSpan refineInterval = TimeSpan.FromMilliseconds(400);
 
-		private readonly ScannerForm scannerForm;
-		private readonly RemoteProcess process;
+    private readonly ScannerForm scannerForm;
+    private readonly RemoteProcess process;
 
-		private readonly KeyboardInput input;
-		private InputCorrelatedScanner scanner;
+    private readonly KeyboardInput input;
+    private InputCorrelatedScanner scanner;
 
-		private bool isScanning = false;
-		private DateTime lastRefineTime;
+    private bool isScanning = false;
+    private DateTime lastRefineTime;
 
-		public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process)
-		{
-			Contract.Requires(scannerForm != null);
-			Contract.Requires(process != null);
+    public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process) {
+        Contract.Requires(scannerForm != null);
+        Contract.Requires(process != null);
 
-			this.scannerForm = scannerForm;
-			this.process = process;
+        this.scannerForm = scannerForm;
+        this.process = process;
 
-			InitializeComponent();
+        InitializeComponent();
 
-			valueTypeComboBox.SetAvailableValues(
-				ScanValueType.Byte,
-				ScanValueType.Short,
-				ScanValueType.Integer,
-				ScanValueType.Long,
-				ScanValueType.Float,
-				ScanValueType.Double
-			);
-			valueTypeComboBox.SelectedValue = ScanValueType.Integer;
+        valueTypeComboBox.SetAvailableValues(
+            ScanValueType.Byte,
+            ScanValueType.Short,
+            ScanValueType.Integer,
+            ScanValueType.Long,
+            ScanValueType.Float,
+            ScanValueType.Double
+        );
+        valueTypeComboBox.SelectedValue = ScanValueType.Integer;
 
-			input = new KeyboardInput();
+        input = new KeyboardInput();
 
-			hotkeyBox.Input = input;
+        hotkeyBox.Input = input;
 
-			infoLabel.Text = string.Empty;
-		}
+        infoLabel.Text = string.Empty;
+    }
 
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
+    protected override void OnLoad(EventArgs e) {
+        base.OnLoad(e);
 
-			GlobalWindowManager.AddWindow(this);
-		}
+        GlobalWindowManager.AddWindow(this);
+    }
 
-		protected override void OnFormClosed(FormClosedEventArgs e)
-		{
-			base.OnFormClosed(e);
+    protected override void OnFormClosed(FormClosedEventArgs e) {
+        base.OnFormClosed(e);
 
-			GlobalWindowManager.RemoveWindow(this);
-		}
+        GlobalWindowManager.RemoveWindow(this);
+    }
 
-		#region Event Handler
+    #region Event Handler
 
-		private async void InputCorrelatorForm_FormClosing(object sender, FormClosingEventArgs e)
-		{
-			hotkeyBox.Input = null;
+    private async void InputCorrelatorForm_FormClosing(object sender, FormClosingEventArgs e) {
+        hotkeyBox.Input = null;
 
-			refineTimer.Enabled = false;
+        refineTimer.Enabled = false;
 
-			if (isScanning)
-			{
-				e.Cancel = true;
+        if (isScanning) {
+            e.Cancel = true;
 
-				Hide();
+            Hide();
 
-				await Task.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
-				Close();
+            Close();
 
-				return;
-			}
+            return;
+        }
 
-			scanner?.Dispose();
+        scanner?.Dispose();
 
-			input?.Dispose();
-		}
+        input?.Dispose();
+    }
 
-		private void addButton_Click(object sender, EventArgs e)
-		{
-			var hotkey = hotkeyBox.Hotkey.Clone();
-			if (hotkey.IsEmpty)
-			{
-				return;
-			}
+    private void addButton_Click(object sender, EventArgs e) {
+        var hotkey = hotkeyBox.Hotkey.Clone();
+        if (hotkey.IsEmpty) {
+            return;
+        }
 
-			hotkeyListBox.Items.Add(hotkey);
+        hotkeyListBox.Items.Add(hotkey);
 
-			hotkeyBox.Clear();
-		}
+        hotkeyBox.Clear();
+    }
 
-		private void removeButton_Click(object sender, EventArgs e)
-		{
-			var index = hotkeyListBox.SelectedIndex;
-			if (index < 0)
-			{
-				return;
-			}
+    private void removeButton_Click(object sender, EventArgs e) {
+        var index = hotkeyListBox.SelectedIndex;
+        if (index < 0) {
+            return;
+        }
 
-			hotkeyListBox.Items.RemoveAt(index);
-		}
+        hotkeyListBox.Items.RemoveAt(index);
+    }
 
-		private async void startStopButton_Click(object sender, EventArgs e)
-		{
-			if (scanner == null)
-			{
-				if (hotkeyListBox.Items.Count == 0)
-				{
-					MessageBox.Show("Please add at least one hotkey.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    private async void startStopButton_Click(object sender, EventArgs e) {
+        if (scanner == null) {
+            if (hotkeyListBox.Items.Count == 0) {
+                MessageBox.Show("Please add at least one hotkey.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-					return;
-				}
+                return;
+            }
 
-				scanner = new InputCorrelatedScanner(
-					process,
-					input,
-					hotkeyListBox.Items.Cast<KeyboardHotkey>(),
-					valueTypeComboBox.SelectedValue
-				);
+            scanner = new InputCorrelatedScanner(
+                process,
+                input,
+                hotkeyListBox.Items.Cast<KeyboardHotkey>(),
+                valueTypeComboBox.SelectedValue
+            );
 
-				settingsGroupBox.Enabled = false;
+            settingsGroupBox.Enabled = false;
 
-				try
-				{
-					await scanner.Initialize();
+            try {
+                await scanner.Initialize();
 
-					startStopButton.Text = "Stop Scan";
+                startStopButton.Text = "Stop Scan";
 
-					refineTimer.Enabled = true;
+                refineTimer.Enabled = true;
 
-					return;
-				}
-				catch (Exception ex)
-				{
-					Program.ShowException(ex);
-				}
-			}
-			else
-			{
-				refineTimer.Enabled = false;
+                return;
+            } catch (Exception ex) {
+                Program.ShowException(ex);
+            }
+        } else {
+            refineTimer.Enabled = false;
 
-				startStopButton.Text = "Start Scan";
+            startStopButton.Text = "Start Scan";
 
-				while (isScanning)
-				{
-					await Task.Delay(TimeSpan.FromSeconds(1));
-				}
+            while (isScanning) {
+                await Task.Delay(TimeSpan.FromSeconds(1));
+            }
 
-				scannerForm.ShowScannerResults(scanner);
+            scannerForm.ShowScannerResults(scanner);
 
-				scanner.Dispose();
-				scanner = null;
-			}
+            scanner.Dispose();
+            scanner = null;
+        }
 
-			settingsGroupBox.Enabled = true;
-		}
+        settingsGroupBox.Enabled = true;
+    }
 
-		private async void refineTimer_Tick(object sender, EventArgs e)
-		{
-			if (isScanning)
-			{
-				return;
-			}
+    private async void refineTimer_Tick(object sender, EventArgs e) {
+        if (isScanning) {
+            return;
+        }
 
-			scanner.CorrelateInput();
+        scanner.CorrelateInput();
 
-			if (lastRefineTime + refineInterval < DateTime.Now)
-			{
-				isScanning = true;
+        if (lastRefineTime + refineInterval < DateTime.Now) {
+            isScanning = true;
 
-				try
-				{
-					await scanner.RefineResults(CancellationToken.None, null);
+            try {
+                await scanner.RefineResults(CancellationToken.None, null);
 
-					infoLabel.Text = $"Scan Count: {scanner.ScanCount} Possible Values: {scanner.TotalResultCount}";
-				}
-				catch (Exception ex)
-				{
-					Program.ShowException(ex);
-				}
+                infoLabel.Text = $"Scan Count: {scanner.ScanCount} Possible Values: {scanner.TotalResultCount}";
+            } catch (Exception ex) {
+                Program.ShowException(ex);
+            }
 
-				isScanning = false;
+            isScanning = false;
 
-				lastRefineTime = DateTime.Now;
-			}
-		}
+            lastRefineTime = DateTime.Now;
+        }
+    }
 
-		#endregion
-	}
+    #endregion
 }

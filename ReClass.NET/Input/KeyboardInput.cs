@@ -1,40 +1,32 @@
-﻿using System;
+using System;
 using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 
-namespace ReClassNET.Input
-{
-	public class KeyboardInput : IDisposable
-	{
-		private readonly IntPtr handle;
+namespace ReClassNET.Input; 
+public class KeyboardInput : IDisposable {
+    private readonly IntPtr handle;
 
-		public KeyboardInput()
-		{
-			handle = Program.CoreFunctions.InitializeInput();
-		}
+    public KeyboardInput() {
+        handle = Program.CoreFunctions.InitializeInput();
+    }
 
-		public void Dispose()
-		{
-			ReleaseUnmanagedResources();
+    public void Dispose() {
+        ReleaseUnmanagedResources();
 
-			GC.SuppressFinalize(this);
-		}
+        GC.SuppressFinalize(this);
+    }
 
-		~KeyboardInput()
-		{
-			ReleaseUnmanagedResources();
-		}
+    ~KeyboardInput() {
+        ReleaseUnmanagedResources();
+    }
 
-		private void ReleaseUnmanagedResources()
-		{
-			Program.CoreFunctions.ReleaseInput(handle);
-		}
+    private void ReleaseUnmanagedResources() {
+        Program.CoreFunctions.ReleaseInput(handle);
+    }
 
-		public Keys[] GetPressedKeys()
-		{
-			Contract.Ensures(Contract.Result<Keys[]>() != null);
+    public Keys[] GetPressedKeys() {
+        Contract.Ensures(Contract.Result<Keys[]>() != null);
 
-			return Program.CoreFunctions.GetPressedKeys(handle);
-		}
-	}
+        return Program.CoreFunctions.GetPressedKeys(handle);
+    }
 }

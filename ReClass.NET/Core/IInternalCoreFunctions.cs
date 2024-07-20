@@ -1,16 +1,13 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 
-namespace ReClassNET.Core
-{
-	public interface IInternalCoreFunctions
-	{
-		bool DisassembleCode(IntPtr address, int length, IntPtr virtualAddress, bool determineStaticInstructionBytes, EnumerateInstructionCallback callback);
+namespace ReClassNET.Core; 
+public interface IInternalCoreFunctions {
+    bool DisassembleCode(IntPtr address, int length, IntPtr virtualAddress, bool determineStaticInstructionBytes, EnumerateInstructionCallback callback);
 
-		IntPtr InitializeInput();
+    IntPtr InitializeInput();
 
-		Keys[] GetPressedKeys(IntPtr handle);
+    Keys[] GetPressedKeys(IntPtr handle);
 
-		void ReleaseInput(IntPtr handle);
-	}
+    void ReleaseInput(IntPtr handle);
 }

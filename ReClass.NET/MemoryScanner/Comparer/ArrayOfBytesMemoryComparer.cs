@@ -2,68 +2,55 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.MemoryScanner.Comparer
-{
-	public class ArrayOfBytesMemoryComparer : ISimpleScanComparer
-	{
-		public ScanCompareType CompareType => ScanCompareType.Equal;
-		public int ValueSize => bytePattern?.Length ?? byteArray.Length;
+namespace ReClassNET.MemoryScanner.Comparer; 
+public class ArrayOfBytesMemoryComparer : ISimpleScanComparer {
+    public ScanCompareType CompareType => ScanCompareType.Equal;
+    public int ValueSize => bytePattern?.Length ?? byteArray.Length;
 
-		private readonly BytePattern bytePattern;
-		private readonly byte[] byteArray;
+    private readonly BytePattern bytePattern;
+    private readonly byte[] byteArray;
 
-		public ArrayOfBytesMemoryComparer(BytePattern pattern)
-		{
-			Contract.Requires(pattern != null);
+    public ArrayOfBytesMemoryComparer(BytePattern pattern) {
+        Contract.Requires(pattern != null);
 
-			bytePattern = pattern;
+        bytePattern = pattern;
 
-			if (!bytePattern.HasWildcards)
-			{
-				byteArray = bytePattern.ToByteArray();
-			}
-		}
+        if (!bytePattern.HasWildcards) {
+            byteArray = bytePattern.ToByteArray();
+        }
+    }
 
-		public ArrayOfBytesMemoryComparer(byte[] pattern)
-		{
-			Contract.Requires(pattern != null);
+    public ArrayOfBytesMemoryComparer(byte[] pattern) {
+        Contract.Requires(pattern != null);
 
-			byteArray = pattern;
-		}
+        byteArray = pattern;
+    }
 
-		public bool Compare(byte[] data, int index, out ScanResult result)
-		{
-			result = null;
+    public bool Compare(byte[] data, int index, out ScanResult result) {
+        result = null;
 
-			if (byteArray != null)
-			{
-				for (var i = 0; i < byteArray.Length; ++i)
-				{
-					if (data[index + i] != byteArray[i])
-					{
-						return false;
-					}
-				}
-			}
-			else if (!bytePattern.Equals(data, index))
-			{
-				return false;
-			}
+        if (byteArray != null) {
+            for (var i = 0; i < byteArray.Length; ++i) {
+                if (data[index + i] != byteArray[i]) {
+                    return false;
+                }
+            }
+        } else if (!bytePattern.Equals(data, index)) {
+            return false;
+        }
 
-			var temp = new byte[ValueSize];
-			Array.Copy(data, index, temp, 0, temp.Length);
-			result = new ArrayOfBytesScanResult(temp);
+        var temp = new byte[ValueSize];
+        Array.Copy(data, index, temp, 0, temp.Length);
+        result = new ArrayOfBytesScanResult(temp);
 
-			return true;
-		}
+        return true;
+    }
 
-		public bool Compare(byte[] data, int index, ScanResult previous, out ScanResult result)
-		{
+    public bool Compare(byte[] data, int index, ScanResult previous, out ScanResult result) {
 #if DEBUG
-			Debug.Assert(previous is ArrayOfBytesScanResult);
+        Debug.Assert(previous is ArrayOfBytesScanResult);
 #endif
 
-			return Compare(data, index, out result);
-		}
-	}
+        return Compare(data, index, out result);
+    }
 }

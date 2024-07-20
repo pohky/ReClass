@@ -1,13 +1,9 @@
-﻿using System;
+using System;
 
-namespace ReClassNET.AddressParser
-{
-	public class ParseException : Exception
-	{
-		public ParseException(string message)
-			: base(message)
-		{
+namespace ReClassNET.AddressParser; 
+public class ParseException : Exception {
+    public ParseException(string message)
+        : base(message) {
 
-		}
-	}
+    }
 }

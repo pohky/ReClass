@@ -1,10 +1,8 @@
-using System.Drawing;
-using System.Windows.Forms;
+namespace ReClassNET.UI;
 
-namespace ReClassNET.UI; 
 internal class CustomToolStripProfessionalRenderer : ToolStripProfessionalRenderer {
-    private readonly bool renderGrip;
     private readonly bool renderBorder;
+    private readonly bool renderGrip;
 
     public CustomToolStripProfessionalRenderer(bool renderGrip, bool renderBorder)
         : base(new CustomProfessionalColorTable()) {

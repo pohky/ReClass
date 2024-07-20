@@ -4,17 +4,9 @@ using ReClassNET.Forms;
 using ReClassNET.Logger;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Plugins; 
+namespace ReClassNET.Plugins;
+
 internal sealed class DefaultPluginHost : IPluginHost {
-    public MainForm MainWindow { get; }
-
-    public ResourceManager Resources => Properties.Resources.ResourceManager;
-
-    public RemoteProcess Process { get; }
-
-    public ILogger Logger { get; }
-
-    public Settings Settings => Program.Settings;
 
     public DefaultPluginHost(MainForm form, RemoteProcess process, ILogger logger) {
         Contract.Requires(form != null);
@@ -25,4 +17,13 @@ internal sealed class DefaultPluginHost : IPluginHost {
         Process = process;
         Logger = logger;
     }
+    public MainForm MainWindow { get; }
+
+    public ResourceManager Resources => Properties.Resources.ResourceManager;
+
+    public RemoteProcess Process { get; }
+
+    public ILogger Logger { get; }
+
+    public Settings Settings => Program.Settings;
 }

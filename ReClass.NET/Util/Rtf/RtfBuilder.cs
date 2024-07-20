@@ -1,28 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 
-namespace ReClassNET.Util.Rtf; 
+namespace ReClassNET.Util.Rtf;
+
 public partial class RtfBuilder {
     private static readonly char[] slashable = { '{', '}', '\\' };
 
     private readonly StringBuilder buffer;
-
-    private readonly Color defaultForeColor = Color.Black;
     private readonly Color defaultBackColor = Color.Empty;
     private readonly float defaultFontSize;
 
-    private readonly List<Color> usedColors = new List<Color>();
-    private readonly List<string> usedFonts = new List<string>();
+    private readonly Color defaultForeColor = Color.Black;
 
-    private Color foreColor;
+    private readonly List<Color> usedColors = new();
+    private readonly List<string> usedFonts = new();
     private Color backColor;
 
     private int fontIndex;
     private float fontSize;
     private FontStyle fontStyle;
+
+    private Color foreColor;
 
     public RtfBuilder()
         : this(RtfFont.Calibri, 22.0f) {
@@ -45,9 +42,7 @@ public partial class RtfBuilder {
         backColor = defaultBackColor;
     }
 
-    public RtfBuilder Append(char value) {
-        return Append(value.ToString());
-    }
+    public RtfBuilder Append(char value) => Append(value.ToString());
 
     public RtfBuilder Append(string value) {
         if (!string.IsNullOrEmpty(value)) {
@@ -134,9 +129,7 @@ public partial class RtfBuilder {
         return usedColors.IndexOf(color) + 1;
     }
 
-    private int IndexOfFont(RtfFont font) {
-        return IndexOfRawFont(GetKnownFontString(font));
-    }
+    private int IndexOfFont(RtfFont font) => IndexOfRawFont(GetKnownFontString(font));
 
     private int IndexOfRawFont(string font) {
         if (!string.IsNullOrEmpty(font)) {

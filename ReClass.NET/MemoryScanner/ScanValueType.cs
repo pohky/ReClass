@@ -1,6 +1,7 @@
 using System.ComponentModel;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 public enum ScanValueType {
     [Description("Byte")]
     Byte,

@@ -1,17 +1,13 @@
-using System;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ReClassNET.Memory;
 using ReClassNET.Native;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class ProcessInfoForm : IconForm {
     private readonly IProcessReader process;
 
@@ -26,8 +22,8 @@ public partial class ProcessInfoForm : IconForm {
         InitializeComponent();
 
         tabControl.ImageList = new ImageList();
-        tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Category);
-        tabControl.ImageList.Images.Add(Properties.Resources.B16x16_Page_White_Stack);
+        tabControl.ImageList.Images.Add(Resources.B16x16_Category);
+        tabControl.ImageList.Images.Add(Resources.B16x16_Page_White_Stack);
         modulesTabPage.ImageIndex = 0;
         sectionsTabPage.ImageIndex = 1;
 
@@ -50,6 +46,25 @@ public partial class ProcessInfoForm : IconForm {
         base.OnFormClosed(e);
 
         GlobalWindowManager.RemoveWindow(this);
+    }
+
+    private IntPtr GetSelectedAddress(object sender) {
+        if (GetToolStripSourceControl(sender) == modulesDataGridView) {
+            return GetSelectedModule()?.Start ?? IntPtr.Zero;
+        }
+        return GetSelectedSection()?.Start ?? IntPtr.Zero;
+    }
+
+    private static Control GetToolStripSourceControl(object sender) => ((sender as ToolStripMenuItem)?.GetCurrentParent() as ContextMenuStrip)?.SourceControl;
+
+    private Module GetSelectedModule() {
+        var row = modulesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
+        return row?["module"] as Module;
+    }
+
+    private Section GetSelectedSection() {
+        var row = sectionsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
+        return row?["section"] as Section;
     }
 
     #region Event Handler
@@ -108,7 +123,7 @@ public partial class ProcessInfoForm : IconForm {
         }
 
         if (e.Button == MouseButtons.Right) {
-            int row = e.RowIndex;
+            var row = e.RowIndex;
             if (e.RowIndex != -1) {
                 dgv.Rows[row].Selected = true;
             }
@@ -190,24 +205,4 @@ public partial class ProcessInfoForm : IconForm {
 
     #endregion
 
-    private IntPtr GetSelectedAddress(object sender) {
-        if (GetToolStripSourceControl(sender) == modulesDataGridView) {
-            return GetSelectedModule()?.Start ?? IntPtr.Zero;
-        }
-        return GetSelectedSection()?.Start ?? IntPtr.Zero;
-    }
-
-    private static Control GetToolStripSourceControl(object sender) {
-        return ((sender as ToolStripMenuItem)?.GetCurrentParent() as ContextMenuStrip)?.SourceControl;
-    }
-
-    private Module GetSelectedModule() {
-        var row = modulesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
-        return row?["module"] as Module;
-    }
-
-    private Section GetSelectedSection() {
-        var row = sectionsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView;
-        return row?["section"] as Section;
-    }
 }

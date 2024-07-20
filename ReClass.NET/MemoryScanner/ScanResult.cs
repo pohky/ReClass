@@ -1,10 +1,9 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 public abstract class ScanResult {
     public abstract ScanValueType ValueType { get; }
 
@@ -26,21 +25,13 @@ public class ByteScanResult : ScanResult, IEquatable<ByteScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new ByteScanResult(Value) { Address = Address };
-    }
+    public bool Equals(ByteScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as ByteScanResult);
-    }
+    public override ScanResult Clone() => new ByteScanResult(Value) { Address = Address };
 
-    public bool Equals(ByteScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as ByteScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class ShortScanResult : ScanResult, IEquatable<ShortScanResult> {
@@ -54,21 +45,13 @@ public class ShortScanResult : ScanResult, IEquatable<ShortScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new ShortScanResult(Value) { Address = Address };
-    }
+    public bool Equals(ShortScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as ShortScanResult);
-    }
+    public override ScanResult Clone() => new ShortScanResult(Value) { Address = Address };
 
-    public bool Equals(ShortScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as ShortScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class IntegerScanResult : ScanResult, IEquatable<IntegerScanResult> {
@@ -82,21 +65,13 @@ public class IntegerScanResult : ScanResult, IEquatable<IntegerScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new IntegerScanResult(Value) { Address = Address };
-    }
+    public bool Equals(IntegerScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as IntegerScanResult);
-    }
+    public override ScanResult Clone() => new IntegerScanResult(Value) { Address = Address };
 
-    public bool Equals(IntegerScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as IntegerScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class LongScanResult : ScanResult, IEquatable<LongScanResult> {
@@ -110,21 +85,13 @@ public class LongScanResult : ScanResult, IEquatable<LongScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new LongScanResult(Value) { Address = Address };
-    }
+    public bool Equals(LongScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as LongScanResult);
-    }
+    public override ScanResult Clone() => new LongScanResult(Value) { Address = Address };
 
-    public bool Equals(LongScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as LongScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class FloatScanResult : ScanResult, IEquatable<FloatScanResult> {
@@ -138,21 +105,13 @@ public class FloatScanResult : ScanResult, IEquatable<FloatScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new FloatScanResult(Value) { Address = Address };
-    }
+    public bool Equals(FloatScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as FloatScanResult);
-    }
+    public override ScanResult Clone() => new FloatScanResult(Value) { Address = Address };
 
-    public bool Equals(FloatScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as FloatScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class DoubleScanResult : ScanResult, IEquatable<DoubleScanResult> {
@@ -166,21 +125,13 @@ public class DoubleScanResult : ScanResult, IEquatable<DoubleScanResult> {
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new DoubleScanResult(Value) { Address = Address };
-    }
+    public bool Equals(DoubleScanResult other) => other != null && Address == other.Address && Value == other.Value;
 
-    public override bool Equals(object obj) {
-        return Equals(obj as DoubleScanResult);
-    }
+    public override ScanResult Clone() => new DoubleScanResult(Value) { Address = Address };
 
-    public bool Equals(DoubleScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value;
-    }
+    public override bool Equals(object obj) => Equals(obj as DoubleScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class ArrayOfBytesScanResult : ScanResult, IEquatable<ArrayOfBytesScanResult> {
@@ -196,21 +147,13 @@ public class ArrayOfBytesScanResult : ScanResult, IEquatable<ArrayOfBytesScanRes
         Value = value;
     }
 
-    public override ScanResult Clone() {
-        return new ArrayOfBytesScanResult(Value) { Address = Address };
-    }
+    public bool Equals(ArrayOfBytesScanResult other) => other != null && Address == other.Address && Value.SequenceEqual(other.Value);
 
-    public override bool Equals(object obj) {
-        return Equals(obj as ArrayOfBytesScanResult);
-    }
+    public override ScanResult Clone() => new ArrayOfBytesScanResult(Value) { Address = Address };
 
-    public bool Equals(ArrayOfBytesScanResult other) {
-        return other != null && Address == other.Address && Value.SequenceEqual(other.Value);
-    }
+    public override bool Equals(object obj) => Equals(obj as ArrayOfBytesScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode();
 }
 
 public class StringScanResult : ScanResult, IEquatable<StringScanResult> {
@@ -230,21 +173,13 @@ public class StringScanResult : ScanResult, IEquatable<StringScanResult> {
         Encoding = encoding;
     }
 
-    public override ScanResult Clone() {
-        return new StringScanResult(Value, Encoding) { Address = Address };
-    }
+    public bool Equals(StringScanResult other) => other != null && Address == other.Address && Value == other.Value && Encoding.Equals(other.Encoding);
 
-    public override bool Equals(object obj) {
-        return Equals(obj as StringScanResult);
-    }
+    public override ScanResult Clone() => new StringScanResult(Value, Encoding) { Address = Address };
 
-    public bool Equals(StringScanResult other) {
-        return other != null && Address == other.Address && Value == other.Value && Encoding.Equals(other.Encoding);
-    }
+    public override bool Equals(object obj) => Equals(obj as StringScanResult);
 
-    public override int GetHashCode() {
-        return Address.GetHashCode() * 19 + Value.GetHashCode() * 19 + Encoding.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode() * 19 + Value.GetHashCode() * 19 + Encoding.GetHashCode();
 }
 
 public class RegexStringScanResult : StringScanResult {
@@ -255,7 +190,5 @@ public class RegexStringScanResult : StringScanResult {
 
     }
 
-    public override ScanResult Clone() {
-        return new RegexStringScanResult(Value, Encoding) { Address = Address };
-    }
+    public override ScanResult Clone() => new RegexStringScanResult(Value, Encoding) { Address = Address };
 }

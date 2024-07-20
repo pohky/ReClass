@@ -34,7 +34,7 @@ namespace ReClassNET.Forms
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.processUpdateTimer = new System.Windows.Forms.Timer(this.components);
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
-			this.projectView = new ReClassNET.Controls.ProjectView();
+			this.ProjectView = new ReClassNET.Controls.ProjectView();
 			this.projectClassContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.deleteClassToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
@@ -196,7 +196,7 @@ namespace ReClassNET.Forms
 			// 
 			// splitContainer.Panel1
 			// 
-			this.splitContainer.Panel1.Controls.Add(this.projectView);
+			this.splitContainer.Panel1.Controls.Add(this.ProjectView);
 			// 
 			// splitContainer.Panel2
 			// 
@@ -208,16 +208,16 @@ namespace ReClassNET.Forms
 			// 
 			// projectView
 			// 
-			this.projectView.ClassContextMenuStrip = this.projectClassContextMenuStrip;
-			this.projectView.ClassesContextMenuStrip = this.projectClassesContextMenuStrip;
-			this.projectView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.projectView.EnumContextMenuStrip = this.projectEnumContextMenuStrip;
-			this.projectView.EnumsContextMenuStrip = this.projectEnumsContextMenuStrip;
-			this.projectView.Location = new System.Drawing.Point(0, 0);
-			this.projectView.Name = "projectView";
-			this.projectView.Size = new System.Drawing.Size(201, 524);
-			this.projectView.TabIndex = 0;
-			this.projectView.SelectionChanged += new ReClassNET.Controls.ProjectView.SelectionChangedEvent(this.classesView_ClassSelected);
+			this.ProjectView.ClassContextMenuStrip = this.projectClassContextMenuStrip;
+			this.ProjectView.ClassesContextMenuStrip = this.projectClassesContextMenuStrip;
+			this.ProjectView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ProjectView.EnumContextMenuStrip = this.projectEnumContextMenuStrip;
+			this.ProjectView.EnumsContextMenuStrip = this.projectEnumsContextMenuStrip;
+			this.ProjectView.Location = new System.Drawing.Point(0, 0);
+			this.ProjectView.Name = "ProjectView";
+			this.ProjectView.Size = new System.Drawing.Size(201, 524);
+			this.ProjectView.TabIndex = 0;
+			this.ProjectView.SelectionChanged += new ReClassNET.Controls.ProjectView.SelectionChangedEvent(this.classesView_ClassSelected);
 			// 
 			// projectClassContextMenuStrip
 			// 
@@ -1458,8 +1458,7 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem addXBytesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem insertXBytesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator nodeTypesToolStripSeparator;
-		private ProjectView projectView;
-		private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem projectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cleanUnusedClassesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
 		private System.Windows.Forms.ToolStripMenuItem generateCppCodeToolStripMenuItem;

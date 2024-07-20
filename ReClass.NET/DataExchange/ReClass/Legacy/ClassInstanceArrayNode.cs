@@ -1,6 +1,7 @@
 using ReClassNET.Nodes;
 
-namespace ReClassNET.DataExchange.ReClass.Legacy; 
+namespace ReClassNET.DataExchange.ReClass.Legacy;
+
 public class ClassInstanceArrayNode : BaseClassArrayNode {
     protected override bool PerformCycleCheck => true;
 

@@ -1,30 +1,12 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Plugins;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class PluginForm : IconForm {
-    private class PluginInfoRow {
-        private readonly PluginInfo plugin;
-
-        public Image Icon => plugin.Interface?.Icon ?? Properties.Resources.B16x16_Plugin;
-        public string Name => plugin.Name;
-        public string Version => plugin.FileVersion;
-        public string Author => plugin.Author;
-        public string Description => plugin.Description;
-
-        public PluginInfoRow(PluginInfo plugin) {
-            Contract.Requires(plugin != null);
-            Contract.Ensures(this.plugin != null);
-
-            this.plugin = plugin;
-        }
-    }
 
     internal PluginForm(PluginManager pluginManager) {
         Contract.Requires(pluginManager != null);
@@ -57,6 +39,38 @@ public partial class PluginForm : IconForm {
         GlobalWindowManager.RemoveWindow(this);
     }
 
+    private void UpdatePluginDescription() {
+        var row = pluginsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault();
+        if (row == null) {
+            descriptionGroupBox.Text = string.Empty;
+            descriptionLabel.Text = string.Empty;
+
+            return;
+        }
+
+        if (row.DataBoundItem is PluginInfoRow plugin) {
+            descriptionGroupBox.Text = plugin.Name;
+            descriptionLabel.Text = plugin.Description;
+        }
+    }
+
+    private class PluginInfoRow {
+        private readonly PluginInfo plugin;
+
+        public Image Icon => plugin.Interface?.Icon ?? Resources.B16x16_Plugin;
+        public string Name => plugin.Name;
+        public string Version => plugin.FileVersion;
+        public string Author => plugin.Author;
+        public string Description => plugin.Description;
+
+        public PluginInfoRow(PluginInfo plugin) {
+            Contract.Requires(plugin != null);
+            Contract.Ensures(this.plugin != null);
+
+            this.plugin = plugin;
+        }
+    }
+
     #region Event Handler
 
     private void pluginsDataGridView_SelectionChanged(object sender, EventArgs e) {
@@ -77,18 +91,4 @@ public partial class PluginForm : IconForm {
 
     #endregion
 
-    private void UpdatePluginDescription() {
-        var row = pluginsDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault();
-        if (row == null) {
-            descriptionGroupBox.Text = string.Empty;
-            descriptionLabel.Text = string.Empty;
-
-            return;
-        }
-
-        if (row.DataBoundItem is PluginInfoRow plugin) {
-            descriptionGroupBox.Text = plugin.Name;
-            descriptionLabel.Text = plugin.Description;
-        }
-    }
 }

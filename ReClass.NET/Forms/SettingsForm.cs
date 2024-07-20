@@ -1,19 +1,19 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Windows.Forms;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 using ReClassNET.Project;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class SettingsForm : IconForm {
     private readonly Settings settings;
     private readonly CppTypeMapping typeMapping;
 
-    public TabControl SettingsTabControl => settingsTabControl;
+    public TabControl SettingsTabControl { get; private set; }
 
     public SettingsForm(Settings settings, CppTypeMapping typeMapping) {
         Contract.Requires(settings != null);
@@ -25,11 +25,11 @@ public partial class SettingsForm : IconForm {
         InitializeComponent();
 
         var imageList = new ImageList();
-        imageList.Images.Add(Properties.Resources.B16x16_Gear);
-        imageList.Images.Add(Properties.Resources.B16x16_Color_Wheel);
-        imageList.Images.Add(Properties.Resources.B16x16_Settings_Edit);
+        imageList.Images.Add(Resources.B16x16_Gear);
+        imageList.Images.Add(Resources.B16x16_Color_Wheel);
+        imageList.Images.Add(Resources.B16x16_Settings_Edit);
 
-        settingsTabControl.ImageList = imageList;
+        SettingsTabControl.ImageList = imageList;
         generalSettingsTabPage.ImageIndex = 0;
         colorsSettingTabPage.ImageIndex = 1;
         typeDefinitionsSettingsTabPage.ImageIndex = 2;

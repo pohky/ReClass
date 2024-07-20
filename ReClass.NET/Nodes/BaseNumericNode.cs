@@ -1,9 +1,9 @@
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseNumericNode : BaseNode {
     /// <summary>Draws the node.</summary>
     /// <param name="context">The drawing context.</param>
@@ -52,7 +52,5 @@ public abstract class BaseNumericNode : BaseNode {
         return new Size(x - origX, context.Font.Height);
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        return IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
 }

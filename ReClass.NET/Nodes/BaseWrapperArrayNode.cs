@@ -1,9 +1,8 @@
-using System;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseWrapperArrayNode : BaseWrapperNode {
     public override int MemorySize => InnerNode.MemorySize * Count;
 

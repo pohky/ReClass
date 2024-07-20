@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Dia2Lib;
 using Microsoft.Win32;
@@ -10,10 +6,13 @@ using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Native;
 
-namespace ReClassNET.Symbols; 
-class DiaUtil : IDisposable {
+namespace ReClassNET.Symbols;
+
+internal class DiaUtil : IDisposable {
     public readonly IDiaDataSource DiaDataSource;
     public readonly IDiaSession DiaSession;
+
+    private bool isDisposed;
 
     public DiaUtil(string pdbName) {
         Contract.Requires(pdbName != null);
@@ -23,7 +22,10 @@ class DiaUtil : IDisposable {
         DiaDataSource.openSession(out DiaSession);
     }
 
-    private bool isDisposed;
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
     protected virtual void Dispose(bool disposing) {
         if (!isDisposed) {
@@ -37,25 +39,20 @@ class DiaUtil : IDisposable {
     ~DiaUtil() {
         Dispose(false);
     }
-
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
 }
 
 public class SymbolStore {
     private const string BlackListFile = "blacklist.txt";
+
+    private readonly HashSet<string> moduleBlacklist = new();
+
+    private readonly Dictionary<string, SymbolReader> symbolReaders = new();
 
     public string SymbolCachePath { get; private set; } = "./SymbolsCache";
 
     public string SymbolDownloadPath { get; set; } = "http://msdl.microsoft.com/download/symbols";
 
     public string SymbolSearchPath => $"srv*{SymbolCachePath}*{SymbolDownloadPath}";
-
-    private readonly Dictionary<string, SymbolReader> symbolReaders = new Dictionary<string, SymbolReader>();
-
-    private readonly HashSet<string> moduleBlacklist = new HashSet<string>();
 
     public SymbolStore() {
         if (NativeMethods.IsUnix()) {

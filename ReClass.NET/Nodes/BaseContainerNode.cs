@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseContainerNode : BaseNode {
-    private readonly List<BaseNode> nodes = new List<BaseNode>();
+    private readonly List<BaseNode> nodes = new();
 
     private int updateCount;
 
@@ -12,12 +11,13 @@ public abstract class BaseContainerNode : BaseNode {
     public IReadOnlyList<BaseNode> Nodes => nodes;
 
     /// <summary>
-    /// If true and the size of replaced nodes differs, the gap will be padded with default nodes (see <see cref="CreateDefaultNodeForSize"/>).
+    ///     If true and the size of replaced nodes differs, the gap will be padded with default nodes (see
+    ///     <see cref="CreateDefaultNodeForSize" />).
     /// </summary>
     protected abstract bool ShouldCompensateSizeChanges { get; }
 
     /// <summary>
-    /// Should be called before adding a child to test if the container can handle the node type.
+    ///     Should be called before adding a child to test if the container can handle the node type.
     /// </summary>
     /// <param name="node">The new child node.</param>
     /// <returns>True if the container can handle the child node or false otherwise.</returns>
@@ -57,16 +57,14 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Checks if the node exists in the container.
+    ///     Checks if the node exists in the container.
     /// </summary>
     /// <param name="node">The node to search.</param>
     /// <returns>True if the node exists in the container, false otherwise.</returns>
-    public bool ContainsNode(BaseNode node) {
-        return FindNodeIndex(node) != -1;
-    }
+    public bool ContainsNode(BaseNode node) => FindNodeIndex(node) != -1;
 
     /// <summary>
-    /// Tries to get the predecessor of the given node in the container.
+    ///     Tries to get the predecessor of the given node in the container.
     /// </summary>
     /// <param name="node">The root node.</param>
     /// <param name="predecessor">The predecessor of the given node.</param>
@@ -78,7 +76,7 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Tries to get the successor of the given node in the container.
+    ///     Tries to get the successor of the given node in the container.
     /// </summary>
     /// <param name="node">The root node.</param>
     /// <param name="successor">The successor of the given node.</param>
@@ -110,15 +108,15 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Disables internal events to speed up batch processing.
-    /// <see cref="EndUpdate"/> must be called to restore the functionality.
+    ///     Disables internal events to speed up batch processing.
+    ///     <see cref="EndUpdate" /> must be called to restore the functionality.
     /// </summary>
     public void BeginUpdate() {
         updateCount++;
     }
 
     /// <summary>
-    /// Enables internal events disabled by <see cref="BeginUpdate"/>.
+    ///     Enables internal events disabled by <see cref="BeginUpdate" />.
     /// </summary>
     public void EndUpdate() {
         updateCount = Math.Max(0, updateCount - 1);
@@ -148,7 +146,10 @@ public abstract class BaseContainerNode : BaseNode {
     /// <summary>Replaces the old node with the new node.</summary>
     /// <param name="oldNode">The old node to replacce.</param>
     /// <param name="newNode">The new node.</param>
-    /// <param name="additionalCreatedNodes">[out] A list for additional created nodes (see <see cref="ShouldCompensateSizeChanges"/>) or null if not needed.</param>
+    /// <param name="additionalCreatedNodes">
+    ///     [out] A list for additional created nodes (see
+    ///     <see cref="ShouldCompensateSizeChanges" />) or null if not needed.
+    /// </param>
     public void ReplaceChildNode(BaseNode oldNode, BaseNode newNode, ref List<BaseNode> additionalCreatedNodes) {
         Contract.Requires(oldNode != null);
         Contract.Requires(newNode != null);
@@ -174,16 +175,16 @@ public abstract class BaseContainerNode : BaseNode {
                 InsertBytes(index + 1, oldSize - newSize, ref additionalCreatedNodes);
             }
             /*else if (newSize > oldSize)
-				{
-					RemoveNodes(index + 1, newSize - oldSize);
-				}*/
+                {
+                    RemoveNodes(index + 1, newSize - oldSize);
+                }*/
         }
 
         OnNodesUpdated();
     }
 
     /// <summary>
-    /// Creates the default container node which takes up to <paramref name="size"/> bytes.
+    ///     Creates the default container node which takes up to <paramref name="size" /> bytes.
     /// </summary>
     /// <param name="size">The maximum size in bytes.</param>
     /// <returns>A new node or null if no node is available for this size.</returns>
@@ -217,7 +218,7 @@ public abstract class BaseContainerNode : BaseNode {
         InsertBytes(FindNodeIndex(position), size, ref dummy);
     }
 
-    /// <summary>Inserts <paramref name="size"/> bytes at the specified position.</summary>
+    /// <summary>Inserts <paramref name="size" /> bytes at the specified position.</summary>
     /// <param name="index">Zero-based position.</param>
     /// <param name="size">The number of bytes to insert.</param>
     /// <param name="createdNodes">[out] A list with the created nodes.</param>
@@ -251,7 +252,7 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Adds all nodes at the end of the container.
+    ///     Adds all nodes at the end of the container.
     /// </summary>
     /// <param name="nodes">The nodes to add.</param>
     public void AddNodes(IEnumerable<BaseNode> nodes) {
@@ -263,7 +264,7 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Adds the node at the end of the container.
+    ///     Adds the node at the end of the container.
     /// </summary>
     /// <param name="node">The node to add.</param>
     public void AddNode(BaseNode node) {
@@ -279,7 +280,7 @@ public abstract class BaseContainerNode : BaseNode {
     }
 
     /// <summary>
-    /// Inserts the node infront of the <paramref name="position"/> node.
+    ///     Inserts the node infront of the <paramref name="position" /> node.
     /// </summary>
     /// <param name="position">The target node.</param>
     /// <param name="node">The node to insert.</param>

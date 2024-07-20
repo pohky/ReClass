@@ -1,47 +1,39 @@
-using System;
 using System.Text;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 public static class BitString {
     /// <summary>
-    /// Converts the value to the corresponding bit string.
-    /// Format: 0000 0000
+    ///     Converts the value to the corresponding bit string.
+    ///     Format: 0000 0000
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>The corresponding bit string.</returns>
-    public static string ToString(byte value) {
-        return AddPaddingAndBuildBlocks(8, Convert.ToString(value, 2));
-    }
+    public static string ToString(byte value) => AddPaddingAndBuildBlocks(8, Convert.ToString(value, 2));
 
     /// <summary>
-    /// Converts the value to the corresponding bit string.
-    /// Format: 0000 0000 0000 0000
+    ///     Converts the value to the corresponding bit string.
+    ///     Format: 0000 0000 0000 0000
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>The corresponding bit string.</returns>
-    public static string ToString(short value) {
-        return AddPaddingAndBuildBlocks(16, Convert.ToString(value, 2));
-    }
+    public static string ToString(short value) => AddPaddingAndBuildBlocks(16, Convert.ToString(value, 2));
 
     /// <summary>
-    /// Converts the value to the corresponding bit string.
-    /// Format: 0000 0000 0000 0000 0000 0000 0000 0000
+    ///     Converts the value to the corresponding bit string.
+    ///     Format: 0000 0000 0000 0000 0000 0000 0000 0000
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>The corresponding bit string.</returns>
-    public static string ToString(int value) {
-        return AddPaddingAndBuildBlocks(32, Convert.ToString(value, 2));
-    }
+    public static string ToString(int value) => AddPaddingAndBuildBlocks(32, Convert.ToString(value, 2));
 
     /// <summary>
-    /// Converts the value to the corresponding bit string.
-    /// Format: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+    ///     Converts the value to the corresponding bit string.
+    ///     Format: 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
     /// </summary>
     /// <param name="value">The value to convert.</param>
     /// <returns>The corresponding bit string.</returns>
-    public static string ToString(long value) {
-        return AddPaddingAndBuildBlocks(64, Convert.ToString(value, 2));
-    }
+    public static string ToString(long value) => AddPaddingAndBuildBlocks(64, Convert.ToString(value, 2));
 
     private static string AddPaddingAndBuildBlocks(int bits, string value) {
         const int BitsPerBlock = 4;

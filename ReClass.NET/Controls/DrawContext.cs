@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using ReClassNET.Memory;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class DrawContext {
     public Settings Settings { get; set; }
 
@@ -23,20 +21,18 @@ public class DrawContext {
     public int Level { get; set; }
     public bool MultipleNodesSelected { get; set; }
 
-    public DrawContext Clone() {
-        return new DrawContext {
-            Settings = Settings,
-            Graphics = Graphics,
-            Font = Font,
-            IconProvider = IconProvider,
-            Process = Process,
-            Memory = Memory,
-            CurrentTime = CurrentTime,
-            ClientArea = ClientArea,
-            HotSpots = HotSpots,
-            Address = Address,
-            Level = Level,
-            MultipleNodesSelected = MultipleNodesSelected
-        };
-    }
+    public DrawContext Clone() => new() {
+        Settings = Settings,
+        Graphics = Graphics,
+        Font = Font,
+        IconProvider = IconProvider,
+        Process = Process,
+        Memory = Memory,
+        CurrentTime = CurrentTime,
+        ClientArea = ClientArea,
+        HotSpots = HotSpots,
+        Address = Address,
+        Level = Level,
+        MultipleNodesSelected = MultipleNodesSelected
+    };
 }

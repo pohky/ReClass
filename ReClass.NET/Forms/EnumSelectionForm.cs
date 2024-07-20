@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Project;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class EnumSelectionForm : IconForm {
     private readonly ReClassNetProject project;
 

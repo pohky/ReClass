@@ -1,4 +1,5 @@
-namespace ReClassNET.AddressParser; 
+namespace ReClassNET.AddressParser;
+
 public enum Token {
     None,
     Add,

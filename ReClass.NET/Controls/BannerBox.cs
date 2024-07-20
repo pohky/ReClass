@@ -1,33 +1,60 @@
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class BannerBox : Control, ISupportInitialize {
     public const int DefaultBannerHeight = 48;
 
-    private bool inInitialize;
-
     private Image icon;
-    private string title;
-    private string text;
 
     private Image image;
 
-    public Image Icon { get => icon; set { icon = value; UpdateBanner(); } }
+    private bool inInitialize;
+    private string text;
+    private string title;
 
-    public string Title { get => title; set { title = value ?? string.Empty; UpdateBanner(); } }
+    public Image Icon {
+        get => icon;
+        set {
+            icon = value;
+            UpdateBanner();
+        }
+    }
 
-    public override string Text { get => text; set { text = value ?? string.Empty; UpdateBanner(); } }
+    public string Title {
+        get => title;
+        set {
+            title = value ?? string.Empty;
+            UpdateBanner();
+        }
+    }
+
+    public override string Text {
+        get => text;
+        set {
+            text = value ?? string.Empty;
+            UpdateBanner();
+        }
+    }
 
     public BannerBox() {
         title = string.Empty;
         text = string.Empty;
     }
 
+    public void BeginInit() {
+        inInitialize = true;
+    }
+
+    public void EndInit() {
+        inInitialize = false;
+
+        UpdateBanner();
+    }
+
     protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified) {
-        int oldWidth = Width;
+        var oldWidth = Width;
 
         base.SetBoundsCore(x, y, width, DpiUtil.ScaleIntY(DefaultBannerHeight), specified);
 
@@ -40,16 +67,6 @@ public class BannerBox : Control, ISupportInitialize {
         if (image != null) {
             e.Graphics.DrawImage(image, ClientRectangle);
         }
-    }
-
-    public void BeginInit() {
-        inInitialize = true;
-    }
-
-    public void EndInit() {
-        inInitialize = false;
-
-        UpdateBanner();
     }
 
     private void UpdateBanner() {

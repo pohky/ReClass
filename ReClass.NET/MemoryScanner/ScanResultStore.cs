@@ -1,34 +1,28 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Text;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 /// <summary>
-/// The store of all found scan results. If the result count exceed the <see cref="MaximumMemoryResultsCount"/> limit,
-/// the results are stored in temporary files.
+///     The store of all found scan results. If the result count exceed the <see cref="MaximumMemoryResultsCount" /> limit,
+///     the results are stored in temporary files.
 /// </summary>
 internal class ScanResultStore : IDisposable {
-    private enum StorageMode {
-        Memory,
-        File
-    }
 
     private const int MaximumMemoryResultsCount = 10000000;
 
-    private readonly List<ScanResultBlock> store = new List<ScanResultBlock>();
+    private readonly List<ScanResultBlock> store = new();
 
     private readonly string storePath;
+
+    private readonly ScanValueType valueType;
     private FileStream fileStream;
 
     private StorageMode mode = StorageMode.Memory;
 
-    private readonly ScanValueType valueType;
-
     /// <summary>
-    /// Gets the number of total results.
+    ///     Gets the number of total results.
     /// </summary>
     public int TotalResultCount { get; private set; }
 
@@ -59,7 +53,7 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Gets the result blocks from the store. This may read results from files..
+    ///     Gets the result blocks from the store. This may read results from files..
     /// </summary>
     public IEnumerable<ScanResultBlock> GetResultBlocks() {
         Contract.Ensures(Contract.Result<IEnumerable<ScanResultBlock>>() != null);
@@ -68,8 +62,8 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Adds a result block to the store. If the result count exceed the <see cref="MaximumMemoryResultsCount"/> limit,
-    /// the results are stored in temporary files.
+    ///     Adds a result block to the store. If the result count exceed the <see cref="MaximumMemoryResultsCount" /> limit,
+    ///     the results are stored in temporary files.
     /// </summary>
     /// <param name="block">The result block to add.</param>
     public void AddBlock(ScanResultBlock block) {
@@ -101,7 +95,7 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Writes a result block to the file.
+    ///     Writes a result block to the file.
     /// </summary>
     /// <param name="block">The result block to add.</param>
     private void AppendBlockToFile(ScanResultBlock block) {
@@ -118,7 +112,7 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Reads all memory blocks from the file.
+    ///     Reads all memory blocks from the file.
     /// </summary>
     private IEnumerable<ScanResultBlock> ReadBlocksFromFile() {
         Contract.Ensures(Contract.Result<IEnumerable<ScanResultBlock>>() != null);
@@ -144,10 +138,10 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Reads a single scan result from the file.
+    ///     Reads a single scan result from the file.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if the <see cref="ScanValueType"/> is not valid.</exception>
-    /// <param name="br">The <see cref="BinaryReader"/> to read from.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the <see cref="ScanValueType" /> is not valid.</exception>
+    /// <param name="br">The <see cref="BinaryReader" /> to read from.</param>
     /// <returns>The scan result.</returns>
     private ScanResult ReadScanResult(BinaryReader br) {
         Contract.Ensures(Contract.Result<ScanResult>() != null);
@@ -198,9 +192,9 @@ internal class ScanResultStore : IDisposable {
     }
 
     /// <summary>
-    /// Writes a single scan result to the file.
+    ///     Writes a single scan result to the file.
     /// </summary>
-    /// <param name="bw">The <see cref="BinaryWriter"/> to write to.</param>
+    /// <param name="bw">The <see cref="BinaryWriter" /> to write to.</param>
     /// <param name="result">The result to write.</param>
     private static void WriteSearchResult(BinaryWriter bw, ScanResult result) {
         Contract.Requires(bw != null);
@@ -232,9 +226,15 @@ internal class ScanResultStore : IDisposable {
                 bw.Write(arrayOfBytesSearchResult.Value);
                 break;
             case StringScanResult stringSearchResult:
-                bw.Write(stringSearchResult.Encoding.IsSameCodePage(Encoding.UTF8) ? 0 : stringSearchResult.Encoding.IsSameCodePage(Encoding.Unicode) ? 1 : 2);
+                bw.Write(stringSearchResult.Encoding.IsSameCodePage(Encoding.UTF8) ? 0 :
+                    stringSearchResult.Encoding.IsSameCodePage(Encoding.Unicode) ? 1 : 2);
                 bw.Write(stringSearchResult.Value);
                 break;
         }
+    }
+
+    private enum StorageMode {
+        Memory,
+        File
     }
 }

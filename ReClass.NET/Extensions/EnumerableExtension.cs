@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class EnumerableExtension {
     [DebuggerStepThrough]
     public static bool None<TSource>(this IEnumerable<TSource> source) {
@@ -103,8 +101,8 @@ public static class EnumerableExtension {
     }
 
     /// <summary>
-    /// Scans the source and returns the first element where the predicate matches.
-    /// If the predicate doesn't match the first element of the source is returned.
+    ///     Scans the source and returns the first element where the predicate matches.
+    ///     If the predicate doesn't match the first element of the source is returned.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="predicate"></param>

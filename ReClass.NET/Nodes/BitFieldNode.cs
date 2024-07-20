@@ -1,16 +1,16 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class BitFieldNode : BaseNode {
-    private int size;
     private int bits;
+    private int size;
 
     /// <summary>Gets or sets the bit count.</summary>
     /// <value>Possible values: 64, 32, 16, 8</value>
@@ -44,7 +44,7 @@ public class BitFieldNode : BaseNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Bitfield";
-        icon = Properties.Resources.B16x16_Button_Bits;
+        icon = Resources.B16x16_Button_Bits;
     }
 
     public override void CopyFromNode(BaseNode node) {
@@ -54,7 +54,7 @@ public class BitFieldNode : BaseNode {
     }
 
     /// <summary>
-    /// Gets the underlaying node for the bit field.
+    ///     Gets the underlaying node for the bit field.
     /// </summary>
     /// <returns></returns>
     public BaseNumericNode GetUnderlayingNode() {

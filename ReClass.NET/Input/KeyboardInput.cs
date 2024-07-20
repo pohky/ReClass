@@ -1,8 +1,7 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Windows.Forms;
 
-namespace ReClassNET.Input; 
+namespace ReClassNET.Input;
+
 public class KeyboardInput : IDisposable {
     private readonly IntPtr handle;
 

@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Threading;
 using ReClassNET.MemoryScanner.Comparer;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 internal class SimpleScannerWorker : IScannerWorker {
-    private readonly ScanSettings settings;
     private readonly ISimpleScanComparer comparer;
+    private readonly ScanSettings settings;
 
     public SimpleScannerWorker(ScanSettings settings, ISimpleScanComparer comparer) {
         Contract.Requires(settings != null);
@@ -30,7 +28,7 @@ internal class SimpleScannerWorker : IScannerWorker {
             }
 
             if (comparer.Compare(data, i, out var result)) {
-                result.Address = (IntPtr)i;
+                result.Address = i;
 
                 results.Add(result);
             }

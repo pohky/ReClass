@@ -1,6 +1,7 @@
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 public static class HexadecimalFormatter {
     private static readonly uint[] lookup = CreateHexLookup();
 

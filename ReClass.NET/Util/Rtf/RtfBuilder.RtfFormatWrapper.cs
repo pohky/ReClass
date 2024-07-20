@@ -1,8 +1,7 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 
-namespace ReClassNET.Util.Rtf; 
+namespace ReClassNET.Util.Rtf;
+
 partial class RtfBuilder {
     private class RtfFormatWrapper : IDisposable {
         private readonly RtfBuilder builder;
@@ -14,7 +13,7 @@ partial class RtfBuilder {
 
             var buffer = builder.buffer;
 
-            int oldLength = buffer.Length;
+            var oldLength = buffer.Length;
 
             if ((builder.fontStyle & FontStyle.Bold) == FontStyle.Bold) {
                 buffer.Append(@"\b");

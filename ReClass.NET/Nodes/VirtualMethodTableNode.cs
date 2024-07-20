@@ -1,13 +1,12 @@
-using System;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class VirtualMethodTableNode : BaseContainerNode {
-    private readonly MemoryBuffer memory = new MemoryBuffer();
+    private readonly MemoryBuffer memory = new();
 
     public override int MemorySize => IntPtr.Size;
 
@@ -15,12 +14,10 @@ public class VirtualMethodTableNode : BaseContainerNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "VTable Pointer";
-        icon = Properties.Resources.B16x16_Button_VTable;
+        icon = Resources.B16x16_Button_VTable;
     }
 
-    public override bool CanHandleChildNode(BaseNode node) {
-        return node is VirtualMethodNode;
-    }
+    public override bool CanHandleChildNode(BaseNode node) => node is VirtualMethodNode;
 
     public override void Initialize() {
         for (var i = 0; i < 10; ++i) {
@@ -94,8 +91,7 @@ public class VirtualMethodTableNode : BaseContainerNode {
         return height;
     }
 
-    protected override BaseNode CreateDefaultNodeForSize(int size) {
+    protected override BaseNode CreateDefaultNodeForSize(int size) =>
         // ignore the size parameter
-        return new VirtualMethodNode();
-    }
+        new VirtualMethodNode();
 }

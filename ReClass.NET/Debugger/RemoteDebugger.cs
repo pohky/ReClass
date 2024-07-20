@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using ReClassNET.Extensions;
 using ReClassNET.Forms;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 public partial class RemoteDebugger {
-    private readonly object syncBreakpoint = new object();
+
+    private readonly HashSet<IBreakpoint> breakpoints = new();
 
     private readonly RemoteProcess process;
-
-    private readonly HashSet<IBreakpoint> breakpoints = new HashSet<IBreakpoint>();
+    private readonly object syncBreakpoint = new();
 
     public RemoteDebugger(RemoteProcess process) {
         Contract.Requires(process != null);
@@ -148,8 +146,7 @@ public partial class RemoteDebugger {
     }
 
     private HardwareBreakpointRegister GetUsableDebugRegister() {
-        var all = new HashSet<HardwareBreakpointRegister>
-        {
+        var all = new HashSet<HardwareBreakpointRegister> {
             HardwareBreakpointRegister.Dr0,
             HardwareBreakpointRegister.Dr1,
             HardwareBreakpointRegister.Dr2,

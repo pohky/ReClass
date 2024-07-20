@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Controls;
 using ReClassNET.Project;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class EnumEditorForm : IconForm {
     private readonly EnumDescription @enum;
 
@@ -83,4 +80,5 @@ public partial class EnumEditorForm : IconForm {
     }
 }
 
-internal class UnderlyingSizeComboBox : EnumComboBox<EnumDescription.UnderlyingTypeSize> { }
+internal class UnderlyingSizeComboBox : EnumComboBox<EnumDescription.UnderlyingTypeSize> {
+}

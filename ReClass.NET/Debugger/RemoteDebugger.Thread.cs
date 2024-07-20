@@ -1,15 +1,14 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Threading;
 
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 public partial class RemoteDebugger {
-    private readonly object syncThread = new object();
-
-    private Thread thread;
+    private readonly object syncThread = new();
+    private volatile bool isAttached;
 
     private volatile bool running = true;
-    private volatile bool isAttached;
+
+    private Thread thread;
 
     public bool IsAttached => isAttached;
 

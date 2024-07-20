@@ -1,15 +1,16 @@
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class BoolNode : BaseNumericNode {
     public override int MemorySize => 1;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Bool";
-        icon = Properties.Resources.B16x16_Button_Bool;
+        icon = Resources.B16x16_Button_Bool;
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
@@ -44,9 +45,7 @@ public class BoolNode : BaseNumericNode {
         return new Size(x - origX, context.Font.Height);
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        return IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
 
     /// <summary>Updates the node from the given spot and sets the value.</summary>
     /// <param name="spot">The spot.</param>

@@ -1,6 +1,5 @@
-using System;
+namespace ReClassNET.Memory;
 
-namespace ReClassNET.Memory; 
 public class Module {
     public IntPtr Start { get; set; }
     public IntPtr End { get; set; }

@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Windows.Forms;
+namespace ReClassNET.Extensions;
 
-namespace ReClassNET.Extensions; 
 public static class DataGridViewExtension {
     public static IEnumerable<DataGridViewRow> GetVisibleRows(this DataGridView dgv) {
         var visibleRowsCount = dgv.DisplayedRowCount(true);

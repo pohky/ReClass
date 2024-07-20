@@ -1,8 +1,7 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.IO;
 
-namespace ReClassNET.Memory; 
+namespace ReClassNET.Memory;
+
 public static class Dumper {
     /// <summary>Dumps a chunk of memory to the given stream.</summary>
     /// <param name="reader">The memory reader to use.</param>

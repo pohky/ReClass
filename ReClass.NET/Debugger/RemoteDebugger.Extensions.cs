@@ -1,7 +1,7 @@
 using System.Diagnostics.Contracts;
-using System.Windows.Forms;
 
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 public static class RemoteDebuggerExtensions {
     public static bool AskUserAndAttachDebugger(this RemoteDebugger debugger) {
         Contract.Requires(debugger != null);

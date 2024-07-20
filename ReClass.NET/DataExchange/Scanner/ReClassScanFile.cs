@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using ReClassNET.Extensions;
 using ReClassNET.Logger;
 using ReClassNET.MemoryScanner;
 
-namespace ReClassNET.DataExchange.Scanner; 
+namespace ReClassNET.DataExchange.Scanner;
+
 public class ReClassScanFile : IScannerImport, IScannerExport {
     public const string FormatName = "ReClass.NET Scanner File";
     public const string FileExtension = ".rcnetscan";
@@ -30,6 +27,46 @@ public class ReClassScanFile : IScannerImport, IScannerExport {
     public const string XmlDescriptionAttribute = "description";
     public const string XmlValueLengthAttribute = "length";
     public const string XmlEncodingAttribute = "encoding";
+
+    public void Save(IEnumerable<MemoryRecord> records, string filePath, ILogger logger) {
+        using var fs = new FileStream(filePath, FileMode.Create);
+        using var archive = new ZipArchive(fs, ZipArchiveMode.Create);
+
+        var dataEntry = archive.CreateEntry(DataFileName);
+        using var entryStream = dataEntry.Open();
+
+        var document = new XDocument(
+            new XComment($"{Constants.ApplicationName} Scanner {Constants.ApplicationVersion} by {Constants.Author}"),
+            new XComment($"Website: {Constants.HomepageUrl}"),
+            new XElement(
+                XmlRootElement,
+                new XAttribute(XmlVersionAttribute, Version1),
+                new XAttribute(XmlPlatformAttribute, Constants.Platform),
+                records.Select(r => {
+                    var temp = new XElement(
+                        XmlRecordElement,
+                        new XAttribute(XmlValueTypeAttribute, r.ValueType.ToString()),
+                        new XAttribute(XmlDescriptionAttribute, r.Description ?? string.Empty),
+                        new XAttribute(XmlAddressAttribute, r.AddressOrOffset.ToString(Constants.AddressHexFormat))
+                    );
+                    if (r.IsRelativeAddress) {
+                        temp.SetAttributeValue(XmlModuleAttribute, r.ModuleName);
+                    }
+                    if (r.ValueType == ScanValueType.ArrayOfBytes || r.ValueType == ScanValueType.String) {
+                        temp.SetAttributeValue(XmlValueLengthAttribute, r.ValueLength);
+                        if (r.ValueType == ScanValueType.String) {
+                            temp.SetAttributeValue(XmlEncodingAttribute,
+                                r.Encoding.IsSameCodePage(Encoding.UTF8) ? "UTF8" :
+                                r.Encoding.IsSameCodePage(Encoding.Unicode) ? "UTF16" : "UTF32");
+                        }
+                    }
+                    return temp;
+                })
+            )
+        );
+
+        document.Save(entryStream);
+    }
 
     public IEnumerable<MemoryRecord> Load(string filePath, ILogger logger) {
         using var fs = new FileStream(filePath, FileMode.Open);
@@ -101,43 +138,5 @@ public class ReClassScanFile : IScannerImport, IScannerExport {
 
             yield return record;
         }
-    }
-
-    public void Save(IEnumerable<MemoryRecord> records, string filePath, ILogger logger) {
-        using var fs = new FileStream(filePath, FileMode.Create);
-        using var archive = new ZipArchive(fs, ZipArchiveMode.Create);
-
-        var dataEntry = archive.CreateEntry(DataFileName);
-        using var entryStream = dataEntry.Open();
-
-        var document = new XDocument(
-            new XComment($"{Constants.ApplicationName} Scanner {Constants.ApplicationVersion} by {Constants.Author}"),
-            new XComment($"Website: {Constants.HomepageUrl}"),
-            new XElement(
-                XmlRootElement,
-                new XAttribute(XmlVersionAttribute, Version1),
-                new XAttribute(XmlPlatformAttribute, Constants.Platform),
-                records.Select(r => {
-                    var temp = new XElement(
-                        XmlRecordElement,
-                        new XAttribute(XmlValueTypeAttribute, r.ValueType.ToString()),
-                        new XAttribute(XmlDescriptionAttribute, r.Description ?? string.Empty),
-                        new XAttribute(XmlAddressAttribute, r.AddressOrOffset.ToString(Constants.AddressHexFormat))
-                    );
-                    if (r.IsRelativeAddress) {
-                        temp.SetAttributeValue(XmlModuleAttribute, r.ModuleName);
-                    }
-                    if (r.ValueType == ScanValueType.ArrayOfBytes || r.ValueType == ScanValueType.String) {
-                        temp.SetAttributeValue(XmlValueLengthAttribute, r.ValueLength);
-                        if (r.ValueType == ScanValueType.String) {
-                            temp.SetAttributeValue(XmlEncodingAttribute, r.Encoding.IsSameCodePage(Encoding.UTF8) ? "UTF8" : r.Encoding.IsSameCodePage(Encoding.Unicode) ? "UTF16" : "UTF32");
-                        }
-                    }
-                    return temp;
-                })
-            )
-        );
-
-        document.Save(entryStream);
     }
 }

@@ -1,18 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace ReClassNET.Util;
 
-namespace ReClassNET.Util; 
 public class DirectedGraph<T> {
     private readonly IDictionary<T, HashSet<T>> adjacencyList = new Dictionary<T, HashSet<T>>();
 
     /// <summary>
-    /// Gets an enumeration of all vertices in the graph.
+    ///     Gets an enumeration of all vertices in the graph.
     /// </summary>
     public IEnumerable<T> Vertices => adjacencyList.Keys;
 
     /// <summary>
-    /// Adds the vertex to the graph.
+    ///     Adds the vertex to the graph.
     /// </summary>
     /// <param name="vertex"></param>
     /// <returns></returns>
@@ -27,7 +24,7 @@ public class DirectedGraph<T> {
     }
 
     /// <summary>
-    /// Adds the vertices to the graph.
+    ///     Adds the vertices to the graph.
     /// </summary>
     /// <param name="vertices"></param>
     public void AddVertices(IEnumerable<T> vertices) {
@@ -37,16 +34,14 @@ public class DirectedGraph<T> {
     }
 
     /// <summary>
-    /// Tests if the graph contains the given vertex.
+    ///     Tests if the graph contains the given vertex.
     /// </summary>
     /// <param name="vertex"></param>
     /// <returns></returns>
-    public bool ContainsVertex(T vertex) {
-        return adjacencyList.ContainsKey(vertex);
-    }
+    public bool ContainsVertex(T vertex) => adjacencyList.ContainsKey(vertex);
 
     /// <summary>
-    /// Adds an edge between both vertices to the graph.
+    ///     Adds an edge between both vertices to the graph.
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>
@@ -60,7 +55,7 @@ public class DirectedGraph<T> {
     }
 
     /// <summary>
-    /// Tests if the graph contains an edge between both vertices.
+    ///     Tests if the graph contains an edge between both vertices.
     /// </summary>
     /// <param name="from"></param>
     /// <param name="to"></param>
@@ -74,7 +69,7 @@ public class DirectedGraph<T> {
     }
 
     /// <summary>
-    /// Gets all neighbours of the given vertex.
+    ///     Gets all neighbours of the given vertex.
     /// </summary>
     /// <param name="vertex">The vertex to check.</param>
     /// <returns>An enumeration of all neighbours of the given vertex.</returns>
@@ -87,7 +82,7 @@ public class DirectedGraph<T> {
     }
 
     /// <summary>
-    /// Tests with a depth first search if the graph contains a cycle.
+    ///     Tests with a depth first search if the graph contains a cycle.
     /// </summary>
     /// <returns>True if a cycle exists, false otherwise.</returns>
     public bool ContainsCycle() {

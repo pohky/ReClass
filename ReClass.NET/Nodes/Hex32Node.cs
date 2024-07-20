@@ -1,16 +1,16 @@
-using System;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class Hex32Node : BaseHexCommentNode {
     public override int MemorySize => 4;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Hex32";
-        icon = Properties.Resources.B16x16_Button_Hex_32;
+        icon = Resources.B16x16_Button_Hex_32;
     }
 
     public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
@@ -27,9 +27,7 @@ public class Hex32Node : BaseHexCommentNode {
         return $"Int32: {value.IntValue}\nUInt32: 0x{value.UIntValue:X08}\nFloat: {value.FloatValue:0.000}";
     }
 
-    public override Size Draw(DrawContext context, int x, int y) {
-        return Draw(context, x, y, context.Settings.ShowNodeText ? context.Memory.ReadString(context.Settings.RawDataEncoding, Offset, 4) + "     " : null, 4);
-    }
+    public override Size Draw(DrawContext context, int x, int y) => Draw(context, x, y, context.Settings.ShowNodeText ? context.Memory.ReadString(context.Settings.RawDataEncoding, Offset, 4) + "     " : null, 4);
 
     public override void Update(HotSpot spot) {
         Update(spot, 4);
@@ -45,7 +43,7 @@ public class Hex32Node : BaseHexCommentNode {
         return x;
     }
 
-    private static UInt32FloatData ReadFromBuffer(MemoryBuffer memory, int offset) => new UInt32FloatData {
+    private static UInt32FloatData ReadFromBuffer(MemoryBuffer memory, int offset) => new() {
         Raw = memory.ReadInt32(offset)
     };
 }

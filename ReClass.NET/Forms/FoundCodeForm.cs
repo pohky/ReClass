@@ -1,31 +1,22 @@
-using System;
 using System.Data;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class FoundCodeForm : IconForm {
-    private class FoundCodeInfo {
-        public ExceptionDebugInfo DebugInfo { get; set; }
-        public DisassembledInstruction[] Instructions { get; set; }
-    }
 
     public delegate void StopEventHandler(object sender, EventArgs e);
 
-    private readonly RemoteProcess process;
-
     private readonly DataTable data;
-    private volatile bool acceptNewRecords = true;
 
-    public event StopEventHandler Stop;
+    private readonly RemoteProcess process;
+    private volatile bool acceptNewRecords = true;
 
     public FoundCodeForm(RemoteProcess process, IntPtr address, HardwareBreakpointTrigger trigger) {
         Contract.Requires(process != null);
@@ -53,6 +44,8 @@ public partial class FoundCodeForm : IconForm {
         foundCodeDataGridView.DataSource = data;
     }
 
+    public event StopEventHandler Stop;
+
     protected override void OnLoad(EventArgs e) {
         base.OnLoad(e);
 
@@ -63,6 +56,69 @@ public partial class FoundCodeForm : IconForm {
         base.OnFormClosed(e);
 
         GlobalWindowManager.RemoveWindow(this);
+    }
+
+    private FoundCodeInfo GetSelectedInfo() {
+        var row = foundCodeDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault();
+        var view = row?.DataBoundItem as DataRowView;
+        return view?["info"] as FoundCodeInfo;
+    }
+
+    private void StopRecording() {
+        acceptNewRecords = false;
+
+        Stop?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void AddRecord(ExceptionDebugInfo? context) {
+        if (context == null) {
+            return;
+        }
+        if (!acceptNewRecords) {
+            return;
+        }
+
+        if (InvokeRequired) {
+            Invoke((MethodInvoker)(() => AddRecord(context)));
+
+            return;
+        }
+
+        var row = data.AsEnumerable().FirstOrDefault(r => r.Field<FoundCodeInfo>("info").DebugInfo.ExceptionAddress == context.Value.ExceptionAddress);
+        if (row != null) {
+            row["counter"] = row.Field<int>("counter") + 1;
+        } else {
+            var disassembler = new Disassembler(process.CoreFunctions);
+
+            var causedByInstruction = disassembler.RemoteGetPreviousInstruction(process, context.Value.ExceptionAddress);
+            if (causedByInstruction == null) {
+                return;
+            }
+
+            var instructions = new DisassembledInstruction[5];
+            instructions[2] = causedByInstruction;
+            instructions[1] = disassembler.RemoteGetPreviousInstruction(process, instructions[2].Address);
+            instructions[0] = disassembler.RemoteGetPreviousInstruction(process, instructions[1].Address);
+
+            var i = 3;
+            foreach (var instruction in disassembler.RemoteDisassembleCode(process, context.Value.ExceptionAddress, 2 * Disassembler.MaximumInstructionLength, 2)) {
+                instructions[i++] = instruction;
+            }
+
+            row = data.NewRow();
+            row["counter"] = 1;
+            row["instruction"] = causedByInstruction.Instruction;
+            row["info"] = new FoundCodeInfo {
+                DebugInfo = context.Value,
+                Instructions = instructions
+            };
+            data.Rows.Add(row);
+        }
+    }
+
+    private class FoundCodeInfo {
+        public ExceptionDebugInfo DebugInfo { get; set; }
+        public DisassembledInstruction[] Instructions { get; set; }
     }
 
     #region Event Handler
@@ -157,61 +213,4 @@ public partial class FoundCodeForm : IconForm {
 
     #endregion
 
-    private FoundCodeInfo GetSelectedInfo() {
-        var row = foundCodeDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault();
-        var view = row?.DataBoundItem as DataRowView;
-        return view?["info"] as FoundCodeInfo;
-    }
-
-    private void StopRecording() {
-        acceptNewRecords = false;
-
-        Stop?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void AddRecord(ExceptionDebugInfo? context) {
-        if (context == null) {
-            return;
-        }
-        if (!acceptNewRecords) {
-            return;
-        }
-
-        if (InvokeRequired) {
-            Invoke((MethodInvoker)(() => AddRecord(context)));
-
-            return;
-        }
-
-        var row = data.AsEnumerable().FirstOrDefault(r => r.Field<FoundCodeInfo>("info").DebugInfo.ExceptionAddress == context.Value.ExceptionAddress);
-        if (row != null) {
-            row["counter"] = row.Field<int>("counter") + 1;
-        } else {
-            var disassembler = new Disassembler(process.CoreFunctions);
-
-            var causedByInstruction = disassembler.RemoteGetPreviousInstruction(process, context.Value.ExceptionAddress);
-            if (causedByInstruction == null) {
-                return;
-            }
-
-            var instructions = new DisassembledInstruction[5];
-            instructions[2] = causedByInstruction;
-            instructions[1] = disassembler.RemoteGetPreviousInstruction(process, instructions[2].Address);
-            instructions[0] = disassembler.RemoteGetPreviousInstruction(process, instructions[1].Address);
-
-            var i = 3;
-            foreach (var instruction in disassembler.RemoteDisassembleCode(process, context.Value.ExceptionAddress, 2 * Disassembler.MaximumInstructionLength, 2)) {
-                instructions[i++] = instruction;
-            }
-
-            row = data.NewRow();
-            row["counter"] = 1;
-            row["instruction"] = causedByInstruction.Instruction;
-            row["info"] = new FoundCodeInfo {
-                DebugInfo = context.Value,
-                Instructions = instructions
-            };
-            data.Rows.Add(row);
-        }
-    }
 }

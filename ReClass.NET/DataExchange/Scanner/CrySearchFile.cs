@@ -1,12 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
 using ReClassNET.Logger;
 using ReClassNET.MemoryScanner;
 
-namespace ReClassNET.DataExchange.Scanner; 
+namespace ReClassNET.DataExchange.Scanner;
+
 public class CrySearchFile : IScannerImport {
     public const string FormatName = "CrySearch Address Tables";
     public const string FileExtension = ".csat";
@@ -52,7 +51,7 @@ public class CrySearchFile : IScannerImport {
                         }
 
                         if (valueType == ScanValueType.ArrayOfBytes || valueType == ScanValueType.String) {
-                            var lengthStr = (entry.Element(XmlSizeElement)?.Attribute(XmlValueAttribute)?.Value.Trim() ?? string.Empty);
+                            var lengthStr = entry.Element(XmlSizeElement)?.Attribute(XmlValueAttribute)?.Value.Trim() ?? string.Empty;
                             int.TryParse(lengthStr, NumberStyles.Integer, null, out var valueLength);
 
                             record.ValueLength = Math.Max(1, valueLength);

@@ -1,24 +1,22 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 /// <summary>
-/// Based on <see cref="ToolStripButton" />.
+///     Based on <see cref="ToolStripButton" />.
 /// </summary>
 [DefaultEvent("Click")]
 public class IconButton : Panel {
+
+    private readonly ProfessionalColorTable colorTable = new();
     public bool Pressed { get; set; }
     public bool Selected { get; set; }
 
     public Image Image { get; set; }
-    public Rectangle ImageRectangle { get; } = new Rectangle(3, 3, 16, 16);
-
-    private readonly ProfessionalColorTable colorTable = new ProfessionalColorTable();
+    public Rectangle ImageRectangle { get; } = new(3, 3, 16, 16);
 
     public IconButton() {
         DoubleBuffered = true;
@@ -153,9 +151,9 @@ public class IconButton : Panel {
 }
 
 internal class IconButtonDesigner : ControlDesigner {
+
+    public override SelectionRules SelectionRules => SelectionRules.Moveable;
     private IconButtonDesigner() {
         AutoResizeHandles = true;
     }
-
-    public override SelectionRules SelectionRules => SelectionRules.Moveable;
 }

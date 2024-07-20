@@ -1,7 +1,7 @@
-using System;
 using System.Runtime.InteropServices;
 
-namespace ReClassNET.Memory; 
+namespace ReClassNET.Memory;
+
 [StructLayout(LayoutKind.Explicit)]
 public struct UInt8Data {
     [FieldOffset(0)]
@@ -28,12 +28,12 @@ public struct UInt32FloatData {
     [FieldOffset(0)]
     public int IntValue;
 
-    public IntPtr IntPtr => (IntPtr)IntValue;
+    public IntPtr IntPtr => IntValue;
 
     [FieldOffset(0)]
     public uint UIntValue;
 
-    public UIntPtr UIntPtr => (UIntPtr)UIntValue;
+    public UIntPtr UIntPtr => UIntValue;
 
     [FieldOffset(0)]
     public float FloatValue;

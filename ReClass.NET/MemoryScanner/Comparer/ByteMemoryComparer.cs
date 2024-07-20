@@ -1,12 +1,10 @@
-using System;
 using System.Diagnostics;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class ByteMemoryComparer : ISimpleScanComparer {
-    public ScanCompareType CompareType { get; }
     public byte Value1 { get; }
     public byte Value2 { get; }
-    public int ValueSize => sizeof(byte);
 
     public ByteMemoryComparer(ScanCompareType compareType, byte value1, byte value2) {
         CompareType = compareType;
@@ -14,6 +12,8 @@ public class ByteMemoryComparer : ISimpleScanComparer {
         Value1 = value1;
         Value2 = value2;
     }
+    public ScanCompareType CompareType { get; }
+    public int ValueSize => sizeof(byte);
 
     public bool Compare(byte[] data, int index, out ScanResult result) {
         return CompareInternal(

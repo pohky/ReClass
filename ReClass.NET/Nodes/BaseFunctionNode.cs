@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseFunctionNode : BaseNode {
-    protected class FunctionNodeInstruction {
-        public string Address { get; set; }
-        public string Data { get; set; }
-        public string Instruction { get; set; }
-    }
+    protected readonly List<FunctionNodeInstruction> Instructions = new();
 
     protected IntPtr Address = IntPtr.Zero;
-    protected readonly List<FunctionNodeInstruction> Instructions = new List<FunctionNodeInstruction>();
 
     protected Size DrawInstructions(DrawContext view, int tx, int y) {
         Contract.Requires(view != null);
@@ -64,5 +56,11 @@ public abstract class BaseFunctionNode : BaseNode {
                 Instruction = instruction.Instruction
             });
         }
+    }
+
+    protected class FunctionNodeInstruction {
+        public string Address { get; set; }
+        public string Data { get; set; }
+        public string Instruction { get; set; }
     }
 }

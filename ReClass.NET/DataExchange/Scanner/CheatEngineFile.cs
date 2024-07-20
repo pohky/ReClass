@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Xml.Linq;
 using ReClassNET.Logger;
 using ReClassNET.MemoryScanner;
 
-namespace ReClassNET.DataExchange.Scanner; 
+namespace ReClassNET.DataExchange.Scanner;
+
 public class CheatEngineFile : IScannerImport {
     public const string FormatName = "Cheat Engine Tables";
     public const string FileExtension = ".ct";

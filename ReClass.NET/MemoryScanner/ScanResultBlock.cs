@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 internal class ScanResultBlock {
     public IntPtr Start { get; }
     public IntPtr End { get; }

@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Controls;
 using ReClassNET.Nodes;
 using ReClassNET.Plugins;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 internal static class NodeTypesBuilder {
-    private static readonly List<Type[]> defaultNodeTypeGroupList = new List<Type[]>();
-    private static readonly Dictionary<Plugin, IReadOnlyList<Type>> pluginNodeTypes = new Dictionary<Plugin, IReadOnlyList<Type>>();
+    private static readonly List<Type[]> defaultNodeTypeGroupList = new();
+    private static readonly Dictionary<Plugin, IReadOnlyList<Type>> pluginNodeTypes = new();
 
     static NodeTypesBuilder() {
         defaultNodeTypeGroupList.Add(new[] { typeof(Hex64Node), typeof(Hex32Node), typeof(Hex16Node), typeof(Hex8Node) });
@@ -49,30 +45,32 @@ internal static class NodeTypesBuilder {
         var clickHandler = new EventHandler((sender, e) => handler((sender as TypeToolStripButton)?.Value ?? ((TypeToolStripMenuItem)sender).Value));
 
         return CreateToolStripItems(t => {
-            GetNodeInfoFromType(t, out var label, out var icon);
+                GetNodeInfoFromType(t, out var label, out var icon);
 
-            var item = new TypeToolStripButton {
-                Value = t,
-                ToolTipText = label,
-                DisplayStyle = ToolStripItemDisplayStyle.Image,
-                Image = icon
-            };
-            item.Click += clickHandler;
-            return item;
-        }, p => new ToolStripDropDownButton {
-            ToolTipText = "",
-            Image = p.Icon
-        }, t => {
-            GetNodeInfoFromType(t, out var label, out var icon);
+                var item = new TypeToolStripButton {
+                    Value = t,
+                    ToolTipText = label,
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                    Image = icon
+                };
+                item.Click += clickHandler;
+                return item;
+            },
+            p => new ToolStripDropDownButton {
+                ToolTipText = "",
+                Image = p.Icon
+            },
+            t => {
+                GetNodeInfoFromType(t, out var label, out var icon);
 
-            var item = new TypeToolStripMenuItem {
-                Value = t,
-                Text = label,
-                Image = icon
-            };
-            item.Click += clickHandler;
-            return item;
-        });
+                var item = new TypeToolStripMenuItem {
+                    Value = t,
+                    Text = label,
+                    Image = icon
+                };
+                item.Click += clickHandler;
+                return item;
+            });
     }
 
     public static IEnumerable<ToolStripItem> CreateToolStripMenuItems(Action<Type> handler, bool addNoneType) {
@@ -81,19 +79,20 @@ internal static class NodeTypesBuilder {
         var clickHandler = new EventHandler((sender, e) => handler(((TypeToolStripMenuItem)sender).Value));
 
         var items = CreateToolStripItems(t => {
-            GetNodeInfoFromType(t, out var label, out var icon);
+                GetNodeInfoFromType(t, out var label, out var icon);
 
-            var item = new TypeToolStripMenuItem {
-                Value = t,
-                Text = label,
-                Image = icon
-            };
-            item.Click += clickHandler;
-            return item;
-        }, p => new ToolStripMenuItem {
-            Text = p.GetType().ToString(),
-            Image = p.Icon
-        });
+                var item = new TypeToolStripMenuItem {
+                    Value = t,
+                    Text = label,
+                    Image = icon
+                };
+                item.Click += clickHandler;
+                return item;
+            },
+            p => new ToolStripMenuItem {
+                Text = p.GetType().ToString(),
+                Image = p.Icon
+            });
 
         if (addNoneType) {
             ToolStripItem noneItem = new TypeToolStripMenuItem {

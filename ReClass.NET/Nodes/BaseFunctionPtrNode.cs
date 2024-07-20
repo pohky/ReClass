@@ -1,13 +1,11 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseFunctionPtrNode : BaseFunctionNode {
     public override int MemorySize => IntPtr.Size;
 
@@ -97,10 +95,10 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
     private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
         Contract.Requires(process != null);
 
-        if (this.Address != address) {
+        if (Address != address) {
             Instructions.Clear();
 
-            this.Address = address;
+            Address = address;
 
             if (!address.IsNull() && process.IsValid) {
                 DisassembleRemoteCode(process, address, out _);

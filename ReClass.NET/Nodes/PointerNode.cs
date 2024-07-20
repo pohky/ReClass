@@ -1,12 +1,12 @@
-using System;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class PointerNode : BaseWrapperNode {
-    private readonly MemoryBuffer memory = new MemoryBuffer();
+    private readonly MemoryBuffer memory = new();
 
     public override int MemorySize => IntPtr.Size;
 
@@ -26,7 +26,7 @@ public class PointerNode : BaseWrapperNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Pointer";
-        icon = Properties.Resources.B16x16_Button_Pointer;
+        icon = Resources.B16x16_Button_Pointer;
     }
 
     public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {

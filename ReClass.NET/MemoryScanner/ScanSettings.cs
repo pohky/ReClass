@@ -1,6 +1,5 @@
-using System;
+namespace ReClassNET.MemoryScanner;
 
-namespace ReClassNET.MemoryScanner; 
 public enum SettingState {
     Yes,
     No,
@@ -25,5 +24,5 @@ public class ScanSettings {
     public int FastScanAlignment { get; set; } = 4;
     public ScanValueType ValueType { get; set; } = ScanValueType.Integer;
 
-    public static ScanSettings Default => new ScanSettings();
+    public static ScanSettings Default => new();
 }

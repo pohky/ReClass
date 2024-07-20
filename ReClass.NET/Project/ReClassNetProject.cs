@@ -1,22 +1,17 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using ReClassNET.Nodes;
 using ReClassNET.Util;
 
-namespace ReClassNET.Project; 
+namespace ReClassNET.Project;
+
 public class ReClassNetProject : IDisposable {
     public delegate void ClassesChangedEvent(ClassNode sender);
-    public event ClassesChangedEvent ClassAdded;
-    public event ClassesChangedEvent ClassRemoved;
 
     public delegate void EnumsChangedEvent(EnumDescription sender);
-    public event EnumsChangedEvent EnumAdded;
-    public event EnumsChangedEvent EnumRemoved;
 
-    private readonly List<EnumDescription> enums = new List<EnumDescription>();
-    private readonly List<ClassNode> classes = new List<ClassNode>();
+    private readonly List<ClassNode> classes = new();
+
+    private readonly List<EnumDescription> enums = new();
 
     public IReadOnlyList<EnumDescription> Enums => enums;
 
@@ -25,15 +20,15 @@ public class ReClassNetProject : IDisposable {
     public string Path { get; set; }
 
     /// <summary>
-    /// Key-Value map with custom data for plugins to store project related data.
-    /// The preferred key format is {Plugin Name}_{Key Name}.
+    ///     Key-Value map with custom data for plugins to store project related data.
+    ///     The preferred key format is {Plugin Name}_{Key Name}.
     /// </summary>
-    public CustomDataMap CustomData { get; } = new CustomDataMap();
+    public CustomDataMap CustomData { get; } = new();
 
     /// <summary>
-    /// List of data types to use while generating C++ code for nodes.
+    ///     List of data types to use while generating C++ code for nodes.
     /// </summary>
-    public CppTypeMapping TypeMapping { get; } = new CppTypeMapping();
+    public CppTypeMapping TypeMapping { get; } = new();
 
     public void Dispose() {
         Clear();
@@ -44,6 +39,10 @@ public class ReClassNetProject : IDisposable {
         EnumAdded = null;
         EnumRemoved = null;
     }
+    public event ClassesChangedEvent ClassAdded;
+    public event ClassesChangedEvent ClassRemoved;
+    public event EnumsChangedEvent EnumAdded;
+    public event EnumsChangedEvent EnumRemoved;
 
     public void AddClass(ClassNode node) {
         Contract.Requires(node != null);

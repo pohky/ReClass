@@ -1,17 +1,18 @@
-using System.Drawing;
 using System.Globalization;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class Int64Node : BaseNumericNode {
     public override int MemorySize => 8;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Int64";
-        icon = Properties.Resources.B16x16_Button_Int_64;
+        icon = Resources.B16x16_Button_Int_64;
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
@@ -23,13 +24,11 @@ public class Int64Node : BaseNumericNode {
         base.Update(spot);
 
         if (spot.Id == 0 || spot.Id == 1) {
-            if (long.TryParse(spot.Text, out var val) || spot.Text.TryGetHexString(out var hexValue) && long.TryParse(hexValue, NumberStyles.HexNumber, null, out val)) {
+            if (long.TryParse(spot.Text, out var val) || (spot.Text.TryGetHexString(out var hexValue) && long.TryParse(hexValue, NumberStyles.HexNumber, null, out val))) {
                 spot.Process.WriteRemoteMemory(spot.Address, val);
             }
         }
     }
 
-    public long ReadValueFromMemory(MemoryBuffer memory) {
-        return memory.ReadInt64(Offset);
-    }
+    public long ReadValueFromMemory(MemoryBuffer memory) => memory.ReadInt64(Offset);
 }

@@ -1,12 +1,12 @@
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseTextNode : BaseNode {
     public int Length { get; set; }
 
@@ -63,9 +63,7 @@ public abstract class BaseTextNode : BaseNode {
         return new Size(x - origX, context.Font.Height);
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        return IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
 
     public override void Update(HotSpot spot) {
         base.Update(spot);
@@ -82,7 +80,5 @@ public abstract class BaseTextNode : BaseNode {
         }
     }
 
-    public string ReadValueFromMemory(MemoryBuffer memory) {
-        return memory.ReadString(Encoding, Offset, MemorySize);
-    }
+    public string ReadValueFromMemory(MemoryBuffer memory) => memory.ReadString(Encoding, Offset, MemorySize);
 }

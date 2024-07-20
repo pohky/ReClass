@@ -1,11 +1,11 @@
-using System;
 using System.Diagnostics.Contracts;
 using System.Resources;
 using ReClassNET.Forms;
 using ReClassNET.Logger;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Plugins; 
+namespace ReClassNET.Plugins;
+
 [ContractClass(typeof(PluginHostContract))]
 public interface IPluginHost {
     /// <summary>Gets the main window of ReClass.NET.</summary>

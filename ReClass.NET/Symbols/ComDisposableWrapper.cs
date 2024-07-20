@@ -1,20 +1,26 @@
-using System;
 using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
-namespace ReClassNET.Symbols; 
-class DisposableWrapper : IDisposable {
-    protected object Object;
+namespace ReClassNET.Symbols;
 
-    [ContractInvariantMethod]
-    private void ObjectInvariants() {
-        Contract.Invariant(Object != null);
-    }
+internal class DisposableWrapper : IDisposable {
+    protected object Object;
 
     public DisposableWrapper(object obj) {
         Contract.Requires(obj != null);
 
-        this.Object = obj;
+        Object = obj;
+    }
+
+    public void Dispose() {
+        Dispose(true);
+
+        GC.SuppressFinalize(this);
+    }
+
+    [ContractInvariantMethod]
+    private void ObjectInvariants() {
+        Contract.Invariant(Object != null);
     }
 
     protected virtual void Dispose(bool disposing) {
@@ -26,15 +32,9 @@ class DisposableWrapper : IDisposable {
     ~DisposableWrapper() {
         Dispose(false);
     }
-
-    public void Dispose() {
-        Dispose(true);
-
-        GC.SuppressFinalize(this);
-    }
 }
 
-class ComDisposableWrapper<T> : DisposableWrapper {
+internal class ComDisposableWrapper<T> : DisposableWrapper {
     public T Interface => (T)Object;
 
     public ComDisposableWrapper(T com)

@@ -1,4 +1,5 @@
-namespace ReClassNET.Util.Rtf; 
+namespace ReClassNET.Util.Rtf;
+
 public enum RtfFont {
     Arial,
     Calibri,

@@ -1,22 +1,20 @@
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class PlaceholderTextBox : TextBox {
+    private Color backColorBackup;
     private Font fontBackup;
     private Color foreColorBackup;
-    private Color backColorBackup;
 
     /// <summary>
-    /// The color of the placeholder text.
+    ///     The color of the placeholder text.
     /// </summary>
     [DefaultValue(typeof(Color), "ControlDarkDark")]
     public Color PlaceholderColor { get; set; } = SystemColors.ControlDarkDark;
 
     /// <summary>
-    /// The placeholder text.
+    ///     The placeholder text.
     /// </summary>
     [DefaultValue("")]
     public string PlaceholderText { get; set; }

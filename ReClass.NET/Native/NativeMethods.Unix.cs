@@ -1,149 +1,178 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 
 /* Unmerged change from project 'ReClass.NET'
 Before:
 namespace ReClassNET.Native
 {
-	internal class NativeMethodsUnix : INativeMethods
-	{
-		#region Imports
+    internal class NativeMethodsUnix : INativeMethods
+    {
+        #region Imports
 
-		private const int RTLD_NOW = 2;
+        private const int RTLD_NOW = 2;
 
-		[DllImport("__Internal")]
-		private static extern IntPtr dlopen(string fileName, int flags);
+        [DllImport("__Internal")]
+        private static extern IntPtr dlopen(string fileName, int flags);
 
-		[DllImport("__Internal")]
-		private static extern IntPtr dlsym(IntPtr handle, string symbol);
+        [DllImport("__Internal")]
+        private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-		[DllImport("__Internal")]
-		private static extern int dlclose(IntPtr handle);
+        [DllImport("__Internal")]
+        private static extern int dlclose(IntPtr handle);
 
-		#endregion
+        #endregion
 
-		public IntPtr LoadLibrary(string fileName)
-		{
-			return dlopen(fileName, RTLD_NOW);
-		}
+        public IntPtr LoadLibrary(string fileName)
+        {
+            return dlopen(fileName, RTLD_NOW);
+        }
 
-		public IntPtr GetProcAddress(IntPtr handle, string name)
-		{
-			// Warning: dlsym could return IntPtr.Zero to a valid function.
-			// Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
+        public IntPtr GetProcAddress(IntPtr handle, string name)
+        {
+            // Warning: dlsym could return IntPtr.Zero to a valid function.
+            // Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
 
-			return dlsym(handle, name);
-		}
+            return dlsym(handle, name);
+        }
 
-		public void FreeLibrary(IntPtr handle)
-		{
-			dlclose(handle);
-		}
+        public void FreeLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
 
-		public Icon GetIconForFile(string path)
-		{
-			return null;
-		}
+        public Icon GetIconForFile(string path)
+        {
+            return null;
+        }
 
-		public void EnableDebugPrivileges()
-		{
+        public void EnableDebugPrivileges()
+        {
 
-		}
+        }
 
-		public string UndecorateSymbolName(string name)
-		{
-			return name;
-		}
+        public string UndecorateSymbolName(string name)
+        {
+            return name;
+        }
 
-		public void SetProcessDpiAwareness()
-		{
+        public void SetProcessDpiAwareness()
+        {
 
-		}
+        }
 
-		public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
-		{
-			return false;
-		}
+        public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
+        {
+            return false;
+        }
 
-		public void UnregisterExtension(string fileExtension, string extensionId)
-		{
+        public void UnregisterExtension(string fileExtension, string extensionId)
+        {
 
-		}
-	}
+        }
+    }
 }
 After:
 namespace ReClassNET.Native;
 
-	internal class NativeMethodsUnix : INativeMethods
-	{
-		#region Imports
+    internal class NativeMethodsUnix : INativeMethods
+    {
+        #region Imports
 
-		private const int RTLD_NOW = 2;
+        private const int RTLD_NOW = 2;
 
-		[DllImport("__Internal")]
-		private static extern IntPtr dlopen(string fileName, int flags);
+        [DllImport("__Internal")]
+        private static extern IntPtr dlopen(string fileName, int flags);
 
-		[DllImport("__Internal")]
-		private static extern IntPtr dlsym(IntPtr handle, string symbol);
+        [DllImport("__Internal")]
+        private static extern IntPtr dlsym(IntPtr handle, string symbol);
 
-		[DllImport("__Internal")]
-		private static extern int dlclose(IntPtr handle);
+        [DllImport("__Internal")]
+        private static extern int dlclose(IntPtr handle);
 
-		#endregion
+        #endregion
 
-		public IntPtr LoadLibrary(string fileName)
-		{
-			return dlopen(fileName, RTLD_NOW);
-		}
+        public IntPtr LoadLibrary(string fileName)
+        {
+            return dlopen(fileName, RTLD_NOW);
+        }
 
-		public IntPtr GetProcAddress(IntPtr handle, string name)
-		{
-			// Warning: dlsym could return IntPtr.Zero to a valid function.
-			// Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
+        public IntPtr GetProcAddress(IntPtr handle, string name)
+        {
+            // Warning: dlsym could return IntPtr.Zero to a valid function.
+            // Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
 
-			return dlsym(handle, name);
-		}
+            return dlsym(handle, name);
+        }
 
-		public void FreeLibrary(IntPtr handle)
-		{
-			dlclose(handle);
-		}
+        public void FreeLibrary(IntPtr handle)
+        {
+            dlclose(handle);
+        }
 
-		public Icon GetIconForFile(string path)
-		{
-			return null;
-		}
+        public Icon GetIconForFile(string path)
+        {
+            return null;
+        }
 
-		public void EnableDebugPrivileges()
-		{
+        public void EnableDebugPrivileges()
+        {
 
-		}
+        }
 
-		public string UndecorateSymbolName(string name)
-		{
-			return name;
-		}
+        public string UndecorateSymbolName(string name)
+        {
+            return name;
+        }
 
-		public void SetProcessDpiAwareness()
-		{
+        public void SetProcessDpiAwareness()
+        {
 
-		}
+        }
 
-		public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
-		{
-			return false;
-		}
+        public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
+        {
+            return false;
+        }
 
-		public void UnregisterExtension(string fileExtension, string extensionId)
-		{
+        public void UnregisterExtension(string fileExtension, string extensionId)
+        {
 
-		}
-	}
+        }
+    }
 */
-namespace ReClassNET.Native; 
+namespace ReClassNET.Native;
+
 internal class NativeMethodsUnix : INativeMethods {
+
+    public IntPtr LoadLibrary(string fileName) => dlopen(fileName, RTLD_NOW);
+
+    public IntPtr GetProcAddress(IntPtr handle, string name) =>
+        // Warning: dlsym could return IntPtr.Zero to a valid function.
+        // Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
+        dlsym(handle, name);
+
+    public void FreeLibrary(IntPtr handle) {
+        dlclose(handle);
+    }
+
+    public Icon GetIconForFile(string path) => null;
+
+    public void EnableDebugPrivileges() {
+
+    }
+
+    public string UndecorateSymbolName(string name) => name;
+
+    public void SetProcessDpiAwareness() {
+
+    }
+
+    public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) => false;
+
+    public void UnregisterExtension(string fileExtension, string extensionId) {
+
+    }
+
     #region Imports
 
     private const int RTLD_NOW = 2;
@@ -159,42 +188,4 @@ internal class NativeMethodsUnix : INativeMethods {
 
     #endregion
 
-    public IntPtr LoadLibrary(string fileName) {
-        return dlopen(fileName, RTLD_NOW);
-    }
-
-    public IntPtr GetProcAddress(IntPtr handle, string name) {
-        // Warning: dlsym could return IntPtr.Zero to a valid function.
-        // Error checking with dlerror is needed but we treat IntPtr.Zero as error value...
-
-        return dlsym(handle, name);
-    }
-
-    public void FreeLibrary(IntPtr handle) {
-        dlclose(handle);
-    }
-
-    public Icon GetIconForFile(string path) {
-        return null;
-    }
-
-    public void EnableDebugPrivileges() {
-
-    }
-
-    public string UndecorateSymbolName(string name) {
-        return name;
-    }
-
-    public void SetProcessDpiAwareness() {
-
-    }
-
-    public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) {
-        return false;
-    }
-
-    public void UnregisterExtension(string fileExtension, string extensionId) {
-
-    }
 }

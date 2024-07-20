@@ -1,7 +1,8 @@
 using System.Xml.Linq;
 using ReClassNET.Util;
 
-namespace ReClassNET.Project; 
+namespace ReClassNET.Project;
+
 public class CppTypeMapping {
     public string TypeBool { get; set; } = "bool";
 
@@ -34,34 +35,32 @@ public class CppTypeMapping {
 
     public string TypeFunctionPtr { get; set; } = "void*";
 
-    internal XElement Serialize(string name) {
-        return new XElement(
-            name,
-            XElementSerializer.ToXml(nameof(TypeBool), TypeBool),
-            XElementSerializer.ToXml(nameof(TypeInt8), TypeInt8),
-            XElementSerializer.ToXml(nameof(TypeInt16), TypeInt16),
-            XElementSerializer.ToXml(nameof(TypeInt32), TypeInt32),
-            XElementSerializer.ToXml(nameof(TypeInt64), TypeInt64),
-            XElementSerializer.ToXml(nameof(TypeNInt), TypeNInt),
-            XElementSerializer.ToXml(nameof(TypeUInt8), TypeUInt8),
-            XElementSerializer.ToXml(nameof(TypeUInt16), TypeUInt16),
-            XElementSerializer.ToXml(nameof(TypeUInt32), TypeUInt32),
-            XElementSerializer.ToXml(nameof(TypeUInt64), TypeUInt64),
-            XElementSerializer.ToXml(nameof(TypeNUInt), TypeNUInt),
-            XElementSerializer.ToXml(nameof(TypeFloat), TypeFloat),
-            XElementSerializer.ToXml(nameof(TypeDouble), TypeDouble),
-            XElementSerializer.ToXml(nameof(TypeVector2), TypeVector2),
-            XElementSerializer.ToXml(nameof(TypeVector3), TypeVector3),
-            XElementSerializer.ToXml(nameof(TypeVector4), TypeVector4),
-            XElementSerializer.ToXml(nameof(TypeMatrix3x3), TypeMatrix3x3),
-            XElementSerializer.ToXml(nameof(TypeMatrix3x4), TypeMatrix3x4),
-            XElementSerializer.ToXml(nameof(TypeMatrix4x4), TypeMatrix4x4),
-            XElementSerializer.ToXml(nameof(TypeUtf8Text), TypeUtf8Text),
-            XElementSerializer.ToXml(nameof(TypeUtf16Text), TypeUtf16Text),
-            XElementSerializer.ToXml(nameof(TypeUtf32Text), TypeUtf32Text),
-            XElementSerializer.ToXml(nameof(TypeFunctionPtr), TypeFunctionPtr)
-        );
-    }
+    internal XElement Serialize(string name) => new(
+        name,
+        XElementSerializer.ToXml(nameof(TypeBool), TypeBool),
+        XElementSerializer.ToXml(nameof(TypeInt8), TypeInt8),
+        XElementSerializer.ToXml(nameof(TypeInt16), TypeInt16),
+        XElementSerializer.ToXml(nameof(TypeInt32), TypeInt32),
+        XElementSerializer.ToXml(nameof(TypeInt64), TypeInt64),
+        XElementSerializer.ToXml(nameof(TypeNInt), TypeNInt),
+        XElementSerializer.ToXml(nameof(TypeUInt8), TypeUInt8),
+        XElementSerializer.ToXml(nameof(TypeUInt16), TypeUInt16),
+        XElementSerializer.ToXml(nameof(TypeUInt32), TypeUInt32),
+        XElementSerializer.ToXml(nameof(TypeUInt64), TypeUInt64),
+        XElementSerializer.ToXml(nameof(TypeNUInt), TypeNUInt),
+        XElementSerializer.ToXml(nameof(TypeFloat), TypeFloat),
+        XElementSerializer.ToXml(nameof(TypeDouble), TypeDouble),
+        XElementSerializer.ToXml(nameof(TypeVector2), TypeVector2),
+        XElementSerializer.ToXml(nameof(TypeVector3), TypeVector3),
+        XElementSerializer.ToXml(nameof(TypeVector4), TypeVector4),
+        XElementSerializer.ToXml(nameof(TypeMatrix3x3), TypeMatrix3x3),
+        XElementSerializer.ToXml(nameof(TypeMatrix3x4), TypeMatrix3x4),
+        XElementSerializer.ToXml(nameof(TypeMatrix4x4), TypeMatrix4x4),
+        XElementSerializer.ToXml(nameof(TypeUtf8Text), TypeUtf8Text),
+        XElementSerializer.ToXml(nameof(TypeUtf16Text), TypeUtf16Text),
+        XElementSerializer.ToXml(nameof(TypeUtf32Text), TypeUtf32Text),
+        XElementSerializer.ToXml(nameof(TypeFunctionPtr), TypeFunctionPtr)
+    );
 
     internal void Deserialize(XElement element) {
         XElementSerializer.TryRead(element, nameof(TypeBool), e => TypeBool = XElementSerializer.ToString(e));

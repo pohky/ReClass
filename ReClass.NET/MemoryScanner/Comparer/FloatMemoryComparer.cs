@@ -1,21 +1,19 @@
-using System;
 using System.Diagnostics;
 using ReClassNET.Extensions;
 using ReClassNET.Util.Conversion;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class FloatMemoryComparer : ISimpleScanComparer {
-    public ScanCompareType CompareType { get; }
+
+    private readonly EndianBitConverter bitConverter;
+    private readonly float maxValue;
+    private readonly float minValue;
+
+    private readonly int significantDigits;
     public ScanRoundMode RoundType { get; }
     public float Value1 { get; }
     public float Value2 { get; }
-    public int ValueSize => sizeof(float);
-
-    private readonly int significantDigits;
-    private readonly float minValue;
-    private readonly float maxValue;
-
-    private readonly EndianBitConverter bitConverter;
 
     public FloatMemoryComparer(ScanCompareType compareType, ScanRoundMode roundType, int significantDigits, float value1, float value2, EndianBitConverter bitConverter) {
         CompareType = compareType;
@@ -32,14 +30,8 @@ public class FloatMemoryComparer : ISimpleScanComparer {
 
         this.bitConverter = bitConverter;
     }
-
-    private bool CheckRoundedEquality(float value) =>
-        RoundType switch {
-            ScanRoundMode.Strict => Value1.IsNearlyEqual((float)Math.Round(value, significantDigits, MidpointRounding.AwayFromZero), 0.0001f),
-            ScanRoundMode.Normal => minValue < value && value < maxValue,
-            ScanRoundMode.Truncate => (int)value == (int)Value1,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    public ScanCompareType CompareType { get; }
+    public int ValueSize => sizeof(float);
 
     public bool Compare(byte[] data, int index, out ScanResult result) {
         return CompareInternal(
@@ -68,6 +60,14 @@ public class FloatMemoryComparer : ISimpleScanComparer {
 
         return Compare(data, index, (FloatScanResult)previous, out result);
     }
+
+    private bool CheckRoundedEquality(float value) =>
+        RoundType switch {
+            ScanRoundMode.Strict => Value1.IsNearlyEqual((float)Math.Round(value, significantDigits, MidpointRounding.AwayFromZero), 0.0001f),
+            ScanRoundMode.Normal => minValue < value && value < maxValue,
+            ScanRoundMode.Truncate => (int)value == (int)Value1,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     public bool Compare(byte[] data, int index, FloatScanResult previous, out ScanResult result) {
         return CompareInternal(

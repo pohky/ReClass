@@ -1,7 +1,7 @@
-using System;
 using System.Text;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class EncodingExtension {
     /// <summary>Gets the (perhaps wrong) byte count per character. Special characters may need more bytes.</summary>
     /// <param name="encoding">The encoding.</param>
@@ -21,12 +21,10 @@ public static class EncodingExtension {
     }
 
     /// <summary>
-    /// Checks if the code page of both encodings is equal.
+    ///     Checks if the code page of both encodings is equal.
     /// </summary>
     /// <param name="encoding"></param>
     /// <param name="other"></param>
     /// <returns></returns>
-    public static bool IsSameCodePage(this Encoding encoding, Encoding other) {
-        return encoding.CodePage == other.CodePage;
-    }
+    public static bool IsSameCodePage(this Encoding encoding, Encoding other) => encoding.CodePage == other.CodePage;
 }

@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using ReClassNET.Extensions;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.Memory; 
+namespace ReClassNET.Memory;
+
 public class NodeDissector {
     public static void DissectNodes(IEnumerable<BaseHexNode> nodes, IProcessReader reader, MemoryBuffer memory) {
         Contract.Requires(nodes != null);
@@ -37,7 +35,8 @@ public class NodeDissector {
         var data64 = new UInt64FloatDoubleData {
             Raw1 = memory.ReadInt32(offset),
             Raw2 = memory.ReadInt32(offset + sizeof(int))
-        }; ;
+        };
+        ;
         var data32 = new UInt32FloatData {
             Raw = memory.ReadInt32(offset)
         };

@@ -1,15 +1,13 @@
-using System;
 using System.Diagnostics;
 using System.Text;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class StringMemoryComparer : ISimpleScanComparer {
-    public ScanCompareType CompareType => ScanCompareType.Equal;
     public bool CaseSensitive { get; }
     public Encoding Encoding { get; }
     public string Value { get; }
-    public int ValueSize { get; }
 
     public StringMemoryComparer(string value, Encoding encoding, bool caseSensitive) {
         Value = value;
@@ -17,6 +15,8 @@ public class StringMemoryComparer : ISimpleScanComparer {
         CaseSensitive = caseSensitive;
         ValueSize = Value.Length * Encoding.GuessByteCountPerChar();
     }
+    public ScanCompareType CompareType => ScanCompareType.Equal;
+    public int ValueSize { get; }
 
     public bool Compare(byte[] data, int index, out ScanResult result) {
         result = null;

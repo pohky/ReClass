@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 
-namespace ReClassNET.Input; 
+namespace ReClassNET.Input;
+
 public class KeyboardHotkey {
-    private readonly HashSet<Keys> keys = new HashSet<Keys>();
+    private readonly HashSet<Keys> keys = new();
 
     public IEnumerable<Keys> Keys => keys;
 
@@ -27,7 +25,9 @@ public class KeyboardHotkey {
 
     public KeyboardHotkey Clone() {
         var copy = new KeyboardHotkey();
-        foreach (var key in Keys) copy.AddKey(key);
+        foreach (var key in Keys) {
+            copy.AddKey(key);
+        }
         return copy;
     }
 

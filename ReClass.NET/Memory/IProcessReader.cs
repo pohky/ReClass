@@ -1,7 +1,5 @@
-using System;
-using System.Collections.Generic;
+namespace ReClassNET.Memory;
 
-namespace ReClassNET.Memory; 
 public interface IProcessReader : IRemoteMemoryReader {
     Section GetSectionToPointer(IntPtr address);
 

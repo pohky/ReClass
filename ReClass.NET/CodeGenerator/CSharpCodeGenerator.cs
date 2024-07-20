@@ -1,17 +1,14 @@
-using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
 using ReClassNET.Extensions;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.CodeGenerator; 
+namespace ReClassNET.CodeGenerator;
+
 public class CSharpCodeGenerator : ICodeGenerator {
-    private static readonly Dictionary<Type, string> nodeTypeToTypeDefinationMap = new Dictionary<Type, string> {
+    private static readonly Dictionary<Type, string> nodeTypeToTypeDefinationMap = new() {
         [typeof(DoubleNode)] = "double",
         [typeof(FloatNode)] = "float",
         [typeof(BoolNode)] = "bool",
@@ -106,7 +103,7 @@ public class CSharpCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C# code for the given enum to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C# code for the given enum to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="enum">The enum to output.</param>
@@ -147,7 +144,7 @@ public class CSharpCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C# code for the given class to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C# code for the given class to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="class">The class to output.</param>
@@ -197,7 +194,7 @@ public class CSharpCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Gets the type definition for the given node. If the node is not expressible <c>null</c> as typename is returned.
+    ///     Gets the type definition for the given node. If the node is not expressible <c>null</c> as typename is returned.
     /// </summary>
     /// <param name="node">The target node.</param>
     /// <returns>The type definition for the node or null as typename if the node is not expressible.</returns>
@@ -225,7 +222,7 @@ public class CSharpCodeGenerator : ICodeGenerator {
     private static string GetUnicodeStringClassName(int length) => $"__UnicodeString{length}";
 
     /// <summary>
-    /// Writes a helper class for unicode strings with the specific length.
+    ///     Writes a helper class for unicode strings with the specific length.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="length">The string length for this class.</param>

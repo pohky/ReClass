@@ -1,6 +1,7 @@
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 internal class ScannerContext {
     public byte[] Buffer { get; private set; }
     public IScannerWorker Worker { get; }

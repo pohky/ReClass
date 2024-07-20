@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Runtime.InteropServices;
 using ReClassNET.Core;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.Memory; 
+namespace ReClassNET.Memory;
+
 public class Disassembler {
     // The maximum number of bytes of a x86-64 instruction.
     public const int MaximumInstructionLength = 15;
@@ -19,11 +17,14 @@ public class Disassembler {
         this.coreFunctions = coreFunctions;
     }
 
-    /// <summary>Disassembles the code in the given range (<paramref name="address"/>, <paramref name="length"/>) in the remote process.</summary>
+    /// <summary>
+    ///     Disassembles the code in the given range (<paramref name="address" />, <paramref name="length" />) in the
+    ///     remote process.
+    /// </summary>
     /// <param name="process">The process to read from.</param>
     /// <param name="address">The address of the code.</param>
     /// <param name="length">The length of the code in bytes.</param>
-    /// <returns>A list of <see cref="DisassembledInstruction"/>.</returns>
+    /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleCode(IRemoteMemoryReader process, IntPtr address, int length) {
         Contract.Requires(process != null);
         Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
@@ -31,12 +32,18 @@ public class Disassembler {
         return RemoteDisassembleCode(process, address, length, -1);
     }
 
-    /// <summary>Disassembles the code in the given range (<paramref name="address"/>, <paramref name="length"/>) in the remote process.</summary>
+    /// <summary>
+    ///     Disassembles the code in the given range (<paramref name="address" />, <paramref name="length" />) in the
+    ///     remote process.
+    /// </summary>
     /// <param name="process">The process to read from.</param>
     /// <param name="address">The address of the code.</param>
     /// <param name="length">The length of the code in bytes.</param>
-    /// <param name="maxInstructions">The maximum number of instructions to disassemble. If <paramref name="maxInstructions"/> is -1, all available instructions get returned.</param>
-    /// <returns>A list of <see cref="DisassembledInstruction"/>.</returns>
+    /// <param name="maxInstructions">
+    ///     The maximum number of instructions to disassemble. If <paramref name="maxInstructions" />
+    ///     is -1, all available instructions get returned.
+    /// </param>
+    /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleCode(IRemoteMemoryReader process, IntPtr address, int length, int maxInstructions) {
         Contract.Requires(process != null);
         Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
@@ -48,9 +55,15 @@ public class Disassembler {
 
     /// <summary>Disassembles the code in the given data.</summary>
     /// <param name="data">The data to disassemble.</param>
-    /// <param name="virtualAddress">The virtual address of the code. This allows to decode instructions located anywhere in memory even if they are not at their original place.</param>
-    /// <param name="maxInstructions">The maximum number of instructions to disassemble. If <paramref name="maxInstructions"/> is -1, all available instructions get returned.</param>
-    /// <returns>A list of <see cref="DisassembledInstruction"/>.</returns>
+    /// <param name="virtualAddress">
+    ///     The virtual address of the code. This allows to decode instructions located anywhere in
+    ///     memory even if they are not at their original place.
+    /// </param>
+    /// <param name="maxInstructions">
+    ///     The maximum number of instructions to disassemble. If <paramref name="maxInstructions" />
+    ///     is -1, all available instructions get returned.
+    /// </param>
+    /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> DisassembleCode(byte[] data, IntPtr virtualAddress, int maxInstructions) {
         Contract.Requires(data != null);
         Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
@@ -59,11 +72,15 @@ public class Disassembler {
         try {
             var instructions = new List<DisassembledInstruction>();
 
-            coreFunctions.DisassembleCode(handle.AddrOfPinnedObject(), data.Length, virtualAddress, false, (ref InstructionData instruction) => {
-                instructions.Add(new DisassembledInstruction(ref instruction));
+            coreFunctions.DisassembleCode(handle.AddrOfPinnedObject(),
+                data.Length,
+                virtualAddress,
+                false,
+                (ref InstructionData instruction) => {
+                    instructions.Add(new DisassembledInstruction(ref instruction));
 
-                return maxInstructions == -1 || instructions.Count < maxInstructions;
-            });
+                    return maxInstructions == -1 || instructions.Count < maxInstructions;
+                });
 
             return instructions;
         } finally {
@@ -73,11 +90,14 @@ public class Disassembler {
         }
     }
 
-    /// <summary>Disassembles the code in the given range (<paramref name="address"/>, <paramref name="maxLength"/>) in the remote process until the first 0xCC instruction.</summary>
+    /// <summary>
+    ///     Disassembles the code in the given range (<paramref name="address" />, <paramref name="maxLength" />) in the
+    ///     remote process until the first 0xCC instruction.
+    /// </summary>
     /// <param name="process">The process to read from.</param>
     /// <param name="address">The address of the code.</param>
     /// <param name="maxLength">The maximum maxLength of the code.</param>
-    /// <returns>A list of <see cref="DisassembledInstruction"/> which belong to the function.</returns>
+    /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleFunction(IRemoteMemoryReader process, IntPtr address, int maxLength) {
         Contract.Requires(process != null);
         Contract.Ensures(Contract.Result<IEnumerable<DisassembledInstruction>>() != null);
@@ -89,8 +109,11 @@ public class Disassembler {
 
     /// <summary>Disassembles the code in the given data.</summary>
     /// <param name="data">The data to disassemble.</param>
-    /// <param name="virtualAddress">The virtual address of the code. This allows to decode instructions located anywhere in memory even if they are not at their original place.</param>
-    /// <returns>A list of <see cref="DisassembledInstruction"/> which belong to the function.</returns>
+    /// <param name="virtualAddress">
+    ///     The virtual address of the code. This allows to decode instructions located anywhere in
+    ///     memory even if they are not at their original place.
+    /// </param>
+    /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
     public IReadOnlyList<DisassembledInstruction> DisassembleFunction(byte[] data, IntPtr virtualAddress) {
         Contract.Requires(data != null);
         Contract.Ensures(Contract.Result<IEnumerable<DisassembledInstruction>>() != null);
@@ -100,15 +123,19 @@ public class Disassembler {
             var instructions = new List<DisassembledInstruction>();
 
             // Read until first CC.
-            coreFunctions.DisassembleCode(handle.AddrOfPinnedObject(), data.Length, virtualAddress, false, (ref InstructionData result) => {
-                if (result.Length == 1 && result.Data[0] == 0xCC) {
-                    return false;
-                }
+            coreFunctions.DisassembleCode(handle.AddrOfPinnedObject(),
+                data.Length,
+                virtualAddress,
+                false,
+                (ref InstructionData result) => {
+                    if (result.Length == 1 && result.Data[0] == 0xCC) {
+                        return false;
+                    }
 
-                instructions.Add(new DisassembledInstruction(ref result));
+                    instructions.Add(new DisassembledInstruction(ref result));
 
-                return true;
-            });
+                    return true;
+                });
 
             return instructions;
         } finally {
@@ -135,28 +162,31 @@ public class Disassembler {
 
             var instruction = default(InstructionData);
 
-            foreach (var offset in new[]
-            {
-                6 * MaximumInstructionLength,
-                4 * MaximumInstructionLength,
-                2 * MaximumInstructionLength,
-                1 * MaximumInstructionLength,
-                14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
-            }) {
+            foreach (var offset in new[] {
+                         6 * MaximumInstructionLength,
+                         4 * MaximumInstructionLength,
+                         2 * MaximumInstructionLength,
+                         1 * MaximumInstructionLength,
+                         14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+                     }) {
                 var currentAddress = targetBufferAddress - offset;
 
-                coreFunctions.DisassembleCode(currentAddress, offset + 1, address - offset, false, (ref InstructionData data) => {
-                    var nextAddress = currentAddress + data.Length;
-                    if (nextAddress.CompareTo(targetBufferAddress) > 0) {
-                        return false;
-                    }
+                coreFunctions.DisassembleCode(currentAddress,
+                    offset + 1,
+                    address - offset,
+                    false,
+                    (ref InstructionData data) => {
+                        var nextAddress = currentAddress + data.Length;
+                        if (nextAddress.CompareTo(targetBufferAddress) > 0) {
+                            return false;
+                        }
 
-                    instruction = data;
+                        instruction = data;
 
-                    currentAddress = nextAddress;
+                        currentAddress = nextAddress;
 
-                    return true;
-                });
+                        return true;
+                    });
 
                 if (currentAddress == targetBufferAddress) {
                     return new DisassembledInstruction(ref instruction);
@@ -171,10 +201,10 @@ public class Disassembler {
         }
     }
 
-    /// <summary>Tries to find the start address of the function <paramref name="address"/> points into.</summary>
+    /// <summary>Tries to find the start address of the function <paramref name="address" /> points into.</summary>
     /// <param name="process">The process to read from.</param>
     /// <param name="address">The address inside the function.</param>
-    /// <returns>The start address of the function (maybe) or <see cref="IntPtr.Zero"/> if no start address could be found.</returns>
+    /// <returns>The start address of the function (maybe) or <see cref="IntPtr.Zero" /> if no start address could be found.</returns>
     public IntPtr RemoteGetFunctionStartAddress(IRemoteMemoryReader process, IntPtr address) {
         const int BufferLength = 512;
 

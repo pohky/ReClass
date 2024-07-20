@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Xml.Linq;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public partial class ReClassNetFile {
     public void Save(string filePath, ILogger logger) {
         using var fs = new FileStream(filePath, FileMode.Create);
@@ -114,40 +111,40 @@ public partial class ReClassNetFile {
 
         switch (node) {
             case VirtualMethodTableNode vtableNode: {
-                    element.Add(vtableNode.Nodes.Select(n => new XElement(
-                        XmlMethodElement,
-                        new XAttribute(XmlNameAttribute, n.Name ?? string.Empty),
-                        new XAttribute(XmlCommentAttribute, n.Comment ?? string.Empty),
-                        new XAttribute(XmlHiddenAttribute, n.IsHidden)
-                    )));
-                    break;
-                }
+                element.Add(vtableNode.Nodes.Select(n => new XElement(
+                    XmlMethodElement,
+                    new XAttribute(XmlNameAttribute, n.Name ?? string.Empty),
+                    new XAttribute(XmlCommentAttribute, n.Comment ?? string.Empty),
+                    new XAttribute(XmlHiddenAttribute, n.IsHidden)
+                )));
+                break;
+            }
             case UnionNode unionNode: {
-                    element.Add(unionNode.Nodes.Select(n => CreateElementFromNode(n, logger)));
-                    break;
-                }
+                element.Add(unionNode.Nodes.Select(n => CreateElementFromNode(n, logger)));
+                break;
+            }
             case BaseWrapperArrayNode arrayNode: {
-                    element.SetAttributeValue(XmlCountAttribute, arrayNode.Count);
-                    break;
-                }
+                element.SetAttributeValue(XmlCountAttribute, arrayNode.Count);
+                break;
+            }
             case BaseTextNode textNode: {
-                    element.SetAttributeValue(XmlLengthAttribute, textNode.Length);
-                    break;
-                }
+                element.SetAttributeValue(XmlLengthAttribute, textNode.Length);
+                break;
+            }
             case BitFieldNode bitFieldNode: {
-                    element.SetAttributeValue(XmlBitsAttribute, bitFieldNode.Bits);
-                    break;
-                }
+                element.SetAttributeValue(XmlBitsAttribute, bitFieldNode.Bits);
+                break;
+            }
             case FunctionNode functionNode: {
-                    var uuid = functionNode.BelongsToClass?.Uuid ?? Guid.Empty;
-                    element.SetAttributeValue(XmlReferenceAttribute, uuid);
-                    element.SetAttributeValue(XmlSignatureAttribute, functionNode.Signature);
-                    break;
-                }
+                var uuid = functionNode.BelongsToClass?.Uuid ?? Guid.Empty;
+                element.SetAttributeValue(XmlReferenceAttribute, uuid);
+                element.SetAttributeValue(XmlSignatureAttribute, functionNode.Signature);
+                break;
+            }
             case EnumNode enumNode: {
-                    element.SetAttributeValue(XmlReferenceAttribute, enumNode.Enum.Name);
-                    break;
-                }
+                element.SetAttributeValue(XmlReferenceAttribute, enumNode.Enum.Name);
+                break;
+            }
         }
 
         return element;

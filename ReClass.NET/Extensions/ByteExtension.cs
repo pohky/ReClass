@@ -1,11 +1,11 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class ByteExtension {
     /// <summary>
-    /// Sets every element in the array to zero.
+    ///     Sets every element in the array to zero.
     /// </summary>
     /// <param name="array"></param>
     [DebuggerStepThrough]

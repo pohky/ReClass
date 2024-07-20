@@ -1,16 +1,15 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using ReClassNET.Native;
 
-namespace ReClassNET.Memory; 
+namespace ReClassNET.Memory;
+
 public class ProcessInfo {
+
+    private readonly Lazy<Image> icon;
     public IntPtr Id { get; }
     public string Name { get; }
     public string Path { get; }
     public Image Icon => icon.Value;
-
-    private readonly Lazy<Image> icon;
 
     public ProcessInfo(IntPtr id, string name, string path) {
         Contract.Requires(name != null);

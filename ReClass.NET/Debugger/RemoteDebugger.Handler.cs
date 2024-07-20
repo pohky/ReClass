@@ -1,4 +1,5 @@
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 public partial class RemoteDebugger {
     private void HandleExceptionEvent(ref DebugEvent evt) {
         lock (syncBreakpoint) {

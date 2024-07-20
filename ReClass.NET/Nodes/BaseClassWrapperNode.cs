@@ -1,4 +1,5 @@
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseClassWrapperNode : BaseWrapperNode {
     public override void Initialize() {
         var node = ClassNode.Create();
@@ -7,7 +8,5 @@ public abstract class BaseClassWrapperNode : BaseWrapperNode {
         ChangeInnerNode(node);
     }
 
-    public override bool CanChangeInnerNodeTo(BaseNode node) {
-        return node is ClassNode;
-    }
+    public override bool CanChangeInnerNodeTo(BaseNode node) => node is ClassNode;
 }

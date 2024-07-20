@@ -1,17 +1,18 @@
-using System.Drawing;
 using System.Globalization;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class UInt32Node : BaseNumericNode {
     public override int MemorySize => 4;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "UInt32 / DWORD";
-        icon = Properties.Resources.B16x16_Button_UInt_32;
+        icon = Resources.B16x16_Button_UInt_32;
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
@@ -23,13 +24,11 @@ public class UInt32Node : BaseNumericNode {
         base.Update(spot);
 
         if (spot.Id == 0 || spot.Id == 1) {
-            if (uint.TryParse(spot.Text, out var val) || spot.Text.TryGetHexString(out var hexValue) && uint.TryParse(hexValue, NumberStyles.HexNumber, null, out val)) {
+            if (uint.TryParse(spot.Text, out var val) || (spot.Text.TryGetHexString(out var hexValue) && uint.TryParse(hexValue, NumberStyles.HexNumber, null, out val))) {
                 spot.Process.WriteRemoteMemory(spot.Address, val);
             }
         }
     }
 
-    public uint ReadValueFromMemory(MemoryBuffer memory) {
-        return memory.ReadUInt32(Offset);
-    }
+    public uint ReadValueFromMemory(MemoryBuffer memory) => memory.ReadUInt32(Offset);
 }

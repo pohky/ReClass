@@ -1,6 +1,5 @@
-using System.IO;
+namespace ReClassNET.Extensions;
 
-namespace ReClassNET.Extensions; 
 public static class StringReaderExtension {
     public static int ReadSkipWhitespaces(this StringReader sr) {
         while (true) {

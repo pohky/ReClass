@@ -1,15 +1,38 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 /// <summary>
-/// A circular buffer with a fixed size.
+///     A circular buffer with a fixed size.
 /// </summary>
 public class CircularBuffer<T> : IEnumerable<T> {
     private readonly T[] buffer;
     private int head;
     private int tail;
+
+    public int Count { get; private set; }
+
+    public int Capacity => buffer.Length;
+
+    public T Head => buffer[head];
+    public T Tail => buffer[tail];
+
+    public T this[int index] {
+        get {
+            if (index < 0 || index >= Count) {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return buffer[(tail + index) % Capacity];
+        }
+        set {
+            if (index < 0 || index >= Count) {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            buffer[(tail + index) % Capacity] = value;
+        }
+    }
 
     public CircularBuffer(int capacity) {
         if (capacity < 0) {
@@ -20,12 +43,17 @@ public class CircularBuffer<T> : IEnumerable<T> {
         head = capacity - 1;
     }
 
-    public int Count { get; private set; }
+    public IEnumerator<T> GetEnumerator() {
+        if (Count == 0 || Capacity == 0) {
+            yield break;
+        }
 
-    public int Capacity => buffer.Length;
+        for (var i = 0; i < Count; ++i) {
+            yield return this[i];
+        }
+    }
 
-    public T Head => buffer[head];
-    public T Tail => buffer[tail];
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public T Enqueue(T item) {
         head = (head + 1) % Capacity;
@@ -60,23 +88,6 @@ public class CircularBuffer<T> : IEnumerable<T> {
         head = Capacity - 1;
         tail = 0;
         Count = 0;
-    }
-
-    public T this[int index] {
-        get {
-            if (index < 0 || index >= Count) {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            return buffer[(tail + index) % Capacity];
-        }
-        set {
-            if (index < 0 || index >= Count) {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            buffer[(tail + index) % Capacity] = value;
-        }
     }
 
     public int IndexOf(T item) {
@@ -117,19 +128,5 @@ public class CircularBuffer<T> : IEnumerable<T> {
         }
 
         Dequeue();
-    }
-
-    public IEnumerator<T> GetEnumerator() {
-        if (Count == 0 || Capacity == 0) {
-            yield break;
-        }
-
-        for (var i = 0; i < Count; ++i) {
-            yield return this[i];
-        }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
     }
 }

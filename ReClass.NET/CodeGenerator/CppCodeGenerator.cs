@@ -1,10 +1,5 @@
-using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -12,7 +7,8 @@ using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.CodeGenerator; 
+namespace ReClassNET.CodeGenerator;
+
 public delegate void WriteNodeFunc(IndentedTextWriter writer, BaseNode node, ILogger logger);
 
 public delegate string GetTypeDefinitionFunc(BaseNode node, ILogger logger);
@@ -20,97 +16,56 @@ public delegate string GetTypeDefinitionFunc(BaseNode node, ILogger logger);
 public delegate string ResolveWrappedTypeFunc(BaseNode node, bool isAnonymousExpression, ILogger logger);
 
 /// <summary>
-/// A C++ code generator for custom nodes.
+///     A C++ code generator for custom nodes.
 /// </summary>
 public abstract class CustomCppCodeGenerator {
     /// <summary>
-    /// Returns <c>true</c> if the code generator can handle the given node.
+    ///     Returns <c>true</c> if the code generator can handle the given node.
     /// </summary>
     /// <param name="node">The node to check.</param>
     /// <returns>True if the code generator can handle the given node, false otherwise.</returns>
     public abstract bool CanHandle(BaseNode node);
 
     /// <summary>
-    /// Outputs the C++ code for the node to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C++ code for the node to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="node">The node to output.</param>
-    /// <param name="defaultWriteNodeFunc">The default implementation of <see cref="CppCodeGenerator.WriteNode"/>.</param>
+    /// <param name="defaultWriteNodeFunc">The default implementation of <see cref="CppCodeGenerator.WriteNode" />.</param>
     /// <param name="logger">The logger.</param>
-    /// <returns>True if the code generator has processed the node, false otherwise. If this method returns false, the default implementation is used.</returns>
-    public virtual bool WriteNode(IndentedTextWriter writer, BaseNode node, WriteNodeFunc defaultWriteNodeFunc, ILogger logger) {
-        return false;
-    }
+    /// <returns>
+    ///     True if the code generator has processed the node, false otherwise. If this method returns false, the default
+    ///     implementation is used.
+    /// </returns>
+    public virtual bool WriteNode(IndentedTextWriter writer, BaseNode node, WriteNodeFunc defaultWriteNodeFunc, ILogger logger) => false;
 
     /// <summary>
-    /// Transforms the given node if necessary.
+    ///     Transforms the given node if necessary.
     /// </summary>
     /// <param name="node">The node to transform.</param>
     /// <returns>The transformed node.</returns>
-    public virtual BaseNode TransformNode(BaseNode node) {
-        return node;
-    }
+    public virtual BaseNode TransformNode(BaseNode node) => node;
 
     /// <summary>
-    /// Gets the type definition for the node. If the node is not a simple node <c>null</c> is returned.
+    ///     Gets the type definition for the node. If the node is not a simple node <c>null</c> is returned.
     /// </summary>
     /// <param name="node">The node.</param>
-    /// <param name="defaultGetTypeDefinitionFunc">The default implementation of <see cref="CppCodeGenerator.GetTypeDefinition"/>.</param>
-    /// <param name="defaultResolveWrappedTypeFunc">The default implementation of <see cref="CppCodeGenerator.ResolveWrappedType"/>.</param>
+    /// <param name="defaultGetTypeDefinitionFunc">
+    ///     The default implementation of
+    ///     <see cref="CppCodeGenerator.GetTypeDefinition" />.
+    /// </param>
+    /// <param name="defaultResolveWrappedTypeFunc">
+    ///     The default implementation of
+    ///     <see cref="CppCodeGenerator.ResolveWrappedType" />.
+    /// </param>
     /// <param name="logger">The logger.</param>
     /// <returns>The type definition for the node or null if no simple type is available.</returns>
-    public virtual string GetTypeDefinition(BaseNode node, GetTypeDefinitionFunc defaultGetTypeDefinitionFunc, ResolveWrappedTypeFunc defaultResolveWrappedTypeFunc, ILogger logger) {
-        return null;
-    }
+    public virtual string GetTypeDefinition(BaseNode node, GetTypeDefinitionFunc defaultGetTypeDefinitionFunc, ResolveWrappedTypeFunc defaultResolveWrappedTypeFunc, ILogger logger) => null;
 }
 
 public class CppCodeGenerator : ICodeGenerator {
-    #region Custom Code Generators
-
-    private static readonly ISet<CustomCppCodeGenerator> customGenerators = new HashSet<CustomCppCodeGenerator>();
-
-    public static void Add(CustomCppCodeGenerator generator) {
-        customGenerators.Add(generator);
-    }
-
-    public static void Remove(CustomCppCodeGenerator generator) {
-        customGenerators.Remove(generator);
-    }
-
-    private static CustomCppCodeGenerator GetCustomCodeGeneratorForNode(BaseNode node) {
-        return customGenerators.FirstOrDefault(g => g.CanHandle(node));
-    }
-
-    #endregion
 
     private readonly Dictionary<Type, string> nodeTypeToTypeDefinationMap;
-
-    #region HelperNodes
-
-    private class Utf8CharacterNode : BaseNode {
-        public override int MemorySize => throw new NotImplementedException();
-        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
-        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
-        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
-    }
-
-    private class Utf16CharacterNode : BaseNode {
-        public override int MemorySize => throw new NotImplementedException();
-        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
-        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
-        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
-    }
-
-    private class Utf32CharacterNode : BaseNode {
-        public override int MemorySize => throw new NotImplementedException();
-        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
-        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
-        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
-    }
-
-    #endregion
-
-    public Language Language => Language.Cpp;
 
     public CppCodeGenerator(CppTypeMapping typeMapping) {
         nodeTypeToTypeDefinationMap = new Dictionary<Type, string> {
@@ -139,6 +94,8 @@ public class CppCodeGenerator : ICodeGenerator {
             [typeof(Vector4Node)] = typeMapping.TypeVector4
         };
     }
+
+    public Language Language => Language.Cpp;
 
     public string GenerateCode(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger) {
         using var sw = new StringWriter();
@@ -206,7 +163,7 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C++ code for the given enum to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C++ code for the given enum to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="enum">The enum to output.</param>
@@ -247,7 +204,7 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C++ code for the given class to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C++ code for the given class to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="class">The class to output.</param>
@@ -321,7 +278,7 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C++ code for the given nodes to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C++ code for the given nodes to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="nodes">The nodes to output.</param>
@@ -370,7 +327,7 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Outputs the C++ code for the given node to the <see cref="TextWriter"/> instance.
+    ///     Outputs the C++ code for the given node to the <see cref="TextWriter" /> instance.
     /// </summary>
     /// <param name="writer">The writer to output to.</param>
     /// <param name="node">The node to output.</param>
@@ -431,7 +388,7 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Transforms the given node into some other node if necessary.
+    ///     Transforms the given node into some other node if necessary.
     /// </summary>
     /// <param name="node">The node to transform.</param>
     /// <returns>The transformed node.</returns>
@@ -453,35 +410,35 @@ public class CppCodeGenerator : ICodeGenerator {
 
         switch (node) {
             case BaseTextNode textNode: {
-                    var arrayNode = new ArrayNode { Count = textNode.Length };
-                    arrayNode.CopyFromNode(node);
-                    arrayNode.ChangeInnerNode(GetCharacterNodeForEncoding(textNode.Encoding));
-                    return arrayNode;
-                }
+                var arrayNode = new ArrayNode { Count = textNode.Length };
+                arrayNode.CopyFromNode(node);
+                arrayNode.ChangeInnerNode(GetCharacterNodeForEncoding(textNode.Encoding));
+                return arrayNode;
+            }
             case BaseTextPtrNode textPtrNode: {
-                    var pointerNode = new PointerNode();
-                    pointerNode.CopyFromNode(node);
-                    pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
-                    return pointerNode;
-                }
+                var pointerNode = new PointerNode();
+                pointerNode.CopyFromNode(node);
+                pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
+                return pointerNode;
+            }
             case BitFieldNode bitFieldNode: {
-                    var underlayingNode = bitFieldNode.GetUnderlayingNode();
-                    underlayingNode.CopyFromNode(node);
-                    return underlayingNode;
-                }
+                var underlayingNode = bitFieldNode.GetUnderlayingNode();
+                underlayingNode.CopyFromNode(node);
+                return underlayingNode;
+            }
             case BaseHexNode hexNode: {
-                    var arrayNode = new ArrayNode { Count = hexNode.MemorySize };
-                    arrayNode.CopyFromNode(node);
-                    arrayNode.ChangeInnerNode(new Utf8CharacterNode());
-                    return arrayNode;
-                }
+                var arrayNode = new ArrayNode { Count = hexNode.MemorySize };
+                arrayNode.CopyFromNode(node);
+                arrayNode.ChangeInnerNode(new Utf8CharacterNode());
+                return arrayNode;
+            }
         }
 
         return node;
     }
 
     /// <summary>
-    /// Gets the type definition for the given node. If the node is not a simple node <c>null</c> is returned.
+    ///     Gets the type definition for the given node. If the node is not a simple node <c>null</c> is returned.
     /// </summary>
     /// <param name="node">The target node.</param>
     /// <param name="logger">The logger.</param>
@@ -509,7 +466,8 @@ public class CppCodeGenerator : ICodeGenerator {
     }
 
     /// <summary>
-    /// Resolves the type of a <see cref="BaseWrapperNode"/> node (<see cref="PointerNode"/> and <see cref="ArrayNode"/>).
+    ///     Resolves the type of a <see cref="BaseWrapperNode" /> node (<see cref="PointerNode" /> and <see cref="ArrayNode" />
+    ///     ).
     /// </summary>
     /// <param name="node">The node to resolve.</param>
     /// <param name="isAnonymousExpression">Specify if the expression should be anonymous.</param>
@@ -567,4 +525,48 @@ public class CppCodeGenerator : ICodeGenerator {
 
         return sb.ToString().Trim();
     }
+
+    #region Custom Code Generators
+
+    private static readonly ISet<CustomCppCodeGenerator> customGenerators = new HashSet<CustomCppCodeGenerator>();
+
+    public static void Add(CustomCppCodeGenerator generator) {
+        customGenerators.Add(generator);
+    }
+
+    public static void Remove(CustomCppCodeGenerator generator) {
+        customGenerators.Remove(generator);
+    }
+
+    private static CustomCppCodeGenerator GetCustomCodeGeneratorForNode(BaseNode node) {
+        return customGenerators.FirstOrDefault(g => g.CanHandle(node));
+    }
+
+    #endregion
+
+    #region HelperNodes
+
+    private class Utf8CharacterNode : BaseNode {
+        public override int MemorySize => throw new NotImplementedException();
+        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
+        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
+        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
+    }
+
+    private class Utf16CharacterNode : BaseNode {
+        public override int MemorySize => throw new NotImplementedException();
+        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
+        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
+        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
+    }
+
+    private class Utf32CharacterNode : BaseNode {
+        public override int MemorySize => throw new NotImplementedException();
+        public override void GetUserInterfaceInfo(out string name, out Image icon) => throw new NotImplementedException();
+        public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
+        public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
+    }
+
+    #endregion
+
 }

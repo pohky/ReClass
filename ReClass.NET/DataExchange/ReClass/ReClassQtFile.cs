@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Extensions;
@@ -9,10 +6,13 @@ using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public class ReClassQtFile : IReClassImport {
     public const string FormatName = "ReClassQt File";
     public const string FileExtension = ".reclassqt";
+
+    private readonly ReClassNetProject project;
 
     private readonly Type[] typeMap = {
         null,
@@ -31,15 +31,13 @@ public class ReClassQtFile : IReClassImport {
         null,
         null,
         typeof(UInt32Node), //bool
-			null,
+        null,
         typeof(FloatNode),
         typeof(DoubleNode),
         typeof(Vector4Node),
         typeof(Vector3Node),
         typeof(Vector2Node)
     };
-
-    private readonly ReClassNetProject project;
 
     public ReClassQtFile(ReClassNetProject project) {
         Contract.Requires(project != null);
@@ -56,9 +54,9 @@ public class ReClassQtFile : IReClassImport {
         var classes = new List<Tuple<XElement, ClassNode>>();
 
         foreach (var element in document.Root
-            .Elements("Namespace")
-            .SelectMany(ns => ns.Elements("Class"))
-            .DistinctBy(e => e.Attribute("ClassId")?.Value)) {
+                     .Elements("Namespace")
+                     .SelectMany(ns => ns.Elements("Class"))
+                     .DistinctBy(e => e.Attribute("ClassId")?.Value)) {
             var node = new ClassNode(false) {
                 Name = element.Attribute("Name")?.Value ?? string.Empty,
                 AddressFormula = ParseAddressString(element)
@@ -150,7 +148,7 @@ public class ReClassQtFile : IReClassImport {
                 if (node is ClassPointerNode classPointerNode) {
                     node = classPointerNode.GetEquivalentNode(innerClassNode);
                 } else // ClassInstanceNode
-                  {
+                {
                     wrapperNode.ChangeInnerNode(innerClassNode);
                 }
             }

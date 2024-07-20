@@ -1,11 +1,78 @@
-using System;
 using System.Runtime.InteropServices;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 
-namespace ReClassNET.Core; 
+namespace ReClassNET.Core;
+
 public class NativeCoreWrapper : ICoreProcessFunctions {
+
+    public NativeCoreWrapper(IntPtr handle) {
+        if (handle.IsNull()) {
+            throw new ArgumentNullException();
+        }
+
+        enumerateProcessesDelegate = GetFunctionDelegate<EnumerateProcessesDelegate>(handle, "EnumerateProcesses");
+        enumerateRemoteSectionsAndModulesDelegate = GetFunctionDelegate<EnumerateRemoteSectionsAndModulesDelegate>(handle, "EnumerateRemoteSectionsAndModules");
+        openRemoteProcessDelegate = GetFunctionDelegate<OpenRemoteProcessDelegate>(handle, "OpenRemoteProcess");
+        isProcessValidDelegate = GetFunctionDelegate<IsProcessValidDelegate>(handle, "IsProcessValid");
+        closeRemoteProcessDelegate = GetFunctionDelegate<CloseRemoteProcessDelegate>(handle, "CloseRemoteProcess");
+        readRemoteMemoryDelegate = GetFunctionDelegate<ReadRemoteMemoryDelegate>(handle, "ReadRemoteMemory");
+        writeRemoteMemoryDelegate = GetFunctionDelegate<WriteRemoteMemoryDelegate>(handle, "WriteRemoteMemory");
+        controlRemoteProcessDelegate = GetFunctionDelegate<ControlRemoteProcessDelegate>(handle, "ControlRemoteProcess");
+        attachDebuggerToProcessDelegate = GetFunctionDelegate<AttachDebuggerToProcessDelegate>(handle, "AttachDebuggerToProcess");
+        detachDebuggerFromProcessDelegate = GetFunctionDelegate<DetachDebuggerFromProcessDelegate>(handle, "DetachDebuggerFromProcess");
+        awaitDebugEventDelegate = GetFunctionDelegate<AwaitDebugEventDelegate>(handle, "AwaitDebugEvent");
+        handleDebugEventDelegate = GetFunctionDelegate<HandleDebugEventDelegate>(handle, "HandleDebugEvent");
+        setHardwareBreakpointDelegate = GetFunctionDelegate<SetHardwareBreakpointDelegate>(handle, "SetHardwareBreakpoint");
+    }
+
+    public void EnumerateProcesses(EnumerateProcessCallback callbackProcess) {
+        enumerateProcessesDelegate(callbackProcess);
+    }
+
+    public void EnumerateRemoteSectionsAndModules(IntPtr process, EnumerateRemoteSectionCallback callbackSection, EnumerateRemoteModuleCallback callbackModule) {
+        enumerateRemoteSectionsAndModulesDelegate(process, callbackSection, callbackModule);
+    }
+
+    public IntPtr OpenRemoteProcess(IntPtr pid, ProcessAccess desiredAccess) => openRemoteProcessDelegate(pid, desiredAccess);
+
+    public bool IsProcessValid(IntPtr process) => isProcessValidDelegate(process);
+
+    public void CloseRemoteProcess(IntPtr process) {
+        closeRemoteProcessDelegate(process);
+    }
+
+    public bool ReadRemoteMemory(IntPtr process, IntPtr address, ref byte[] buffer, int offset, int size) => readRemoteMemoryDelegate(process, address, buffer, offset, size);
+
+    public bool WriteRemoteMemory(IntPtr process, IntPtr address, ref byte[] buffer, int offset, int size) => writeRemoteMemoryDelegate(process, address, buffer, offset, size);
+
+    public void ControlRemoteProcess(IntPtr process, ControlRemoteProcessAction action) {
+        controlRemoteProcessDelegate(process, action);
+    }
+
+    public bool AttachDebuggerToProcess(IntPtr id) => attachDebuggerToProcessDelegate(id);
+
+    public void DetachDebuggerFromProcess(IntPtr id) {
+        detachDebuggerFromProcessDelegate(id);
+    }
+
+    public bool AwaitDebugEvent(ref DebugEvent evt, int timeoutInMilliseconds) => awaitDebugEventDelegate(ref evt, timeoutInMilliseconds);
+
+    public void HandleDebugEvent(ref DebugEvent evt) {
+        handleDebugEventDelegate(ref evt);
+    }
+
+    public bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set) => setHardwareBreakpointDelegate(id, address, register, trigger, size, set);
+
+    protected static TDelegate GetFunctionDelegate<TDelegate>(IntPtr handle, string function) {
+        var address = NativeMethods.GetProcAddress(handle, function);
+        if (address.IsNull()) {
+            throw new Exception($"Function '{function}' not found.");
+        }
+        return Marshal.GetDelegateForFunctionPointer<TDelegate>(address);
+    }
+
     #region Native Delegates
 
     private delegate void EnumerateProcessesDelegate([MarshalAs(UnmanagedType.FunctionPtr)] EnumerateProcessCallback callbackProcess);
@@ -33,9 +100,9 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
     private delegate void DetachDebuggerFromProcessDelegate(IntPtr id);
 
     [return: MarshalAs(UnmanagedType.I1)]
-    private delegate bool AwaitDebugEventDelegate([In, Out] ref DebugEvent evt, int timeoutInMilliseconds);
+    private delegate bool AwaitDebugEventDelegate([In] [Out] ref DebugEvent evt, int timeoutInMilliseconds);
 
-    private delegate void HandleDebugEventDelegate([In, Out] ref DebugEvent evt);
+    private delegate void HandleDebugEventDelegate([In] [Out] ref DebugEvent evt);
 
     [return: MarshalAs(UnmanagedType.I1)]
     private delegate bool SetHardwareBreakpointDelegate(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, [param: MarshalAs(UnmanagedType.I1)] bool set);
@@ -56,83 +123,4 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
 
     #endregion
 
-    public NativeCoreWrapper(IntPtr handle) {
-        if (handle.IsNull()) {
-            throw new ArgumentNullException();
-        }
-
-        enumerateProcessesDelegate = GetFunctionDelegate<EnumerateProcessesDelegate>(handle, "EnumerateProcesses");
-        enumerateRemoteSectionsAndModulesDelegate = GetFunctionDelegate<EnumerateRemoteSectionsAndModulesDelegate>(handle, "EnumerateRemoteSectionsAndModules");
-        openRemoteProcessDelegate = GetFunctionDelegate<OpenRemoteProcessDelegate>(handle, "OpenRemoteProcess");
-        isProcessValidDelegate = GetFunctionDelegate<IsProcessValidDelegate>(handle, "IsProcessValid");
-        closeRemoteProcessDelegate = GetFunctionDelegate<CloseRemoteProcessDelegate>(handle, "CloseRemoteProcess");
-        readRemoteMemoryDelegate = GetFunctionDelegate<ReadRemoteMemoryDelegate>(handle, "ReadRemoteMemory");
-        writeRemoteMemoryDelegate = GetFunctionDelegate<WriteRemoteMemoryDelegate>(handle, "WriteRemoteMemory");
-        controlRemoteProcessDelegate = GetFunctionDelegate<ControlRemoteProcessDelegate>(handle, "ControlRemoteProcess");
-        attachDebuggerToProcessDelegate = GetFunctionDelegate<AttachDebuggerToProcessDelegate>(handle, "AttachDebuggerToProcess");
-        detachDebuggerFromProcessDelegate = GetFunctionDelegate<DetachDebuggerFromProcessDelegate>(handle, "DetachDebuggerFromProcess");
-        awaitDebugEventDelegate = GetFunctionDelegate<AwaitDebugEventDelegate>(handle, "AwaitDebugEvent");
-        handleDebugEventDelegate = GetFunctionDelegate<HandleDebugEventDelegate>(handle, "HandleDebugEvent");
-        setHardwareBreakpointDelegate = GetFunctionDelegate<SetHardwareBreakpointDelegate>(handle, "SetHardwareBreakpoint");
-    }
-
-    protected static TDelegate GetFunctionDelegate<TDelegate>(IntPtr handle, string function) {
-        var address = NativeMethods.GetProcAddress(handle, function);
-        if (address.IsNull()) {
-            throw new Exception($"Function '{function}' not found.");
-        }
-        return Marshal.GetDelegateForFunctionPointer<TDelegate>(address);
-    }
-
-    public void EnumerateProcesses(EnumerateProcessCallback callbackProcess) {
-        enumerateProcessesDelegate(callbackProcess);
-    }
-
-    public void EnumerateRemoteSectionsAndModules(IntPtr process, EnumerateRemoteSectionCallback callbackSection, EnumerateRemoteModuleCallback callbackModule) {
-        enumerateRemoteSectionsAndModulesDelegate(process, callbackSection, callbackModule);
-    }
-
-    public IntPtr OpenRemoteProcess(IntPtr pid, ProcessAccess desiredAccess) {
-        return openRemoteProcessDelegate(pid, desiredAccess);
-    }
-
-    public bool IsProcessValid(IntPtr process) {
-        return isProcessValidDelegate(process);
-    }
-
-    public void CloseRemoteProcess(IntPtr process) {
-        closeRemoteProcessDelegate(process);
-    }
-
-    public bool ReadRemoteMemory(IntPtr process, IntPtr address, ref byte[] buffer, int offset, int size) {
-        return readRemoteMemoryDelegate(process, address, buffer, offset, size);
-    }
-
-    public bool WriteRemoteMemory(IntPtr process, IntPtr address, ref byte[] buffer, int offset, int size) {
-        return writeRemoteMemoryDelegate(process, address, buffer, offset, size);
-    }
-
-    public void ControlRemoteProcess(IntPtr process, ControlRemoteProcessAction action) {
-        controlRemoteProcessDelegate(process, action);
-    }
-
-    public bool AttachDebuggerToProcess(IntPtr id) {
-        return attachDebuggerToProcessDelegate(id);
-    }
-
-    public void DetachDebuggerFromProcess(IntPtr id) {
-        detachDebuggerFromProcessDelegate(id);
-    }
-
-    public bool AwaitDebugEvent(ref DebugEvent evt, int timeoutInMilliseconds) {
-        return awaitDebugEventDelegate(ref evt, timeoutInMilliseconds);
-    }
-
-    public void HandleDebugEvent(ref DebugEvent evt) {
-        handleDebugEventDelegate(ref evt);
-    }
-
-    public bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set) {
-        return setHardwareBreakpointDelegate(id, address, register, trigger, size, set);
-    }
 }

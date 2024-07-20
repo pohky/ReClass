@@ -1,15 +1,288 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Extensions;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
+using ReClassNET.Properties;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public partial class ProjectView : UserControl {
+
+    public delegate void SelectionChangedEvent(object sender, ClassNode node);
+
+    private readonly TreeNode classesRootNode;
+
+    private readonly TreeNode enumsRootNode;
+
+    private bool autoExpandClassNodes;
+    private bool enableClassHierarchyView;
+
+    private ClassNode selectedClass;
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public ClassNode SelectedClass {
+        get => selectedClass;
+        set {
+            if (selectedClass != value) {
+                selectedClass = value;
+                if (selectedClass != null) {
+                    projectTreeView.SelectedNode = FindMainClassTreeNode(selectedClass);
+                }
+
+                SelectionChanged?.Invoke(this, selectedClass);
+            }
+        }
+    }
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public EnumDescription SelectedEnum { get; private set; }
+
+    [DefaultValue(false)]
+    public bool AutoExpandClassNodes {
+        get => autoExpandClassNodes;
+        set {
+            if (autoExpandClassNodes != value) {
+                autoExpandClassNodes = value;
+
+                if (autoExpandClassNodes) {
+                    ExpandAllClassNodes();
+                }
+            }
+        }
+    }
+
+    [DefaultValue(false)]
+    public bool EnableClassHierarchyView {
+        get => enableClassHierarchyView;
+        set {
+            if (enableClassHierarchyView != value) {
+                enableClassHierarchyView = value;
+
+                var classes = classesRootNode.Nodes.Cast<ClassTreeNode>().Select(t => t.ClassNode).ToList();
+
+                classesRootNode.Nodes.Clear();
+
+                AddClasses(classes);
+            }
+        }
+    }
+
+    public ContextMenuStrip ClassesContextMenuStrip { get; set; }
+
+    public ContextMenuStrip ClassContextMenuStrip { get; set; }
+
+    public ContextMenuStrip EnumsContextMenuStrip { get; set; }
+
+    public ContextMenuStrip EnumContextMenuStrip { get; set; }
+
+    public ProjectView() {
+        Contract.Ensures(classesRootNode != null);
+        Contract.Ensures(enumsRootNode != null);
+
+        InitializeComponent();
+
+        DoubleBuffered = true;
+
+        projectTreeView.TreeViewNodeSorter = new NodeSorter();
+        projectTreeView.ImageList = new ImageList();
+        projectTreeView.ImageList.Images.Add(Resources.B16x16_Text_List_Bullets);
+        projectTreeView.ImageList.Images.Add(Resources.B16x16_Class_Type);
+        projectTreeView.ImageList.Images.Add(Resources.B16x16_Category);
+        projectTreeView.ImageList.Images.Add(Resources.B16x16_Enum_Type);
+
+        classesRootNode = new TreeNode {
+            Text = "Classes",
+            ImageIndex = 0,
+            SelectedImageIndex = 0,
+            Tag = 0
+        };
+
+        projectTreeView.Nodes.Add(classesRootNode);
+
+        enumsRootNode = new TreeNode {
+            Text = "Enums",
+            ImageIndex = 2,
+            SelectedImageIndex = 2,
+            Tag = 1
+        };
+
+        projectTreeView.Nodes.Add(enumsRootNode);
+    }
+    public event SelectionChangedEvent SelectionChanged;
+
+    public void ExpandAllClassNodes() {
+        classesRootNode.ExpandAll();
+    }
+
+    public void CollapseAllClassNodes() {
+        foreach (var tn in classesRootNode.Nodes.Cast<TreeNode>()) {
+            tn.Collapse();
+        }
+    }
+
+    /// <summary>
+    ///     Clears all displayed nodes.
+    /// </summary>
+    public void Clear() {
+        Clear(true, true);
+    }
+
+    /// <summary>
+    ///     Clears the selected nodes.
+    /// </summary>
+    /// <param name="clearClasses">Clears the classes if set.</param>
+    /// <param name="clearEnums">Clears the enums if set.</param>
+    public void Clear(bool clearClasses, bool clearEnums) {
+        if (clearClasses) {
+            classesRootNode.Nodes.Clear();
+        }
+
+        if (clearEnums) {
+            enumsRootNode.Nodes.Clear();
+        }
+    }
+
+    /// <summary>Adds the class to the view.</summary>
+    /// <param name="class">The class to add.</param>
+    public void AddClass(ClassNode @class) {
+        Contract.Requires(@class != null);
+
+        AddClasses(new[] { @class });
+    }
+
+    /// <summary>
+    ///     Adds all classes to the view.
+    /// </summary>
+    /// <param name="classes">The classes to add.</param>
+    public void AddClasses(IEnumerable<ClassNode> classes) {
+        Contract.Requires(classes != null);
+
+        projectTreeView.BeginUpdate();
+
+        foreach (var @class in classes) {
+            classesRootNode.Nodes.Add(new ClassTreeNode(@class, this));
+        }
+
+        classesRootNode.Expand();
+
+        projectTreeView.Sort();
+
+        projectTreeView.EndUpdate();
+    }
+
+    /// <summary>Removes the class from the view.</summary>
+    /// <param name="node">The class to remove.</param>
+    public void RemoveClass(ClassNode node) {
+        Contract.Requires(node != null);
+
+        foreach (var tn in FindClassTreeNodes(node)) {
+            tn.Remove();
+        }
+
+        if (selectedClass == node) {
+            if (classesRootNode.Nodes.Count > 0) {
+                projectTreeView.SelectedNode = classesRootNode.Nodes[0];
+            } else {
+                SelectedClass = null;
+            }
+        }
+    }
+
+    /// <summary>Searches for the <see cref="ClassTreeNode" /> which represents the class.</summary>
+    /// <param name="node">The class to search.</param>
+    /// <returns>The found class tree node.</returns>
+    private ClassTreeNode FindMainClassTreeNode(ClassNode node) {
+        Contract.Requires(node != null);
+
+        return classesRootNode.Nodes
+            .Cast<ClassTreeNode>()
+            .FirstOrDefault(t => t.ClassNode == node);
+    }
+
+    /// <summary>Searches for the ClassTreeNode which represents the class.</summary>
+    /// <param name="node">The class to search.</param>
+    /// <returns>The found class tree node.</returns>
+    private IEnumerable<ClassTreeNode> FindClassTreeNodes(ClassNode node) {
+        Contract.Requires(node != null);
+
+        return classesRootNode.Nodes
+            .Cast<ClassTreeNode>()
+            .Traverse(t => t.Nodes.Cast<ClassTreeNode>())
+            .Where(n => n.ClassNode == node);
+    }
+
+    /// <summary>
+    ///     Updates the display for the given class.
+    /// </summary>
+    /// <param name="class">The class to update.</param>
+    public void UpdateClassNode(ClassNode @class) {
+        Contract.Requires(@class != null);
+
+        projectTreeView.BeginUpdate();
+
+        foreach (var tn in FindClassTreeNodes(@class)) {
+            tn.Update();
+        }
+
+        projectTreeView.Sort();
+
+        projectTreeView.EndUpdate();
+    }
+
+    /// <summary>Adds the enum to the view.</summary>
+    /// <param name="enum">The enum to add.</param>
+    public void AddEnum(EnumDescription @enum) {
+        Contract.Requires(@enum != null);
+
+        AddEnums(new[] { @enum });
+    }
+
+    /// <summary>Adds the enums to the view.</summary>
+    /// <param name="enums">The enums to add.</param>
+    public void AddEnums(IEnumerable<EnumDescription> enums) {
+        Contract.Requires(enums != null);
+
+        projectTreeView.BeginUpdate();
+
+        foreach (var @enum in enums) {
+            enumsRootNode.Nodes.Add(new EnumTreeNode(@enum));
+        }
+
+        enumsRootNode.ExpandAll();
+
+        projectTreeView.Sort();
+
+        projectTreeView.EndUpdate();
+    }
+
+    /// <summary>
+    ///     Updates the display for the given enum.
+    /// </summary>
+    /// <param name="enum">The enum to update.</param>
+    public void UpdateEnumNode(EnumDescription @enum) {
+        Contract.Requires(@enum != null);
+
+        projectTreeView.BeginUpdate();
+
+        var node = enumsRootNode.Nodes
+            .Cast<EnumTreeNode>()
+            .FirstOrDefault(n => n.Enum == @enum);
+
+        if (node != null) {
+            node.Update();
+        } else {
+            AddEnum(@enum);
+        }
+
+        projectTreeView.Sort();
+
+        projectTreeView.EndUpdate();
+    }
+
     /// <summary>A custom tree node for class nodes with hierarchical structure.</summary>
     private class ClassTreeNode : TreeNode {
         private readonly ProjectView control;
@@ -18,7 +291,7 @@ public partial class ProjectView : UserControl {
 
         /// <summary>Constructor of the class.</summary>
         /// <param name="node">The class node.</param>
-        /// <param name="control">The <see cref="ProjectView"/> instance this node should belong to.</param>
+        /// <param name="control">The <see cref="ProjectView" /> instance this node should belong to.</param>
         public ClassTreeNode(ClassNode node, ProjectView control)
             : this(node, control, null) {
             Contract.Requires(node != null);
@@ -119,109 +392,6 @@ public partial class ProjectView : UserControl {
         }
     }
 
-    private readonly TreeNode enumsRootNode;
-    private readonly TreeNode classesRootNode;
-
-    private ClassNode selectedClass;
-
-    private bool autoExpandClassNodes;
-    private bool enableClassHierarchyView;
-
-    public delegate void SelectionChangedEvent(object sender, ClassNode node);
-    public event SelectionChangedEvent SelectionChanged;
-
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ClassNode SelectedClass {
-        get => selectedClass;
-        set {
-            if (selectedClass != value) {
-                selectedClass = value;
-                if (selectedClass != null) {
-                    projectTreeView.SelectedNode = FindMainClassTreeNode(selectedClass);
-                }
-
-                SelectionChanged?.Invoke(this, selectedClass);
-            }
-        }
-    }
-
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public EnumDescription SelectedEnum { get; private set; }
-
-    [DefaultValue(false)]
-    public bool AutoExpandClassNodes {
-        get => autoExpandClassNodes;
-        set {
-            if (autoExpandClassNodes != value) {
-                autoExpandClassNodes = value;
-
-                if (autoExpandClassNodes) {
-                    ExpandAllClassNodes();
-                }
-            }
-        }
-    }
-
-    [DefaultValue(false)]
-    public bool EnableClassHierarchyView {
-        get => enableClassHierarchyView;
-        set {
-            if (enableClassHierarchyView != value) {
-                enableClassHierarchyView = value;
-
-                var classes = classesRootNode.Nodes.Cast<ClassTreeNode>().Select(t => t.ClassNode).ToList();
-
-                classesRootNode.Nodes.Clear();
-
-                AddClasses(classes);
-            }
-        }
-    }
-
-    public ContextMenuStrip ClassesContextMenuStrip { get; set; }
-
-    public ContextMenuStrip ClassContextMenuStrip { get; set; }
-
-    public ContextMenuStrip EnumsContextMenuStrip { get; set; }
-
-    public ContextMenuStrip EnumContextMenuStrip { get; set; }
-
-    public ProjectView() {
-        Contract.Ensures(classesRootNode != null);
-        Contract.Ensures(enumsRootNode != null);
-
-        InitializeComponent();
-
-        DoubleBuffered = true;
-
-        projectTreeView.TreeViewNodeSorter = new NodeSorter();
-        projectTreeView.ImageList = new ImageList();
-        projectTreeView.ImageList.Images.Add(Properties.Resources.B16x16_Text_List_Bullets);
-        projectTreeView.ImageList.Images.Add(Properties.Resources.B16x16_Class_Type);
-        projectTreeView.ImageList.Images.Add(Properties.Resources.B16x16_Category);
-        projectTreeView.ImageList.Images.Add(Properties.Resources.B16x16_Enum_Type);
-
-        classesRootNode = new TreeNode {
-            Text = "Classes",
-            ImageIndex = 0,
-            SelectedImageIndex = 0,
-            Tag = 0
-        };
-
-        projectTreeView.Nodes.Add(classesRootNode);
-
-        enumsRootNode = new TreeNode {
-            Text = "Enums",
-            ImageIndex = 2,
-            SelectedImageIndex = 2,
-            Tag = 1
-        };
-
-        projectTreeView.Nodes.Add(enumsRootNode);
-    }
-
     #region Event Handler
 
     private void projectTreeView_AfterSelect(object sender, TreeViewEventArgs e) {
@@ -283,172 +453,4 @@ public partial class ProjectView : UserControl {
 
     #endregion
 
-    public void ExpandAllClassNodes() {
-        classesRootNode.ExpandAll();
-    }
-
-    public void CollapseAllClassNodes() {
-        foreach (var tn in classesRootNode.Nodes.Cast<TreeNode>()) {
-            tn.Collapse();
-        }
-    }
-
-    /// <summary>
-    /// Clears all displayed nodes.
-    /// </summary>
-    public void Clear() {
-        Clear(true, true);
-    }
-
-    /// <summary>
-    /// Clears the selected nodes.
-    /// </summary>
-    /// <param name="clearClasses">Clears the classes if set.</param>
-    /// <param name="clearEnums">Clears the enums if set.</param>
-    public void Clear(bool clearClasses, bool clearEnums) {
-        if (clearClasses) {
-            classesRootNode.Nodes.Clear();
-        }
-
-        if (clearEnums) {
-            enumsRootNode.Nodes.Clear();
-        }
-    }
-
-    /// <summary>Adds the class to the view.</summary>
-    /// <param name="class">The class to add.</param>
-    public void AddClass(ClassNode @class) {
-        Contract.Requires(@class != null);
-
-        AddClasses(new[] { @class });
-    }
-
-    /// <summary>
-    /// Adds all classes to the view.
-    /// </summary>
-    /// <param name="classes">The classes to add.</param>
-    public void AddClasses(IEnumerable<ClassNode> classes) {
-        Contract.Requires(classes != null);
-
-        projectTreeView.BeginUpdate();
-
-        foreach (var @class in classes) {
-            classesRootNode.Nodes.Add(new ClassTreeNode(@class, this));
-        }
-
-        classesRootNode.Expand();
-
-        projectTreeView.Sort();
-
-        projectTreeView.EndUpdate();
-    }
-
-    /// <summary>Removes the class from the view.</summary>
-    /// <param name="node">The class to remove.</param>
-    public void RemoveClass(ClassNode node) {
-        Contract.Requires(node != null);
-
-        foreach (var tn in FindClassTreeNodes(node)) {
-            tn.Remove();
-        }
-
-        if (selectedClass == node) {
-            if (classesRootNode.Nodes.Count > 0) {
-                projectTreeView.SelectedNode = classesRootNode.Nodes[0];
-            } else {
-                SelectedClass = null;
-            }
-        }
-    }
-
-    /// <summary>Searches for the <see cref="ClassTreeNode"/> which represents the class.</summary>
-    /// <param name="node">The class to search.</param>
-    /// <returns>The found class tree node.</returns>
-    private ClassTreeNode FindMainClassTreeNode(ClassNode node) {
-        Contract.Requires(node != null);
-
-        return classesRootNode.Nodes
-            .Cast<ClassTreeNode>()
-            .FirstOrDefault(t => t.ClassNode == node);
-    }
-
-    /// <summary>Searches for the ClassTreeNode which represents the class.</summary>
-    /// <param name="node">The class to search.</param>
-    /// <returns>The found class tree node.</returns>
-    private IEnumerable<ClassTreeNode> FindClassTreeNodes(ClassNode node) {
-        Contract.Requires(node != null);
-
-        return classesRootNode.Nodes
-            .Cast<ClassTreeNode>()
-            .Traverse(t => t.Nodes.Cast<ClassTreeNode>())
-            .Where(n => n.ClassNode == node);
-    }
-
-    /// <summary>
-    /// Updates the display for the given class.
-    /// </summary>
-    /// <param name="class">The class to update.</param>
-    public void UpdateClassNode(ClassNode @class) {
-        Contract.Requires(@class != null);
-
-        projectTreeView.BeginUpdate();
-
-        foreach (var tn in FindClassTreeNodes(@class)) {
-            tn.Update();
-        }
-
-        projectTreeView.Sort();
-
-        projectTreeView.EndUpdate();
-    }
-
-    /// <summary>Adds the enum to the view.</summary>
-    /// <param name="enum">The enum to add.</param>
-    public void AddEnum(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
-        AddEnums(new[] { @enum });
-    }
-
-    /// <summary>Adds the enums to the view.</summary>
-    /// <param name="enums">The enums to add.</param>
-    public void AddEnums(IEnumerable<EnumDescription> enums) {
-        Contract.Requires(enums != null);
-
-        projectTreeView.BeginUpdate();
-
-        foreach (var @enum in enums) {
-            enumsRootNode.Nodes.Add(new EnumTreeNode(@enum));
-        }
-
-        enumsRootNode.ExpandAll();
-
-        projectTreeView.Sort();
-
-        projectTreeView.EndUpdate();
-    }
-
-    /// <summary>
-    /// Updates the display for the given enum.
-    /// </summary>
-    /// <param name="enum">The enum to update.</param>
-    public void UpdateEnumNode(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
-        projectTreeView.BeginUpdate();
-
-        var node = enumsRootNode.Nodes
-            .Cast<EnumTreeNode>()
-            .FirstOrDefault(n => n.Enum == @enum);
-
-        if (node != null) {
-            node.Update();
-        } else {
-            AddEnum(@enum);
-        }
-
-        projectTreeView.Sort();
-
-        projectTreeView.EndUpdate();
-    }
 }

@@ -1,9 +1,9 @@
-using System;
 using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 
-namespace ReClassNET.AddressParser; 
+namespace ReClassNET.AddressParser;
+
 public class Interpreter : IExecutor {
     public IntPtr Execute(IExpression expression, IProcessReader processReader) {
         Contract.Requires(expression != null);
@@ -15,13 +15,13 @@ public class Interpreter : IExecutor {
             case NegateExpression negateExpression:
                 return Execute(negateExpression.Expression, processReader).Negate();
             case ModuleExpression moduleExpression: {
-                    var module = processReader.GetModuleByName(moduleExpression.Name);
-                    if (module != null) {
-                        return module.Start;
-                    }
-
-                    return IntPtr.Zero;
+                var module = processReader.GetModuleByName(moduleExpression.Name);
+                if (module != null) {
+                    return module.Start;
                 }
+
+                return IntPtr.Zero;
+            }
             case AddExpression addExpression:
                 return Execute(addExpression.Lhs, processReader).Add(Execute(addExpression.Rhs, processReader));
             case SubtractExpression subtractExpression:
@@ -34,9 +34,8 @@ public class Interpreter : IExecutor {
                 var readFromAddress = Execute(readMemoryExpression.Expression, processReader);
                 if (readMemoryExpression.ByteCount == 4) {
                     return IntPtrExtension.From(processReader.ReadRemoteInt32(readFromAddress));
-                } else {
-                    return IntPtrExtension.From(processReader.ReadRemoteInt64(readFromAddress));
                 }
+                return IntPtrExtension.From(processReader.ReadRemoteInt64(readFromAddress));
             default:
                 throw new ArgumentException($"Unsupported operation '{expression.GetType().FullName}'.");
         }

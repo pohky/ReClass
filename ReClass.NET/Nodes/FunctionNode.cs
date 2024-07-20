@@ -1,24 +1,23 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class FunctionNode : BaseFunctionNode {
+
+    private int memorySize = IntPtr.Size;
     public string Signature { get; set; } = "void function()";
 
     public ClassNode BelongsToClass { get; set; }
-
-    private int memorySize = IntPtr.Size;
     public override int MemorySize => memorySize;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Function";
-        icon = Properties.Resources.B16x16_Button_Function;
+        icon = Resources.B16x16_Button_Function;
     }
 
     public override string GetToolTipText(HotSpot spot) {
@@ -110,10 +109,10 @@ public class FunctionNode : BaseFunctionNode {
     private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
         Contract.Requires(process != null);
 
-        if (this.Address != address) {
+        if (Address != address) {
             Instructions.Clear();
 
-            this.Address = address;
+            Address = address;
 
             if (!address.IsNull() && process.IsValid) {
                 DisassembleRemoteCode(process, address, out memorySize);

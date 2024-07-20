@@ -1,18 +1,14 @@
-using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Memory;
 using ReClassNET.Native;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class ProcessBrowserForm : IconForm {
     private const string NoPreviousProcess = "No previous process";
 
-    private static readonly string[] commonProcesses =
-    {
+    private static readonly string[] commonProcesses = {
         "[system process]", "system", "svchost.exe", "services.exe", "wininit.exe",
         "smss.exe", "csrss.exe", "lsass.exe", "winlogon.exe", "wininit.exe", "dwm.exe"
     };
@@ -59,30 +55,6 @@ public partial class ProcessBrowserForm : IconForm {
         GlobalWindowManager.RemoveWindow(this);
     }
 
-    #region Event Handler
-
-    private void filterCheckBox_CheckedChanged(object sender, EventArgs e) {
-        RefreshProcessList();
-    }
-
-    private void filterTextBox_TextChanged(object sender, EventArgs e) {
-        ApplyFilter();
-    }
-
-    private void refreshButton_Click(object sender, EventArgs e) {
-        RefreshProcessList();
-    }
-
-    private void previousProcessLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-        filterTextBox.Text = previousProcessLinkLabel.Text == NoPreviousProcess ? string.Empty : previousProcessLinkLabel.Text;
-    }
-
-    private void processDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e) {
-        AcceptButton.PerformClick();
-    }
-
-    #endregion
-
     /// <summary>Queries all processes and displays them.</summary>
     private void RefreshProcessList() {
         var dt = new DataTable();
@@ -118,4 +90,29 @@ public partial class ProcessBrowserForm : IconForm {
         }
         ((DataTable)processDataGridView.DataSource).DefaultView.RowFilter = filter;
     }
+
+    #region Event Handler
+
+    private void filterCheckBox_CheckedChanged(object sender, EventArgs e) {
+        RefreshProcessList();
+    }
+
+    private void filterTextBox_TextChanged(object sender, EventArgs e) {
+        ApplyFilter();
+    }
+
+    private void refreshButton_Click(object sender, EventArgs e) {
+        RefreshProcessList();
+    }
+
+    private void previousProcessLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+        filterTextBox.Text = previousProcessLinkLabel.Text == NoPreviousProcess ? string.Empty : previousProcessLinkLabel.Text;
+    }
+
+    private void processDataGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e) {
+        AcceptButton.PerformClick();
+    }
+
+    #endregion
+
 }

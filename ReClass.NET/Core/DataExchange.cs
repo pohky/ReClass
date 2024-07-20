@@ -1,13 +1,13 @@
-using System;
 using System.Runtime.InteropServices;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Core; 
+namespace ReClassNET.Core;
+
 public enum ProcessAccess {
     Read,
     Write,
     Full
-};
+}
 
 public enum ControlRemoteProcessAction {
     Suspend,
@@ -24,7 +24,7 @@ public struct EnumerateProcessData {
 
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
     public string Path;
-};
+}
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1)]
 public struct EnumerateRemoteSectionData {
@@ -68,4 +68,4 @@ public struct InstructionData {
 
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
     public string Instruction;
-};
+}

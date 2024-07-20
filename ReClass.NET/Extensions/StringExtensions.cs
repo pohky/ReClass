@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class StringExtension {
+
+    private static readonly Regex hexadecimalValueRegex = new("^(0x|h)?([0-9A-F]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     [Pure]
     [DebuggerStepThrough]
-    public static bool IsPrintable(this char c) {
-        return (' ' <= c && c <= '~' || '\xA1' <= c && c <= '\xFF') && c != '\xFFFD' /* Unicode REPLACEMENT CHARACTER � */;
-    }
+    public static bool IsPrintable(this char c) => ((' ' <= c && c <= '~') || ('\xA1' <= c && c <= '\xFF')) && c != '\xFFFD' /* Unicode REPLACEMENT CHARACTER � */;
 
     [DebuggerStepThrough]
     public static IEnumerable<char> InterpretAsSingleByteCharacter(this IEnumerable<byte> source) {
@@ -80,8 +78,6 @@ public static class StringExtension {
         }
         return s.Substring(0, length);
     }
-
-    private static readonly Regex hexadecimalValueRegex = new Regex("^(0x|h)?([0-9A-F]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     public static bool TryGetHexString(this string s, out string value) {
         Contract.Requires(s != null);
 

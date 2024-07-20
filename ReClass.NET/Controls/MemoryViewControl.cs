@@ -1,70 +1,25 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public partial class MemoryViewControl : UserControl {
-    /// <summary>
-    /// Contains informations about a selected node.
-    /// </summary>
-    public class SelectedNodeInfo {
-        /// <summary>
-        /// The selected node.
-        /// </summary>
-        public BaseNode Node { get; }
-
-        public RemoteProcess Process { get; }
-
-        /// <summary>
-        /// The memory this node uses.
-        /// </summary>
-        public MemoryBuffer Memory { get; }
-
-        /// <summary>
-        /// The address of the node in the remote process.
-        /// </summary>
-        public IntPtr Address { get; }
-
-        public int Level { get; }
-
-        public SelectedNodeInfo(BaseNode node, RemoteProcess process, MemoryBuffer memory, IntPtr address, int level) {
-            Contract.Requires(node != null);
-            Contract.Requires(process != null);
-            Contract.Requires(memory != null);
-
-            Node = node;
-            Process = process;
-            Memory = memory;
-            Address = address;
-            Level = level;
-        }
-    }
-
-    private readonly List<HotSpot> hotSpots = new List<HotSpot>();
-    private readonly List<HotSpot> selectedNodes = new List<HotSpot>();
-
-    private HotSpot selectionCaret;
-    private HotSpot selectionAnchor;
 
     private readonly FontEx font;
 
-    public ContextMenuStrip NodeContextMenuStrip { get; set; }
-
-    public event DrawContextRequestEventHandler DrawContextRequested;
-    public event EventHandler SelectionChanged;
-    public event NodeClickEventHandler ChangeClassTypeClick;
-    public event NodeClickEventHandler ChangeWrappedTypeClick;
-    public event NodeClickEventHandler ChangeEnumTypeClick;
+    private readonly List<HotSpot> hotSpots = new();
 
     private readonly MemoryPreviewPopUp memoryPreviewPopUp;
+    private readonly List<HotSpot> selectedNodes = new();
+    private HotSpot selectionAnchor;
+
+    private HotSpot selectionCaret;
+
+    public ContextMenuStrip NodeContextMenuStrip { get; set; }
 
     public MemoryViewControl() {
         InitializeComponent();
@@ -81,6 +36,12 @@ public partial class MemoryViewControl : UserControl {
 
         memoryPreviewPopUp = new MemoryPreviewPopUp(font);
     }
+
+    public event DrawContextRequestEventHandler DrawContextRequested;
+    public event EventHandler SelectionChanged;
+    public event NodeClickEventHandler ChangeClassTypeClick;
+    public event NodeClickEventHandler ChangeWrappedTypeClick;
+    public event NodeClickEventHandler ChangeEnumTypeClick;
 
     protected override void OnPaint(PaintEventArgs e) {
         base.OnPaint(e);
@@ -135,9 +96,9 @@ public partial class MemoryViewControl : UserControl {
         drawnSize.Width += 10;
 
         /*foreach (var spot in hotSpots.Where(h => h.Type == HotSpotType.Select))
-			{
-				e.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.FromArgb(150, 255, 0, 0)), 1), spot.Rect);
-			}*/
+            {
+                e.Graphics.DrawRectangle(new Pen(new SolidBrush(Color.FromArgb(150, 255, 0, 0)), 1), spot.Rect);
+            }*/
 
         AutoScrollMinSize = new Size(Math.Max(drawnSize.Width, ClientSize.Width), Math.Max(drawnSize.Height, ClientSize.Height));
 
@@ -147,6 +108,113 @@ public partial class MemoryViewControl : UserControl {
 
     private void OnSelectionChanged() {
         SelectionChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    ///     Gets informations about all selected nodes.
+    /// </summary>
+    /// <returns>A list with informations about all selected nodes.</returns>
+    public IReadOnlyList<SelectedNodeInfo> GetSelectedNodes() {
+        return selectedNodes
+            .Select(h => new SelectedNodeInfo(h.Node, h.Process, h.Memory, h.Address, h.Level))
+            .ToList();
+    }
+
+    /// <summary>
+    ///     Selects the given nodes.
+    /// </summary>
+    /// <param name="nodes"></param>
+    public void SetSelectedNodes(IEnumerable<SelectedNodeInfo> nodes) {
+        selectedNodes.ForEach(h => h.Node.ClearSelection());
+
+        selectedNodes.Clear();
+
+        selectedNodes.AddRange(nodes.Select(i => new HotSpot { Type = HotSpotType.Select, Node = i.Node, Process = i.Process, Memory = i.Memory, Address = i.Address, Level = i.Level }));
+        selectedNodes.ForEach(h => h.Node.IsSelected = true);
+
+        OnSelectionChanged();
+    }
+
+    /// <summary>
+    ///     Shows the context menu at the given point.
+    /// </summary>
+    /// <param name="location">The location where the context menu should be shown.</param>
+    private void ShowNodeContextMenu(Point location) {
+        NodeContextMenuStrip?.Show(this, location);
+    }
+
+    public void ShowNodeNameEditBox(BaseNode node) {
+        if (node == null || node is BaseHexNode) {
+            return;
+        }
+
+        var hotSpot = hotSpots
+            .FirstOrDefault(s => s.Node == node && s.Type == HotSpotType.Edit && s.Id == HotSpot.NameId);
+        if (hotSpot != null) {
+            hotSpotEditBox.ShowOnHotSpot(hotSpot);
+        }
+    }
+
+    /// <summary>
+    ///     Resets the selection state of all selected nodes.
+    /// </summary>
+    public void ClearSelection() {
+        selectionAnchor = selectionCaret = null;
+
+        selectedNodes.ForEach(h => h.Node.ClearSelection());
+
+        selectedNodes.Clear();
+
+        OnSelectionChanged();
+
+        //Invalidate();
+    }
+
+    /// <summary>
+    ///     Resets the control to the initial state.
+    /// </summary>
+    public void Reset() {
+        ClearSelection();
+
+        hotSpotEditBox.Hide();
+
+        VerticalScroll.Value = VerticalScroll.Minimum;
+    }
+
+    /// <summary>
+    ///     Contains informations about a selected node.
+    /// </summary>
+    public class SelectedNodeInfo {
+        /// <summary>
+        ///     The selected node.
+        /// </summary>
+        public BaseNode Node { get; }
+
+        public RemoteProcess Process { get; }
+
+        /// <summary>
+        ///     The memory this node uses.
+        /// </summary>
+        public MemoryBuffer Memory { get; }
+
+        /// <summary>
+        ///     The address of the node in the remote process.
+        /// </summary>
+        public IntPtr Address { get; }
+
+        public int Level { get; }
+
+        public SelectedNodeInfo(BaseNode node, RemoteProcess process, MemoryBuffer memory, IntPtr address, int level) {
+            Contract.Requires(node != null);
+            Contract.Requires(process != null);
+            Contract.Requires(memory != null);
+
+            Node = node;
+            Process = process;
+            Memory = memory;
+            Address = address;
+            Level = level;
+        }
     }
 
     #region Process Input
@@ -216,15 +284,15 @@ public partial class MemoryViewControl : UserControl {
 
                                 var containerNode = selectedNode.GetParentContainer();
                                 foreach (var spot in containerNode.Nodes
-                                    .SkipWhile(n => n != first.Node)
-                                    .TakeWhileInclusive(n => n != last.Node)
-                                    .Select(n => new HotSpot {
-                                        Address = (IntPtr)(containerNode.Offset + n.Offset),
-                                        Node = n,
-                                        Process = first.Process,
-                                        Memory = first.Memory,
-                                        Level = first.Level
-                                    })) {
+                                             .SkipWhile(n => n != first.Node)
+                                             .TakeWhileInclusive(n => n != last.Node)
+                                             .Select(n => new HotSpot {
+                                                 Address = containerNode.Offset + n.Offset,
+                                                 Node = n,
+                                                 Process = first.Process,
+                                                 Memory = first.Memory,
+                                                 Level = first.Level
+                                             })) {
                                     spot.Node.IsSelected = true;
                                     selectedNodes.Add(spot);
                                 }
@@ -439,15 +507,15 @@ public partial class MemoryViewControl : UserControl {
 
                         var containerNode = toSelect.Node.GetParentContainer();
                         foreach (var spot in containerNode.Nodes
-                            .SkipWhile(n => n != first.Node)
-                            .TakeWhileInclusive(n => n != last.Node)
-                            .Select(n => new HotSpot {
-                                Address = (IntPtr)(containerNode.Offset + n.Offset),
-                                Node = n,
-                                Process = toSelect.Process,
-                                Memory = toSelect.Memory,
-                                Level = toSelect.Level
-                            })) {
+                                     .SkipWhile(n => n != first.Node)
+                                     .TakeWhileInclusive(n => n != last.Node)
+                                     .Select(n => new HotSpot {
+                                         Address = containerNode.Offset + n.Offset,
+                                         Node = n,
+                                         Process = toSelect.Process,
+                                         Memory = toSelect.Memory,
+                                         Level = toSelect.Level
+                                     })) {
                             spot.Node.IsSelected = true;
                             selectedNodes.Add(spot);
                         }
@@ -530,74 +598,4 @@ public partial class MemoryViewControl : UserControl {
 
     #endregion
 
-    /// <summary>
-    /// Gets informations about all selected nodes.
-    /// </summary>
-    /// <returns>A list with informations about all selected nodes.</returns>
-    public IReadOnlyList<SelectedNodeInfo> GetSelectedNodes() {
-        return selectedNodes
-            .Select(h => new SelectedNodeInfo(h.Node, h.Process, h.Memory, h.Address, h.Level))
-            .ToList();
-    }
-
-    /// <summary>
-    /// Selects the given nodes.
-    /// </summary>
-    /// <param name="nodes"></param>
-    public void SetSelectedNodes(IEnumerable<SelectedNodeInfo> nodes) {
-        selectedNodes.ForEach(h => h.Node.ClearSelection());
-
-        selectedNodes.Clear();
-
-        selectedNodes.AddRange(nodes.Select(i => new HotSpot { Type = HotSpotType.Select, Node = i.Node, Process = i.Process, Memory = i.Memory, Address = i.Address, Level = i.Level }));
-        selectedNodes.ForEach(h => h.Node.IsSelected = true);
-
-        OnSelectionChanged();
-    }
-
-    /// <summary>
-    /// Shows the context menu at the given point.
-    /// </summary>
-    /// <param name="location">The location where the context menu should be shown.</param>
-    private void ShowNodeContextMenu(Point location) {
-        NodeContextMenuStrip?.Show(this, location);
-    }
-
-    public void ShowNodeNameEditBox(BaseNode node) {
-        if (node == null || node is BaseHexNode) {
-            return;
-        }
-
-        var hotSpot = hotSpots
-            .FirstOrDefault(s => s.Node == node && s.Type == HotSpotType.Edit && s.Id == HotSpot.NameId);
-        if (hotSpot != null) {
-            hotSpotEditBox.ShowOnHotSpot(hotSpot);
-        }
-    }
-
-    /// <summary>
-    /// Resets the selection state of all selected nodes.
-    /// </summary>
-    public void ClearSelection() {
-        selectionAnchor = selectionCaret = null;
-
-        selectedNodes.ForEach(h => h.Node.ClearSelection());
-
-        selectedNodes.Clear();
-
-        OnSelectionChanged();
-
-        //Invalidate();
-    }
-
-    /// <summary>
-    /// Resets the control to the initial state.
-    /// </summary>
-    public void Reset() {
-        ClearSelection();
-
-        hotSpotEditBox.Hide();
-
-        VerticalScroll.Value = VerticalScroll.Minimum;
-    }
 }

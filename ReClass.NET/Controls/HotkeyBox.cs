@@ -1,16 +1,14 @@
-using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using ReClassNET.Input;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 [Designer(typeof(HotkeyBoxDesigner))]
 public partial class HotkeyBox : UserControl {
     public KeyboardInput Input { get; set; }
 
-    public KeyboardHotkey Hotkey { get; } = new KeyboardHotkey();
+    public KeyboardHotkey Hotkey { get; } = new();
 
     public HotkeyBox() {
         InitializeComponent();
@@ -60,9 +58,9 @@ public partial class HotkeyBox : UserControl {
 }
 
 internal class HotkeyBoxDesigner : ControlDesigner {
+
+    public override SelectionRules SelectionRules => SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
     private HotkeyBoxDesigner() {
         AutoResizeHandles = true;
     }
-
-    public override SelectionRules SelectionRules => SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
 }

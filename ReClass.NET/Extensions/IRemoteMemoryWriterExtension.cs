@@ -1,8 +1,8 @@
-using System;
 using System.Text;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class IRemoteMemoryWriterExtension {
     public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, sbyte value) => writer.WriteRemoteMemory(address, new[] { (byte)value });
 

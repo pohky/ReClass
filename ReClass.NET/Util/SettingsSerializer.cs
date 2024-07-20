@@ -1,8 +1,8 @@
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Xml.Linq;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 internal sealed class SettingsSerializer {
     private const string XmlRootElement = "Settings";
     private const string XmlGeneralElement = "General";

@@ -1,9 +1,8 @@
-using System;
-using System.Drawing;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 public enum HotSpotType {
     None,
     Edit,

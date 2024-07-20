@@ -1,10 +1,9 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.IO.Compression;
 using System.Xml.Linq;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public partial class ReClassNetFile {
     /// <summary>Reads a platform from the ReClass.NET file.</summary>
     /// <exception cref="FormatException">Thrown if the format of the file is incorrect.</exception>

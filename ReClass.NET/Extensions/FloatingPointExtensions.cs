@@ -1,8 +1,8 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class FloatingPointExtension {
     [Pure]
     [DebuggerStepThrough]

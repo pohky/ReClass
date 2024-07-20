@@ -1,11 +1,9 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public delegate void ClassCreatedEventHandler(ClassNode node);
 
 public class ClassNode : BaseContainerNode {

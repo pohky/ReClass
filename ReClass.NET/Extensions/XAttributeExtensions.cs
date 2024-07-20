@@ -1,7 +1,7 @@
-using System;
 using System.Xml.Linq;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class XAttributeExtensions {
     public static TEnum GetEnumValue<TEnum>(this XAttribute attribute) where TEnum : struct {
         TEnum @enum = default;

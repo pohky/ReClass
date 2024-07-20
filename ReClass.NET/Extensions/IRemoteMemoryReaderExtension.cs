@@ -1,10 +1,10 @@
-using System;
 using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class IRemoteMemoryReaderExtension {
     public static sbyte ReadRemoteInt8(this IRemoteMemoryReader reader, IntPtr address) {
         var data = reader.ReadRemoteMemory(address, sizeof(sbyte));

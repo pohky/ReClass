@@ -1,17 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+namespace ReClassNET.Project;
 
-namespace ReClassNET.Project; 
 public class EnumDescription {
-    public enum UnderlyingTypeSize {
-        OneByte = 1,
-        TwoBytes = 2,
-        FourBytes = 4,
-        EightBytes = 8
-    }
 
-    public static EnumDescription Default => new EnumDescription { Name = "DummyEnum" };
+    public static EnumDescription Default => new() { Name = "DummyEnum" };
 
     public string Name { get; set; } = string.Empty;
 
@@ -67,5 +58,12 @@ public class EnumDescription {
         UseFlagsMode = useFlagsMode;
         Size = size;
         Values = temp;
+    }
+
+    public enum UnderlyingTypeSize {
+        OneByte = 1,
+        TwoBytes = 2,
+        FourBytes = 4,
+        EightBytes = 8
     }
 }

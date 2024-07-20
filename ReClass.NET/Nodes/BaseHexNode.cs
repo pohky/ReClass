@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Globalization;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -9,17 +6,17 @@ using ReClassNET.Memory;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseHexNode : BaseNode {
-    private static readonly Random highlightRandom = new Random();
+    private static readonly Random highlightRandom = new();
     private static readonly Color[] highlightColors = {
         Color.Aqua, Color.Aquamarine, Color.Blue, Color.BlueViolet, Color.Chartreuse, Color.Crimson, Color.LawnGreen, Color.Magenta
     };
-    private static Color GetRandomHighlightColor() => highlightColors[highlightRandom.Next(highlightColors.Length)];
 
     private static readonly TimeSpan hightlightDuration = TimeSpan.FromSeconds(1);
 
-    private static readonly Dictionary<IntPtr, ValueTypeWrapper<DateTime>> highlightTimer = new Dictionary<IntPtr, ValueTypeWrapper<DateTime>>();
+    private static readonly Dictionary<IntPtr, ValueTypeWrapper<DateTime>> highlightTimer = new();
 
     private readonly byte[] buffer;
 
@@ -28,6 +25,7 @@ public abstract class BaseHexNode : BaseNode {
 
         buffer = new byte[MemorySize];
     }
+    private static Color GetRandomHighlightColor() => highlightColors[highlightRandom.Next(highlightColors.Length)];
 
     protected Size Draw(DrawContext context, int x, int y, string text, int length) {
         Contract.Requires(context != null);
@@ -85,9 +83,7 @@ public abstract class BaseHexNode : BaseNode {
         return new Size(x - origX, context.Font.Height);
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        return IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
 
     /// <summary>Updates the node from the given spot. Sets the value of the selected byte.</summary>
     /// <param name="spot">The spot.</param>
@@ -104,7 +100,5 @@ public abstract class BaseHexNode : BaseNode {
         }
     }
 
-    public byte[] ReadValueFromMemory(MemoryBuffer memory) {
-        return memory.ReadBytes(Offset, MemorySize);
-    }
+    public byte[] ReadValueFromMemory(MemoryBuffer memory) => memory.ReadBytes(Offset, MemorySize);
 }

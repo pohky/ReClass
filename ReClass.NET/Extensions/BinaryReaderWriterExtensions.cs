@@ -1,8 +1,7 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.IO;
 
-namespace ReClassNET.Extensions; 
+namespace ReClassNET.Extensions;
+
 public static class BinaryReaderWriterExtension {
     public static IntPtr ReadIntPtr(this BinaryReader br) {
         Contract.Requires(br != null);

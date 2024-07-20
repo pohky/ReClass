@@ -1,10 +1,10 @@
-using System;
 using System.Diagnostics.Contracts;
 using Microsoft.SqlServer.MessageBox;
 
-namespace ReClassNET.Logger; 
+namespace ReClassNET.Logger;
+
 public abstract class BaseLogger : ILogger {
-    private readonly object sync = new object();
+    private readonly object sync = new();
 
     public event NewLogEntryEventHandler NewLogEntry;
 

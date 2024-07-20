@@ -1,11 +1,10 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseMatrixNode : BaseNode {
     /// <summary>Size of the value type in bytes.</summary>
     public abstract int ValueTypeSize { get; }
@@ -13,8 +12,6 @@ public abstract class BaseMatrixNode : BaseNode {
     protected BaseMatrixNode() {
         LevelsOpen.DefaultValue = true;
     }
-
-    protected delegate void DrawMatrixValues(int x, ref int maxX, ref int y);
 
     protected Size DrawMatrixType(DrawContext context, int x, int y, string type, int rows, int columns) {
         Contract.Requires(context != null);
@@ -74,8 +71,6 @@ public abstract class BaseMatrixNode : BaseNode {
 
         return new Size(x - origX, y - origY + context.Font.Height);
     }
-
-    protected delegate void DrawVectorValues(ref int x, ref int y);
     protected Size DrawVectorType(DrawContext context, int x, int y, string type, int columns) {
         Contract.Requires(context != null);
         Contract.Requires(type != null);
@@ -151,4 +146,8 @@ public abstract class BaseMatrixNode : BaseNode {
             }
         }
     }
+
+    protected delegate void DrawMatrixValues(int x, ref int maxX, ref int y);
+
+    protected delegate void DrawVectorValues(ref int x, ref int y);
 }

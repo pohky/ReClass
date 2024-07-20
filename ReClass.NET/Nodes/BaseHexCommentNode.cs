@@ -1,12 +1,11 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public abstract class BaseHexCommentNode : BaseHexNode {
     protected int AddComment(DrawContext view, int x, int y, float fvalue, IntPtr ivalue, UIntPtr uvalue) {
         Contract.Requires(view != null);

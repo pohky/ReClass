@@ -1,16 +1,16 @@
-using System;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class Hex64Node : BaseHexCommentNode {
     public override int MemorySize => 8;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Hex64";
-        icon = Properties.Resources.B16x16_Button_Hex_64;
+        icon = Resources.B16x16_Button_Hex_64;
     }
 
     public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
@@ -27,9 +27,7 @@ public class Hex64Node : BaseHexCommentNode {
         return $"Int64: {value.LongValue}\nUInt64: 0x{value.ULongValue:X016}\nFloat: {value.FloatValue:0.000}\nDouble: {value.DoubleValue:0.000}";
     }
 
-    public override Size Draw(DrawContext context, int x, int y) {
-        return Draw(context, x, y, context.Settings.ShowNodeText ? context.Memory.ReadString(context.Settings.RawDataEncoding, Offset, 8) + " " : null, 8);
-    }
+    public override Size Draw(DrawContext context, int x, int y) => Draw(context, x, y, context.Settings.ShowNodeText ? context.Memory.ReadString(context.Settings.RawDataEncoding, Offset, 8) + " " : null, 8);
 
     public override void Update(HotSpot spot) {
         Update(spot, 8);
@@ -45,7 +43,7 @@ public class Hex64Node : BaseHexCommentNode {
         return x;
     }
 
-    private static UInt64FloatDoubleData ReadFromBuffer(MemoryBuffer memory, int offset) => new UInt64FloatDoubleData {
+    private static UInt64FloatDoubleData ReadFromBuffer(MemoryBuffer memory, int offset) => new() {
         Raw1 = memory.ReadInt32(offset),
         Raw2 = memory.ReadInt32(offset + sizeof(int))
     };

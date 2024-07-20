@@ -1,9 +1,8 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Windows.Forms;
 using ReClassNET.Forms;
 
-namespace ReClassNET.Logger; 
+namespace ReClassNET.Logger;
+
 /// <summary>A logger which displays messages in a form.</summary>
 public class GuiLogger : BaseLogger {
     private readonly LogForm form;
@@ -12,7 +11,7 @@ public class GuiLogger : BaseLogger {
 
     public GuiLogger() {
         form = new LogForm();
-        form.FormClosing += delegate (object sender, FormClosingEventArgs e) {
+        form.FormClosing += delegate(object sender, FormClosingEventArgs e) {
             form.Clear();
 
             form.Hide();

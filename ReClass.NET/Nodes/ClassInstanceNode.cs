@@ -1,9 +1,9 @@
-using System;
-using System.Drawing;
 using ReClassNET.Controls;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class ClassInstanceNode : BaseClassWrapperNode {
     public override int MemorySize => InnerNode.MemorySize;
 
@@ -11,7 +11,7 @@ public class ClassInstanceNode : BaseClassWrapperNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Class Instance";
-        icon = Properties.Resources.B16x16_Button_Class_Instance;
+        icon = Resources.B16x16_Button_Class_Instance;
     }
 
     public override Size Draw(DrawContext context, int x, int y) {

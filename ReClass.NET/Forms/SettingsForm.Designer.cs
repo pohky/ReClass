@@ -30,7 +30,7 @@ namespace ReClassNET.Forms
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.settingsTabControl = new System.Windows.Forms.TabControl();
+            this.SettingsTabControl = new System.Windows.Forms.TabControl();
             this.generalSettingsTabPage = new System.Windows.Forms.TabPage();
             this.fileAssociationGroupBox = new System.Windows.Forms.GroupBox();
             this.removeAssociationButton = new System.Windows.Forms.Button();
@@ -131,7 +131,7 @@ namespace ReClassNET.Forms
             this.bannerBox = new ReClassNET.Controls.BannerBox();
             this.utf32TextSettingsLabel = new System.Windows.Forms.Label();
             this.utf32TextTypeTextBox = new System.Windows.Forms.TextBox();
-            this.settingsTabControl.SuspendLayout();
+            this.SettingsTabControl.SuspendLayout();
             this.generalSettingsTabPage.SuspendLayout();
             this.fileAssociationGroupBox.SuspendLayout();
             this.commentsGroupBox.SuspendLayout();
@@ -144,14 +144,14 @@ namespace ReClassNET.Forms
             // 
             // settingsTabControl
             // 
-            this.settingsTabControl.Controls.Add(this.generalSettingsTabPage);
-            this.settingsTabControl.Controls.Add(this.colorsSettingTabPage);
-            this.settingsTabControl.Controls.Add(this.typeDefinitionsSettingsTabPage);
-            this.settingsTabControl.Location = new System.Drawing.Point(12, 60);
-            this.settingsTabControl.Name = "settingsTabControl";
-            this.settingsTabControl.SelectedIndex = 0;
-            this.settingsTabControl.Size = new System.Drawing.Size(562, 355);
-            this.settingsTabControl.TabIndex = 1;
+            this.SettingsTabControl.Controls.Add(this.generalSettingsTabPage);
+            this.SettingsTabControl.Controls.Add(this.colorsSettingTabPage);
+            this.SettingsTabControl.Controls.Add(this.typeDefinitionsSettingsTabPage);
+            this.SettingsTabControl.Location = new System.Drawing.Point(12, 60);
+            this.SettingsTabControl.Name = "SettingsTabControl";
+            this.SettingsTabControl.SelectedIndex = 0;
+            this.SettingsTabControl.Size = new System.Drawing.Size(562, 355);
+            this.SettingsTabControl.TabIndex = 1;
             // 
             // generalSettingsTabPage
             // 
@@ -1118,7 +1118,7 @@ namespace ReClassNET.Forms
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 427);
             this.Controls.Add(this.bannerBox);
-            this.Controls.Add(this.settingsTabControl);
+            this.Controls.Add(this.SettingsTabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -1126,7 +1126,7 @@ namespace ReClassNET.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ReClass.NET - Settings";
-            this.settingsTabControl.ResumeLayout(false);
+            this.SettingsTabControl.ResumeLayout(false);
             this.generalSettingsTabPage.ResumeLayout(false);
             this.generalSettingsTabPage.PerformLayout();
             this.fileAssociationGroupBox.ResumeLayout(false);
@@ -1146,8 +1146,8 @@ namespace ReClassNET.Forms
 		}
 
 		#endregion
-		private System.Windows.Forms.TabControl settingsTabControl;
-		private System.Windows.Forms.TabPage generalSettingsTabPage;
+
+        private System.Windows.Forms.TabPage generalSettingsTabPage;
 		private System.Windows.Forms.TabPage colorsSettingTabPage;
 		private System.Windows.Forms.TabPage typeDefinitionsSettingsTabPage;
 		private System.Windows.Forms.CheckBox stayOnTopCheckBox;

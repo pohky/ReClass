@@ -1,8 +1,8 @@
-using System.Drawing;
 using System.Text;
 using ReClassNET.Util;
 
-namespace ReClassNET; 
+namespace ReClassNET;
+
 public class Settings {
     // Application Settings
 
@@ -72,7 +72,7 @@ public class Settings {
 
     public Color PluginColor { get; set; } = Color.FromArgb(255, 0, 255);
 
-    public CustomDataMap CustomData { get; } = new CustomDataMap();
+    public CustomDataMap CustomData { get; } = new();
 
     public Settings Clone() => MemberwiseClone() as Settings;
 }

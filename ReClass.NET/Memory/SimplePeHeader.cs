@@ -1,7 +1,5 @@
-using System;
-using System.IO;
+namespace ReClassNET.Memory;
 
-namespace ReClassNET.Memory; 
 public class SimplePeHeader {
     private readonly byte[] data;
 
@@ -15,14 +13,14 @@ public class SimplePeHeader {
 
     private int FirstSectionOffset => e_lfanew + 24 + SizeOfOptionalHeader;
 
-    public int SectionOffset(int index) => FirstSectionOffset + index * 40;
-
     private SimplePeHeader(byte[] data) {
         this.data = data;
     }
 
+    public int SectionOffset(int index) => FirstSectionOffset + index * 40;
+
     /// <summary>
-    /// Rewrites the section headers to build a valid pe file.
+    ///     Rewrites the section headers to build a valid pe file.
     /// </summary>
     /// <param name="data">The memory of a dumped module.</param>
     public static void FixSectionHeaders(byte[] data) {

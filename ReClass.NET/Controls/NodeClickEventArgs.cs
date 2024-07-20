@@ -1,11 +1,9 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Windows.Forms;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class NodeClickEventArgs : EventArgs {
     public BaseNode Node { get; }
 

@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Globalization;
@@ -7,7 +6,8 @@ using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Util;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 public enum MemoryRecordAddressMode {
     Absolute,
     Relative,
@@ -53,8 +53,6 @@ public class MemoryRecord : INotifyPropertyChanged {
     public Encoding Encoding { get; set; }
 
     public bool ShowValueHexadecimal { get; set; }
-
-    public event PropertyChangedEventHandler PropertyChanged;
 
     public MemoryRecord() {
 
@@ -104,6 +102,8 @@ public class MemoryRecord : INotifyPropertyChanged {
 
         PreviousValueStr = ValueStr;
     }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     private void NotifyPropertyChanged(string propertyName) {
         var propertyChanged = PropertyChanged;

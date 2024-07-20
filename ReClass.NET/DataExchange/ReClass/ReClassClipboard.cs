@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Windows.Forms;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public class ReClassClipboard {
     /// <summary>The clipboard format string.</summary>
     private const string ClipboardFormat = "ReClass.NET::Nodes";
@@ -32,7 +29,7 @@ public class ReClassClipboard {
     /// <summary>Pastes nodes from the clipboard.</summary>
     /// <param name="templateProject">The project to resolve class references.</param>
     /// <param name="logger">The logger.</param>
-    /// <returns>A list of <see cref="ClassNode"/> and <see cref="BaseNode"/>. If no data was present, both lists are empty.</returns>
+    /// <returns>A list of <see cref="ClassNode" /> and <see cref="BaseNode" />. If no data was present, both lists are empty.</returns>
     public static Tuple<List<ClassNode>, List<BaseNode>> Paste(ReClassNetProject templateProject, ILogger logger) {
         Contract.Requires(templateProject != null);
         Contract.Requires(logger != null);

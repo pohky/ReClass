@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 public sealed class GlobalWindowManagerEventArgs : EventArgs {
     public Form Form { get; }
 
@@ -16,7 +13,7 @@ public sealed class GlobalWindowManagerEventArgs : EventArgs {
 }
 
 public static class GlobalWindowManager {
-    private static readonly List<Form> windows = new List<Form>();
+    private static readonly List<Form> windows = new();
 
     public static Form TopWindow => windows.LastOrDefault();
     public static IEnumerable<Form> Windows => windows;

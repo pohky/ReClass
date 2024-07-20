@@ -1,14 +1,12 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class ArrayOfBytesMemoryComparer : ISimpleScanComparer {
-    public ScanCompareType CompareType => ScanCompareType.Equal;
-    public int ValueSize => bytePattern?.Length ?? byteArray.Length;
+    private readonly byte[] byteArray;
 
     private readonly BytePattern bytePattern;
-    private readonly byte[] byteArray;
 
     public ArrayOfBytesMemoryComparer(BytePattern pattern) {
         Contract.Requires(pattern != null);
@@ -25,6 +23,8 @@ public class ArrayOfBytesMemoryComparer : ISimpleScanComparer {
 
         byteArray = pattern;
     }
+    public ScanCompareType CompareType => ScanCompareType.Equal;
+    public int ValueSize => bytePattern?.Length ?? byteArray.Length;
 
     public bool Compare(byte[] data, int index, out ScanResult result) {
         result = null;

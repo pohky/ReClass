@@ -1,23 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Logger;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class LogForm : IconForm {
-    private class LogItem {
-        public Image Icon { get; set; }
 
-        public string Message { get; set; }
-
-        public Exception Exception { get; set; }
-    }
-
-    private readonly List<LogItem> items = new List<LogItem>();
+    private readonly List<LogItem> items = new();
 
     public LogForm() {
         InitializeComponent();
@@ -36,6 +26,56 @@ public partial class LogForm : IconForm {
         base.OnFormClosed(e);
 
         GlobalWindowManager.RemoveWindow(this);
+    }
+
+    private void RefreshDataBinding() {
+        var cm = entriesDataGridView.BindingContext[items] as CurrencyManager;
+        cm?.Refresh();
+    }
+
+    public void Clear() {
+        items.Clear();
+
+        RefreshDataBinding();
+    }
+
+    public void Add(LogLevel level, string message, Exception ex) {
+        Contract.Requires(message != null);
+
+        Image icon;
+        switch (level) {
+            case LogLevel.Error:
+                icon = Resources.B16x16_Error;
+                break;
+            case LogLevel.Warning:
+                icon = Resources.B16x16_Warning;
+                break;
+            case LogLevel.Information:
+                icon = Resources.B16x16_Information;
+                break;
+            default:
+                icon = Resources.B16x16_Gear;
+                break;
+        }
+
+        items.Add(new LogItem { Icon = icon, Message = message, Exception = ex });
+
+        RefreshDataBinding();
+    }
+
+    private void ShowDetailsForm() {
+        var item = entriesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as LogItem;
+        if (item?.Exception != null) {
+            Program.ShowException(item.Exception);
+        }
+    }
+
+    private class LogItem {
+        public Image Icon { get; set; }
+
+        public string Message { get; set; }
+
+        public Exception Exception { get; set; }
     }
 
     #region Event Handler
@@ -58,45 +98,4 @@ public partial class LogForm : IconForm {
 
     #endregion
 
-    private void RefreshDataBinding() {
-        var cm = entriesDataGridView.BindingContext[items] as CurrencyManager;
-        cm?.Refresh();
-    }
-
-    public void Clear() {
-        items.Clear();
-
-        RefreshDataBinding();
-    }
-
-    public void Add(LogLevel level, string message, Exception ex) {
-        Contract.Requires(message != null);
-
-        Image icon;
-        switch (level) {
-            case LogLevel.Error:
-                icon = Properties.Resources.B16x16_Error;
-                break;
-            case LogLevel.Warning:
-                icon = Properties.Resources.B16x16_Warning;
-                break;
-            case LogLevel.Information:
-                icon = Properties.Resources.B16x16_Information;
-                break;
-            default:
-                icon = Properties.Resources.B16x16_Gear;
-                break;
-        }
-
-        items.Add(new LogItem { Icon = icon, Message = message, Exception = ex });
-
-        RefreshDataBinding();
-    }
-
-    private void ShowDetailsForm() {
-        var item = entriesDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as LogItem;
-        if (item?.Exception != null) {
-            Program.ShowException(item.Exception);
-        }
-    }
 }

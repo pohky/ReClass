@@ -1,9 +1,11 @@
-using System;
 using ReClassNET.Debugger;
 
-namespace ReClassNET.Core; 
+namespace ReClassNET.Core;
+
 public delegate void EnumerateProcessCallback(ref EnumerateProcessData data);
+
 public delegate void EnumerateRemoteSectionCallback(ref EnumerateRemoteSectionData data);
+
 public delegate void EnumerateRemoteModuleCallback(ref EnumerateRemoteModuleData data);
 
 public interface ICoreProcessFunctions {

@@ -1,14 +1,12 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Debugger;
 using ReClassNET.Forms;
 using ReClassNET.MemoryScanner;
 using ReClassNET.MemoryScanner.Comparer;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 public class LinkedWindowFeatures {
     public static ClassNode CreateClassAtAddress(IntPtr address, bool addDefaultBytes) {
         Contract.Ensures(Contract.Result<ClassNode>() != null);

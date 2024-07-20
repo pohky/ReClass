@@ -1,11 +1,10 @@
-using System.Drawing;
-using System.Windows.Forms;
+namespace ReClassNET.Extensions;
 
-namespace ReClassNET.Extensions; 
 public static class GraphicsExtension {
     /// <summary>
-    /// Use GDI to render normal text because GDI+ doesn't work nicely with long texts and the custom width calculation.
-    /// But GDI is simple, there is no custom rendering (rotation, scale, ...). So the BitFieldNode uses GDI+ for rendering.
+    ///     Use GDI to render normal text because GDI+ doesn't work nicely with long texts and the custom width calculation.
+    ///     But GDI is simple, there is no custom rendering (rotation, scale, ...). So the BitFieldNode uses GDI+ for
+    ///     rendering.
     /// </summary>
     /// <param name="g">The graphics context.</param>
     /// <param name="text">The text to render.</param>

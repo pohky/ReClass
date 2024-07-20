@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Extensions;
@@ -9,10 +6,90 @@ using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public class ReClassFile : IReClassImport {
     public const string FormatName = "ReClass File";
     public const string FileExtension = ".reclass";
+
+    #region ReClass 2011 / ReClass 2013
+
+    private static readonly Type[] typeMap2013 = {
+        null,
+        typeof(ClassInstanceNode),
+        null,
+        null,
+        typeof(Hex32Node),
+        typeof(Hex16Node),
+        typeof(Hex8Node),
+        typeof(ClassPointerNode),
+        typeof(Int32Node),
+        typeof(Int16Node),
+        typeof(Int8Node),
+        typeof(FloatNode),
+        typeof(UInt32Node),
+        typeof(UInt16Node),
+        typeof(UInt8Node),
+        typeof(Utf8TextNode),
+        typeof(FunctionPtrNode),
+        typeof(CustomNode),
+        typeof(Vector2Node),
+        typeof(Vector3Node),
+        typeof(Vector4Node),
+        typeof(Matrix4x4Node),
+        typeof(VirtualMethodTableNode),
+        typeof(ClassInstanceArrayNode),
+        null,
+        null,
+        null,
+        typeof(Int64Node),
+        typeof(DoubleNode),
+        typeof(Utf16TextNode),
+        typeof(ClassPointerArrayNode)
+    };
+
+    #endregion
+
+    #region ReClass 2015 / ReClass 2016
+
+    private static readonly Type[] typeMap2016 = {
+        null,
+        typeof(ClassInstanceNode),
+        null,
+        null,
+        typeof(Hex32Node),
+        typeof(Hex64Node),
+        typeof(Hex16Node),
+        typeof(Hex8Node),
+        typeof(ClassPointerNode),
+        typeof(Int64Node),
+        typeof(Int32Node),
+        typeof(Int16Node),
+        typeof(Int8Node),
+        typeof(FloatNode),
+        typeof(DoubleNode),
+        typeof(UInt32Node),
+        typeof(UInt16Node),
+        typeof(UInt8Node),
+        typeof(Utf8TextNode),
+        typeof(Utf16TextNode),
+        typeof(FunctionPtrNode),
+        typeof(CustomNode),
+        typeof(Vector2Node),
+        typeof(Vector3Node),
+        typeof(Vector4Node),
+        typeof(Matrix4x4Node),
+        typeof(VirtualMethodTableNode),
+        typeof(ClassInstanceArrayNode),
+        null,
+        typeof(Utf8TextPtrNode),
+        typeof(Utf16TextPtrNode),
+        typeof(BitFieldNode),
+        typeof(UInt64Node),
+        typeof(FunctionNode)
+    };
+
+    #endregion
 
     private readonly ReClassNetProject project;
 
@@ -52,8 +129,8 @@ public class ReClassFile : IReClassImport {
         var classes = new List<Tuple<XElement, ClassNode>>();
 
         foreach (var element in document.Root
-            .Elements("Class")
-            .DistinctBy(e => e.Attribute("Name")?.Value)) {
+                     .Elements("Class")
+                     .DistinctBy(e => e.Attribute("Name")?.Value)) {
             var node = new ClassNode(false) {
                 Name = element.Attribute("Name")?.Value ?? string.Empty,
                 AddressFormula = TransformAddressString(element.Attribute("strOffset")?.Value ?? string.Empty)
@@ -159,7 +236,7 @@ public class ReClassFile : IReClassImport {
             // ClassInstanceNode, ClassPointerNode, ClassInstanceArrayNode, ClassPointerArrayNode
             if (node is BaseWrapperNode baseWrapperNode) {
                 string reference;
-                int arrayCount = 0;
+                var arrayCount = 0;
                 if (node is BaseClassArrayNode) // ClassInstanceArrayNode, ClassPointerArrayNode
                 {
                     reference = element.Element("Array")?.Attribute("Name")?.Value;
@@ -170,7 +247,7 @@ public class ReClassFile : IReClassImport {
                         TryGetAttributeValue(element, "Count", out arrayCount, logger);
                     }
                 } else // ClassInstanceNode, ClassPointerNode
-                  {
+                {
                     reference = element.Attribute("Pointer")?.Value ?? element.Attribute("Instance")?.Value;
                 }
 
@@ -193,10 +270,10 @@ public class ReClassFile : IReClassImport {
                 {
                     node = classArrayNode.GetEquivalentNode(arrayCount, innerClassNode);
                 } else if (node is ClassPointerNode classPointerNode) // ClassPointerNode
-                  {
+                {
                     node = classPointerNode.GetEquivalentNode(innerClassNode);
                 } else // ClassInstanceNode, ClassPointerNode
-                  {
+                {
                     baseWrapperNode.ChangeInnerNode(innerClassNode);
                 }
             }
@@ -213,15 +290,15 @@ public class ReClassFile : IReClassImport {
                         .ForEach(vtableNode.AddNode);
                     break;
                 case BaseTextNode textNode: {
-                        TryGetAttributeValue(element, "Size", out var length, logger);
-                        textNode.Length = textNode is Utf16TextNode ? length / 2 : length;
-                        break;
-                    }
+                    TryGetAttributeValue(element, "Size", out var length, logger);
+                    textNode.Length = textNode is Utf16TextNode ? length / 2 : length;
+                    break;
+                }
                 case BitFieldNode bitFieldNode: {
-                        TryGetAttributeValue(element, "Size", out var bits, logger);
-                        bitFieldNode.Bits = bits * 8;
-                        break;
-                    }
+                    TryGetAttributeValue(element, "Size", out var bits, logger);
+                    bitFieldNode.Bits = bits * 8;
+                    break;
+                }
             }
 
             yield return node;
@@ -236,85 +313,4 @@ public class ReClassFile : IReClassImport {
             logger.Log(LogLevel.Warning, element.ToString());
         }
     }
-
-    #region ReClass 2011 / ReClass 2013
-
-    private static readonly Type[] typeMap2013 =
-    {
-        null,
-        typeof(ClassInstanceNode),
-        null,
-        null,
-        typeof(Hex32Node),
-        typeof(Hex16Node),
-        typeof(Hex8Node),
-        typeof(ClassPointerNode),
-        typeof(Int32Node),
-        typeof(Int16Node),
-        typeof(Int8Node),
-        typeof(FloatNode),
-        typeof(UInt32Node),
-        typeof(UInt16Node),
-        typeof(UInt8Node),
-        typeof(Utf8TextNode),
-        typeof(FunctionPtrNode),
-        typeof(CustomNode),
-        typeof(Vector2Node),
-        typeof(Vector3Node),
-        typeof(Vector4Node),
-        typeof(Matrix4x4Node),
-        typeof(VirtualMethodTableNode),
-        typeof(ClassInstanceArrayNode),
-        null,
-        null,
-        null,
-        typeof(Int64Node),
-        typeof(DoubleNode),
-        typeof(Utf16TextNode),
-        typeof(ClassPointerArrayNode)
-    };
-
-    #endregion
-
-    #region ReClass 2015 / ReClass 2016
-
-    private static readonly Type[] typeMap2016 =
-    {
-        null,
-        typeof(ClassInstanceNode),
-        null,
-        null,
-        typeof(Hex32Node),
-        typeof(Hex64Node),
-        typeof(Hex16Node),
-        typeof(Hex8Node),
-        typeof(ClassPointerNode),
-        typeof(Int64Node),
-        typeof(Int32Node),
-        typeof(Int16Node),
-        typeof(Int8Node),
-        typeof(FloatNode),
-        typeof(DoubleNode),
-        typeof(UInt32Node),
-        typeof(UInt16Node),
-        typeof(UInt8Node),
-        typeof(Utf8TextNode),
-        typeof(Utf16TextNode),
-        typeof(FunctionPtrNode),
-        typeof(CustomNode),
-        typeof(Vector2Node),
-        typeof(Vector3Node),
-        typeof(Vector4Node),
-        typeof(Matrix4x4Node),
-        typeof(VirtualMethodTableNode),
-        typeof(ClassInstanceArrayNode),
-        null,
-        typeof(Utf8TextPtrNode),
-        typeof(Utf16TextPtrNode),
-        typeof(BitFieldNode),
-        typeof(UInt64Node),
-        typeof(FunctionNode)
-    };
-
-    #endregion
 }

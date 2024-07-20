@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 public static class Utils {
     public static T Min<T, U>(T item1, T item2, Func<T, U> keySelector) where U : IComparable {
         Contract.Requires(keySelector != null);
@@ -47,6 +45,6 @@ public static class Utils {
     public static string RandomString(int length) {
         const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         return new string(Enumerable.Repeat(Chars, length)
-          .Select(s => s[Program.GlobalRandom.Next(s.Length)]).ToArray());
+            .Select(s => s[Program.GlobalRandom.Next(s.Length)]).ToArray());
     }
 }

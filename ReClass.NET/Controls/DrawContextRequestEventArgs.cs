@@ -1,9 +1,9 @@
-using System;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class DrawContextRequestEventArgs : EventArgs {
     public DateTime CurrentTime { get; set; } = DateTime.UtcNow;
 

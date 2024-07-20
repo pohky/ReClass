@@ -1,18 +1,57 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Extensions;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class EnumComboBox<TEnum> : ComboBox where TEnum : struct {
+
+    public EnumComboBox() {
+        base.AutoCompleteMode = AutoCompleteMode.None;
+        base.DropDownStyle = ComboBoxStyle.DropDownList;
+        base.FormattingEnabled = false;
+        base.DisplayMember = nameof(EnumDescriptionDisplay<TEnum>.Description);
+        base.ValueMember = nameof(EnumDescriptionDisplay<TEnum>.Value);
+
+        SetValues(EnumDescriptionDisplay<TEnum>.Create());
+        if (base.Items.Count != 0) {
+            SelectedIndex = 0;
+        }
+    }
+
+    public void SetAvailableValues(TEnum item1, params TEnum[] items) {
+        SetAvailableValues(items.Prepend(item1));
+    }
+
+    public void SetAvailableValues(IEnumerable<TEnum> values) {
+        Contract.Requires(values != null);
+
+        SetValues(EnumDescriptionDisplay<TEnum>.CreateExact(values));
+    }
+
+    public void SetAvailableValuesExclude(TEnum item1, params TEnum[] items) {
+        SetAvailableValuesExclude(items.Prepend(item1));
+    }
+
+    public void SetAvailableValuesExclude(IEnumerable<TEnum> values) {
+        Contract.Requires(values != null);
+
+        SetValues(EnumDescriptionDisplay<TEnum>.CreateExclude(values));
+    }
+
+    private void SetValues(List<EnumDescriptionDisplay<TEnum>> values) {
+        Contract.Requires(values != null);
+
+        base.Items.Clear();
+        base.Items.AddRange(values.ToArray());
+    }
+
     #region Properties
 
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public new ObjectCollection Items => new ObjectCollection(this);
+    public new ObjectCollection Items => new(this);
 
     [Browsable(false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -70,43 +109,4 @@ public class EnumComboBox<TEnum> : ComboBox where TEnum : struct {
 
     #endregion
 
-    public EnumComboBox() {
-        base.AutoCompleteMode = AutoCompleteMode.None;
-        base.DropDownStyle = ComboBoxStyle.DropDownList;
-        base.FormattingEnabled = false;
-        base.DisplayMember = nameof(EnumDescriptionDisplay<TEnum>.Description);
-        base.ValueMember = nameof(EnumDescriptionDisplay<TEnum>.Value);
-
-        SetValues(EnumDescriptionDisplay<TEnum>.Create());
-        if (base.Items.Count != 0) {
-            SelectedIndex = 0;
-        }
-    }
-
-    public void SetAvailableValues(TEnum item1, params TEnum[] items) {
-        SetAvailableValues(items.Prepend(item1));
-    }
-
-    public void SetAvailableValues(IEnumerable<TEnum> values) {
-        Contract.Requires(values != null);
-
-        SetValues(EnumDescriptionDisplay<TEnum>.CreateExact(values));
-    }
-
-    public void SetAvailableValuesExclude(TEnum item1, params TEnum[] items) {
-        SetAvailableValuesExclude(items.Prepend(item1));
-    }
-
-    public void SetAvailableValuesExclude(IEnumerable<TEnum> values) {
-        Contract.Requires(values != null);
-
-        SetValues(EnumDescriptionDisplay<TEnum>.CreateExclude(values));
-    }
-
-    private void SetValues(List<EnumDescriptionDisplay<TEnum>> values) {
-        Contract.Requires(values != null);
-
-        base.Items.Clear();
-        base.Items.AddRange(values.ToArray());
-    }
 }

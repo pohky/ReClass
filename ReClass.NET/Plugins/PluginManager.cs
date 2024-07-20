@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.IO;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Core;
 using ReClassNET.DataExchange.ReClass;
@@ -12,11 +9,12 @@ using ReClassNET.Native;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 
-namespace ReClassNET.Plugins; 
+namespace ReClassNET.Plugins;
+
 internal sealed class PluginManager {
-    private readonly List<PluginInfo> plugins = new List<PluginInfo>();
 
     private readonly IPluginHost host;
+    private readonly List<PluginInfo> plugins = new();
 
     public IEnumerable<PluginInfo> Plugins => plugins;
 

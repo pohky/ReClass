@@ -1,11 +1,10 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using ReClassNET.Native;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 public static class DpiUtil {
     public const int DefalutDpi = 96;
 
@@ -42,13 +41,9 @@ public static class DpiUtil {
         }
     }
 
-    public static int ScaleIntX(int i) {
-        return (int)Math.Round(i * scaleX);
-    }
+    public static int ScaleIntX(int i) => (int)Math.Round(i * scaleX);
 
-    public static int ScaleIntY(int i) {
-        return (int)Math.Round(i * scaleY);
-    }
+    public static int ScaleIntY(int i) => (int)Math.Round(i * scaleY);
 
     public static Image ScaleImage(Image sourceImage) {
         if (sourceImage == null) {
@@ -85,7 +80,7 @@ public static class DpiUtil {
 
         var interpolationMode = InterpolationMode.HighQualityBicubic;
         if (sourceWidth > 0 && sourceHeight > 0) {
-            if ((width % sourceWidth) == 0 && (height % sourceHeight) == 0) {
+            if (width % sourceWidth == 0 && height % sourceHeight == 0) {
                 interpolationMode = InterpolationMode.NearestNeighbor;
             }
         }

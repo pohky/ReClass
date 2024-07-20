@@ -1,6 +1,5 @@
-using System;
+namespace ReClassNET.Util.Conversion;
 
-namespace ReClassNET.Util.Conversion; 
 public sealed class BigEndianBitConverter : EndianBitConverter {
     protected override long FromBytes(byte[] buffer, int index, int bytesToConvert) {
         if (buffer == null) {

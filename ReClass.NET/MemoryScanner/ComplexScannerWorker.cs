@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using System.Threading;
 using ReClassNET.MemoryScanner.Comparer;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 internal class ComplexScannerWorker : IScannerWorker {
-    private readonly ScanSettings settings;
     private readonly IComplexScanComparer comparer;
+    private readonly ScanSettings settings;
 
     public ComplexScannerWorker(ScanSettings settings, IComplexScanComparer comparer) {
         this.settings = settings;

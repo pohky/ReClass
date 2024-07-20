@@ -1,9 +1,8 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Windows.Forms;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class InputBytesForm : IconForm {
     private readonly int currentSize;
 
@@ -32,6 +31,12 @@ public partial class InputBytesForm : IconForm {
         GlobalWindowManager.RemoveWindow(this);
     }
 
+    private void FormatLabelText(Label label, int size) {
+        Contract.Requires(label != null);
+
+        label.Text = $"0x{size:X} / {size}";
+    }
+
     #region Event Handler
 
     private void hexRadioButton_CheckedChanged(object sender, EventArgs e) {
@@ -44,9 +49,4 @@ public partial class InputBytesForm : IconForm {
 
     #endregion
 
-    private void FormatLabelText(Label label, int size) {
-        Contract.Requires(label != null);
-
-        label.Text = $"0x{size:X} / {size}";
-    }
 }

@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public delegate void MemorySearchResultControlResultDoubleClickEventHandler(object sender, MemoryRecord record);
 
 public partial class MemoryRecordList : UserControl {
+
+    private readonly BindingList<MemoryRecord> bindings;
     public bool ShowDescriptionColumn {
         get => descriptionColumn.Visible;
         set => descriptionColumn.Visible = value;
@@ -55,10 +54,6 @@ public partial class MemoryRecordList : UserControl {
         set;
     }
 
-    public event MemorySearchResultControlResultDoubleClickEventHandler RecordDoubleClick;
-
-    private readonly BindingList<MemoryRecord> bindings;
-
     public MemoryRecordList() {
         InitializeComponent();
 
@@ -81,6 +76,53 @@ public partial class MemoryRecordList : UserControl {
         resultDataGridView.DataSource = bindings;
     }
 
+    public event MemorySearchResultControlResultDoubleClickEventHandler RecordDoubleClick;
+
+    private IEnumerable<MemoryRecord> GetSelectedRecords() => resultDataGridView.SelectedRows.Cast<DataGridViewRow>().Select(r => (MemoryRecord)r.DataBoundItem);
+
+    /// <summary>
+    ///     Sets the records to display.
+    /// </summary>
+    /// <param name="records">The records.</param>
+    public void SetRecords(IEnumerable<MemoryRecord> records) {
+        Contract.Requires(records != null);
+
+        bindings.Clear();
+
+        bindings.RaiseListChangedEvents = false;
+
+        foreach (var record in records) {
+            bindings.Add(record);
+        }
+
+        bindings.RaiseListChangedEvents = true;
+        bindings.ResetBindings();
+    }
+
+    /// <summary>
+    ///     Removes all records.
+    /// </summary>
+    public void Clear() {
+        bindings.Clear();
+    }
+
+    /// <summary>
+    ///     Refreshes the data of all displayed records.
+    /// </summary>
+    /// <param name="process">The process.</param>
+    public void RefreshValues(RemoteProcess process) {
+        Contract.Requires(process != null);
+
+        foreach (var record in resultDataGridView.GetVisibleRows().Select(r => (MemoryRecord)r.DataBoundItem)) {
+            record.RefreshValue(process);
+        }
+    }
+
+    private void OnRecordDoubleClick(MemoryRecord record) {
+        var evt = RecordDoubleClick;
+        evt?.Invoke(this, record);
+    }
+
     #region Event Handler
 
     private void resultDataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
@@ -96,7 +138,7 @@ public partial class MemoryRecordList : UserControl {
                 e.FormattingApplied = true;
             }
         } else if (e.ColumnIndex == 3) // Value
-          {
+        {
             var record = (MemoryRecord)resultDataGridView.Rows[e.RowIndex].DataBoundItem;
             e.CellStyle.ForeColor = record.HasChangedValue ? Color.Red : Color.Black;
             e.FormattingApplied = true;
@@ -121,48 +163,4 @@ public partial class MemoryRecordList : UserControl {
 
     #endregion
 
-    private IEnumerable<MemoryRecord> GetSelectedRecords() => resultDataGridView.SelectedRows.Cast<DataGridViewRow>().Select(r => (MemoryRecord)r.DataBoundItem);
-
-    /// <summary>
-    /// Sets the records to display.
-    /// </summary>
-    /// <param name="records">The records.</param>
-    public void SetRecords(IEnumerable<MemoryRecord> records) {
-        Contract.Requires(records != null);
-
-        bindings.Clear();
-
-        bindings.RaiseListChangedEvents = false;
-
-        foreach (var record in records) {
-            bindings.Add(record);
-        }
-
-        bindings.RaiseListChangedEvents = true;
-        bindings.ResetBindings();
-    }
-
-    /// <summary>
-    /// Removes all records.
-    /// </summary>
-    public void Clear() {
-        bindings.Clear();
-    }
-
-    /// <summary>
-    /// Refreshes the data of all displayed records.
-    /// </summary>
-    /// <param name="process">The process.</param>
-    public void RefreshValues(RemoteProcess process) {
-        Contract.Requires(process != null);
-
-        foreach (var record in resultDataGridView.GetVisibleRows().Select(r => (MemoryRecord)r.DataBoundItem)) {
-            record.RefreshValue(process);
-        }
-    }
-
-    private void OnRecordDoubleClick(MemoryRecord record) {
-        var evt = RecordDoubleClick;
-        evt?.Invoke(this, record);
-    }
 }

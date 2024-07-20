@@ -1,14 +1,14 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Project;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class EnumNode : BaseNode {
     public override int MemorySize => (int)Enum.Size;
 
@@ -16,7 +16,7 @@ public class EnumNode : BaseNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Enum";
-        icon = Properties.Resources.B16x16_Button_Enum;
+        icon = Resources.B16x16_Button_Enum;
     }
 
     public void ChangeEnum(EnumDescription @enum) {
@@ -27,9 +27,7 @@ public class EnumNode : BaseNode {
         GetParentContainer()?.ChildHasChanged(this);
     }
 
-    private string GetTextRepresentation(MemoryBuffer memory) {
-        return Enum.UseFlagsMode ? GetFlagsStringRepresentation(memory) : GetStringRepresentation(memory);
-    }
+    private string GetTextRepresentation(MemoryBuffer memory) => Enum.UseFlagsMode ? GetFlagsStringRepresentation(memory) : GetStringRepresentation(memory);
 
     private long ReadSignedValueFromMemory(MemoryBuffer memory) {
         switch (Enum.Size) {
@@ -153,7 +151,5 @@ public class EnumNode : BaseNode {
         return new Size(x - origX, context.Font.Height);
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        return IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => IsHidden && !IsWrapped ? HiddenHeight : context.Font.Height;
 }

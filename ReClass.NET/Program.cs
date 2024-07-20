@@ -1,8 +1,5 @@
-using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Windows.Forms;
 using Microsoft.SqlServer.MessageBox;
 using ReClassNET.Core;
 using ReClassNET.Forms;
@@ -12,7 +9,8 @@ using ReClassNET.Native;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET; 
+namespace ReClassNET;
+
 public static class Program {
     public static CommandLineArgs CommandLineArgs { get; private set; }
 
@@ -20,7 +18,7 @@ public static class Program {
 
     public static ILogger Logger { get; private set; }
 
-    public static Random GlobalRandom { get; } = new Random();
+    public static Random GlobalRandom { get; } = new();
 
     public static RemoteProcess RemoteProcess { get; private set; }
 
@@ -33,7 +31,7 @@ public static class Program {
     public static FontEx MonoSpaceFont { get; private set; }
 
     [STAThread]
-    static void Main(string[] args) {
+    private static void Main(string[] args) {
         DesignMode = false; // The designer doesn't call Main()
 
         CommandLineArgs = new CommandLineArgs(args);

@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class RegexStringMemoryComparer : IComplexScanComparer {
-    public ScanCompareType CompareType => ScanCompareType.Equal;
 
     public Regex Pattern { get; }
 
@@ -21,6 +19,7 @@ public class RegexStringMemoryComparer : IComplexScanComparer {
 
         Encoding = encoding;
     }
+    public ScanCompareType CompareType => ScanCompareType.Equal;
 
     public IEnumerable<ScanResult> Compare(byte[] data, int size) {
         var buffer = Encoding.GetString(data, 0, size);
@@ -37,7 +36,7 @@ public class RegexStringMemoryComparer : IComplexScanComparer {
             lastOffset = byteOffset;
 
             yield return new RegexStringScanResult(match.Value, Encoding) {
-                Address = (IntPtr)byteOffset
+                Address = byteOffset
             };
 
             match = match.NextMatch();
@@ -60,7 +59,7 @@ public class RegexStringMemoryComparer : IComplexScanComparer {
         }
 
         result = new RegexStringScanResult(match.Value, Encoding) {
-            Address = (IntPtr)byteOffset
+            Address = byteOffset
         };
 
         return true;

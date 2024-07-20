@@ -1,22 +1,16 @@
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.IO;
 using System.Text;
 
-namespace ReClassNET.AddressParser; 
+namespace ReClassNET.AddressParser;
+
 /// <summary>
-/// Parses the given text and reads individual tokens from it.
+///     Parses the given text and reads individual tokens from it.
 /// </summary>
 public class Tokenizer : ITokenizer {
     private readonly TextReader reader;
 
     private char currentCharacter;
-
-    public Token Token { get; private set; }
-
-    public string Identifier { get; private set; }
-
-    public long Number { get; private set; }
 
     public Tokenizer(TextReader reader) {
         Contract.Requires(reader != null);
@@ -26,6 +20,12 @@ public class Tokenizer : ITokenizer {
         ReadNextCharacter();
         ReadNextToken();
     }
+
+    public Token Token { get; private set; }
+
+    public string Identifier { get; private set; }
+
+    public long Number { get; private set; }
 
     public void ReadNextToken() {
         SkipWhitespaces();
@@ -101,15 +101,20 @@ public class Tokenizer : ITokenizer {
     }
 
     private bool TryReadNumberToken() {
-        bool IsHexadecimalDigit(char c) => char.IsDigit(c) || 'a' <= c && c <= 'f' || 'A' <= c && c <= 'F';
-        bool IsHexadecimalIdentifier(char c) => c == 'x' || c == 'X';
+        bool IsHexadecimalDigit(char c) {
+            return char.IsDigit(c) || ('a' <= c && c <= 'f') || ('A' <= c && c <= 'F');
+        }
+
+        bool IsHexadecimalIdentifier(char c) {
+            return c == 'x' || c == 'X';
+        }
 
         if (IsHexadecimalDigit(currentCharacter)) {
             var sb = new StringBuilder();
             var hasHexadecimalIdentifier = false;
 
             while (IsHexadecimalDigit(currentCharacter)
-                || IsHexadecimalIdentifier(currentCharacter) && !hasHexadecimalIdentifier && sb.Length == 1 && sb[0] == '0') {
+                   || (IsHexadecimalIdentifier(currentCharacter) && !hasHexadecimalIdentifier && sb.Length == 1 && sb[0] == '0')) {
                 sb.Append(currentCharacter);
 
                 if (!hasHexadecimalIdentifier) {

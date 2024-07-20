@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using ReClassNET.Util;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class ClassUtil {
     /// <summary>
-    /// Tests if the class to check can be inserted into the parent class without creating a cycle.
+    ///     Tests if the class to check can be inserted into the parent class without creating a cycle.
     /// </summary>
     /// <param name="parent">The class into which </param>
     /// <param name="classToCheck">The class which should get inserted.</param>

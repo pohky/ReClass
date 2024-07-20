@@ -1,13 +1,30 @@
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 public class GrowingList<T> {
     private readonly List<T> list;
 
     public T DefaultValue { get; set; }
 
     public int Count => list.Count;
+
+    public T this[int index] {
+        get {
+            Contract.Requires(index >= 0);
+
+            CheckIndex(index);
+
+            return list[index];
+        }
+        set {
+            Contract.Requires(index >= 0);
+
+            CheckIndex(index);
+
+            list[index] = value;
+        }
+    }
 
     public GrowingList() {
         Contract.Ensures(list != null);
@@ -33,23 +50,6 @@ public class GrowingList<T> {
 
         if (index >= list.Count) {
             GrowToSize(index);
-        }
-    }
-
-    public T this[int index] {
-        get {
-            Contract.Requires(index >= 0);
-
-            CheckIndex(index);
-
-            return list[index];
-        }
-        set {
-            Contract.Requires(index >= 0);
-
-            CheckIndex(index);
-
-            list[index] = value;
         }
     }
 }

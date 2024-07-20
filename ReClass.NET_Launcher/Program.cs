@@ -1,16 +1,14 @@
-using System;
 using System.Diagnostics;
-using System.IO;
-using System.Windows.Forms;
 using ReClassNET;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Native;
 using ReClassNET.Util;
 
-namespace ReClassNET_Launcher; 
-static class Program {
+namespace ReClassNET_Launcher;
+
+internal static class Program {
     [STAThread]
-    static void Main(string[] args) {
+    private static void Main(string[] args) {
         var commandLineArgs = new CommandLineArgs(args);
 
         // Register the files with the launcher.

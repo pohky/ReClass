@@ -1,10 +1,8 @@
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class HotSpotTextBox : TextBox {
     private HotSpot currentHotSpot;
 
@@ -24,10 +22,33 @@ public class HotSpotTextBox : TextBox {
         }
     }
 
-    public event HotSpotTextBoxCommitEventHandler Committed;
-
     public HotSpotTextBox() {
         BorderStyle = BorderStyle.None;
+    }
+
+    public event HotSpotTextBoxCommitEventHandler Committed;
+
+    public void ShowOnHotSpot(HotSpot hotSpot) {
+        currentHotSpot = hotSpot;
+
+        if (hotSpot == null) {
+            Visible = false;
+
+            return;
+        }
+
+        AlignToRect(hotSpot.Rect);
+
+        Text = hotSpot.Text.Trim();
+        ReadOnly = hotSpot.Id == HotSpot.ReadOnlyId;
+
+        Visible = true;
+    }
+
+    private void AlignToRect(Rectangle rect) {
+        SetBounds(rect.Left + 2, rect.Top, rect.Width, rect.Height);
+
+        minimumWidth = rect.Width;
     }
 
     #region Events
@@ -75,28 +96,6 @@ public class HotSpotTextBox : TextBox {
 
     #endregion
 
-    public void ShowOnHotSpot(HotSpot hotSpot) {
-        currentHotSpot = hotSpot;
-
-        if (hotSpot == null) {
-            Visible = false;
-
-            return;
-        }
-
-        AlignToRect(hotSpot.Rect);
-
-        Text = hotSpot.Text.Trim();
-        ReadOnly = hotSpot.Id == HotSpot.ReadOnlyId;
-
-        Visible = true;
-    }
-
-    private void AlignToRect(Rectangle rect) {
-        SetBounds(rect.Left + 2, rect.Top, rect.Width, rect.Height);
-
-        minimumWidth = rect.Width;
-    }
 }
 
 public delegate void HotSpotTextBoxCommitEventHandler(object sender, HotSpotTextBoxCommitEventArgs e);

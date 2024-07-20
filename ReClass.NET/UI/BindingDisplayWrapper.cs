@@ -1,10 +1,10 @@
-using System;
 using System.Diagnostics.Contracts;
 
-namespace ReClassNET.UI; 
+namespace ReClassNET.UI;
+
 public class BindingDisplayWrapper<T> {
-    public T Value { get; }
     private readonly Func<T, string> toString;
+    public T Value { get; }
 
     public BindingDisplayWrapper(T value, Func<T, string> toString) {
         Contract.Requires(toString != null);

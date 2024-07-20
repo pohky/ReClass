@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Extensions;
@@ -11,7 +7,8 @@ using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 public partial class ReClassNetFile {
     public void Load(string filePath, ILogger logger) {
         using var fs = new FileStream(filePath, FileMode.Open);
@@ -84,8 +81,8 @@ public partial class ReClassNetFile {
         var classesElement = document.Root.Element(XmlClassesElement);
         if (classesElement != null) {
             foreach (var element in classesElement
-                .Elements(XmlClassElement)
-                .DistinctBy(e => e.Attribute(XmlUuidAttribute)?.Value)) {
+                         .Elements(XmlClassElement)
+                         .DistinctBy(e => e.Attribute(XmlUuidAttribute)?.Value)) {
                 var node = new ClassNode(false) {
                     Uuid = ParseUuid(element.Attribute(XmlUuidAttribute)?.Value),
                     Name = element.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
@@ -203,63 +200,60 @@ public partial class ReClassNetFile {
 
         switch (node) {
             case VirtualMethodTableNode vtableNode: {
-                    var nodes = element
-                        .Elements(XmlMethodElement)
-                        .Select(e => new VirtualMethodNode {
-                            Name = e.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
-                            Comment = e.Attribute(XmlCommentAttribute)?.Value ?? string.Empty,
-                            IsHidden = (bool?)e.Attribute(XmlHiddenAttribute) ?? false
-                        });
+                var nodes = element
+                    .Elements(XmlMethodElement)
+                    .Select(e => new VirtualMethodNode {
+                        Name = e.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
+                        Comment = e.Attribute(XmlCommentAttribute)?.Value ?? string.Empty,
+                        IsHidden = (bool?)e.Attribute(XmlHiddenAttribute) ?? false
+                    });
 
-                    vtableNode.AddNodes(nodes);
-                    break;
-                }
+                vtableNode.AddNodes(nodes);
+                break;
+            }
             case UnionNode unionNode: {
-                    var nodes = element
-                        .Elements()
-                        .Select(e => CreateNodeFromElement(e, unionNode, logger));
+                var nodes = element
+                    .Elements()
+                    .Select(e => CreateNodeFromElement(e, unionNode, logger));
 
-                    unionNode.AddNodes(nodes);
-                    break;
-                }
+                unionNode.AddNodes(nodes);
+                break;
+            }
             case BaseWrapperArrayNode arrayNode: {
-                    arrayNode.Count = (int?)element.Attribute(XmlCountAttribute) ?? 0;
-                    break;
-                }
+                arrayNode.Count = (int?)element.Attribute(XmlCountAttribute) ?? 0;
+                break;
+            }
             case BaseTextNode textNode: {
-                    textNode.Length = (int?)element.Attribute(XmlLengthAttribute) ?? 0;
-                    break;
-                }
+                textNode.Length = (int?)element.Attribute(XmlLengthAttribute) ?? 0;
+                break;
+            }
             case BitFieldNode bitFieldNode: {
-                    bitFieldNode.Bits = (int?)element.Attribute(XmlBitsAttribute) ?? 0;
-                    break;
-                }
+                bitFieldNode.Bits = (int?)element.Attribute(XmlBitsAttribute) ?? 0;
+                break;
+            }
             case FunctionNode functionNode: {
-                    functionNode.Signature = element.Attribute(XmlSignatureAttribute)?.Value ?? string.Empty;
+                functionNode.Signature = element.Attribute(XmlSignatureAttribute)?.Value ?? string.Empty;
 
-                    var reference = ParseUuid(element.Attribute(XmlReferenceAttribute)?.Value);
-                    if (project.ContainsClass(reference)) {
-                        functionNode.BelongsToClass = project.GetClassByUuid(reference);
-                    }
-                    break;
+                var reference = ParseUuid(element.Attribute(XmlReferenceAttribute)?.Value);
+                if (project.ContainsClass(reference)) {
+                    functionNode.BelongsToClass = project.GetClassByUuid(reference);
                 }
+                break;
+            }
             case EnumNode enumNode: {
-                    var enumName = element.Attribute(XmlReferenceAttribute)?.Value ?? string.Empty;
-                    var @enum = project.Enums.FirstOrDefault(e => e.Name == enumName) ?? EnumDescription.Default;
+                var enumName = element.Attribute(XmlReferenceAttribute)?.Value ?? string.Empty;
+                var @enum = project.Enums.FirstOrDefault(e => e.Name == enumName) ?? EnumDescription.Default;
 
-                    enumNode.ChangeEnum(@enum);
-                    break;
-                }
+                enumNode.ChangeEnum(@enum);
+                break;
+            }
         }
 
         return node;
     }
 
-    private static Guid ParseUuid(string raw) => raw == null
-            ? throw new ArgumentNullException()
-            : raw.Length == 24
-                ? new Guid(Convert.FromBase64String(raw))
-                : Guid.Parse(raw);
+    private static Guid ParseUuid(string raw) => raw == null ? throw new ArgumentNullException() :
+        raw.Length == 24 ? new Guid(Convert.FromBase64String(raw)) : Guid.Parse(raw);
 
     public static Tuple<List<ClassNode>, List<BaseNode>> DeserializeNodesFromStream(Stream input, ReClassNetProject templateProject, ILogger logger) {
         Contract.Requires(input != null);

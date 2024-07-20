@@ -1,15 +1,13 @@
-using System;
 using System.Diagnostics;
 using ReClassNET.Util.Conversion;
 
-namespace ReClassNET.MemoryScanner.Comparer; 
+namespace ReClassNET.MemoryScanner.Comparer;
+
 public class ShortMemoryComparer : ISimpleScanComparer {
-    public ScanCompareType CompareType { get; }
-    public short Value1 { get; }
-    public short Value2 { get; }
-    public int ValueSize => sizeof(short);
 
     private readonly EndianBitConverter bitConverter;
+    public short Value1 { get; }
+    public short Value2 { get; }
 
     public ShortMemoryComparer(ScanCompareType compareType, short value1, short value2, EndianBitConverter bitConverter) {
         CompareType = compareType;
@@ -19,6 +17,8 @@ public class ShortMemoryComparer : ISimpleScanComparer {
 
         this.bitConverter = bitConverter;
     }
+    public ScanCompareType CompareType { get; }
+    public int ValueSize => sizeof(short);
 
     public bool Compare(byte[] data, int index, out ScanResult result) {
         return CompareInternal(

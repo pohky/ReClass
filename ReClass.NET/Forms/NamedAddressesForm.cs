@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Windows.Forms;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class NamedAddressesForm : IconForm {
     private readonly RemoteProcess process;
 
@@ -31,6 +28,25 @@ public partial class NamedAddressesForm : IconForm {
         base.OnFormClosed(e);
 
         GlobalWindowManager.RemoveWindow(this);
+    }
+
+    private void DisplayNamedAddresses() {
+        namedAddressesListBox.DataSource = process.NamedAddresses
+            .Select(kv => new BindingDisplayWrapper<KeyValuePair<IntPtr, string>>(kv, v => $"0x{v.Key.ToString(Constants.AddressHexFormat)}: {v.Value}"))
+            .ToList();
+
+        namedAddressesListBox_SelectedIndexChanged(null, null);
+    }
+
+    private bool IsValidInput() {
+        try {
+            var address = process.ParseAddress(addressTextBox.Text.Trim());
+            var name = nameTextBox.Text.Trim();
+
+            return !address.IsNull() && !string.IsNullOrEmpty(name);
+        } catch {
+            return false;
+        }
     }
 
     #region Event Handler
@@ -68,22 +84,4 @@ public partial class NamedAddressesForm : IconForm {
 
     #endregion
 
-    private void DisplayNamedAddresses() {
-        namedAddressesListBox.DataSource = process.NamedAddresses
-            .Select(kv => new BindingDisplayWrapper<KeyValuePair<IntPtr, string>>(kv, v => $"0x{v.Key.ToString(Constants.AddressHexFormat)}: {v.Value}"))
-            .ToList();
-
-        namedAddressesListBox_SelectedIndexChanged(null, null);
-    }
-
-    private bool IsValidInput() {
-        try {
-            var address = process.ParseAddress(addressTextBox.Text.Trim());
-            var name = nameTextBox.Text.Trim();
-
-            return !address.IsNull() && !string.IsNullOrEmpty(name);
-        } catch {
-            return false;
-        }
-    }
 }

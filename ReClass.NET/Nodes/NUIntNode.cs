@@ -1,18 +1,18 @@
-using System;
-using System.Drawing;
 using System.Globalization;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class NUIntNode : BaseNumericNode {
     public override int MemorySize => UIntPtr.Size;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "NUInt";
-        icon = Properties.Resources.B16x16_Button_NUInt;
+        icon = Resources.B16x16_Button_NUInt;
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
@@ -30,7 +30,7 @@ public class NUIntNode : BaseNumericNode {
 
         if (spot.Id == 0 || spot.Id == 1) {
 #if RECLASSNET64
-            if (ulong.TryParse(spot.Text, out var val) || spot.Text.TryGetHexString(out var hexValue) && ulong.TryParse(hexValue, NumberStyles.HexNumber, null, out val)) {
+            if (ulong.TryParse(spot.Text, out var val) || (spot.Text.TryGetHexString(out var hexValue) && ulong.TryParse(hexValue, NumberStyles.HexNumber, null, out val))) {
                 spot.Process.WriteRemoteMemory(spot.Address, val);
             }
 #else
@@ -42,7 +42,5 @@ public class NUIntNode : BaseNumericNode {
         }
     }
 
-    public UIntPtr ReadValueFromMemory(MemoryBuffer memory) {
-        return memory.ReadUIntPtr(Offset);
-    }
+    public UIntPtr ReadValueFromMemory(MemoryBuffer memory) => memory.ReadUIntPtr(Offset);
 }

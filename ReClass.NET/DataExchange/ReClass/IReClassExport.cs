@@ -1,8 +1,8 @@
 using System.Diagnostics.Contracts;
-using System.IO;
 using ReClassNET.Logger;
 
-namespace ReClassNET.DataExchange.ReClass; 
+namespace ReClassNET.DataExchange.ReClass;
+
 [ContractClass(typeof(ReClassExportContract))]
 public interface IReClassExport {
     void Save(string filePath, ILogger logger);

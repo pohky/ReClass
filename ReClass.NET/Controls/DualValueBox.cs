@@ -1,8 +1,8 @@
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 [Designer(typeof(DualValueControlDesigner))]
 public partial class DualValueBox : UserControl {
     public bool ShowSecondInputField {
@@ -54,9 +54,9 @@ public partial class DualValueBox : UserControl {
 }
 
 internal class DualValueControlDesigner : ControlDesigner {
-    DualValueControlDesigner() {
-        AutoResizeHandles = true;
-    }
 
     public override SelectionRules SelectionRules => SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
+    private DualValueControlDesigner() {
+        AutoResizeHandles = true;
+    }
 }

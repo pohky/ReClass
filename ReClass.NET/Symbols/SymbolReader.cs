@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Dia2Lib;
@@ -6,13 +5,19 @@ using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Native;
 
-namespace ReClassNET.Symbols; 
+namespace ReClassNET.Symbols;
+
 public class SymbolReader : IDisposable {
-    private ComDisposableWrapper<DiaSource> diaSource;
     private ComDisposableWrapper<IDiaSession> diaSession;
+    private ComDisposableWrapper<DiaSource> diaSource;
 
     public SymbolReader() {
         diaSource = new ComDisposableWrapper<DiaSource>(new DiaSource());
+    }
+
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     protected virtual void Dispose(bool disposing) {
@@ -29,11 +34,6 @@ public class SymbolReader : IDisposable {
 
     ~SymbolReader() {
         Dispose(false);
-    }
-
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 
     public static void TryResolveSymbolsForModule(Module module, string searchPath) {
@@ -90,21 +90,21 @@ public class SymbolReader : IDisposable {
         Contract.Requires(sb != null);
 
         /*switch ((SymTagEnum)symbol.symTag)
-			{
-				case SymTagEnum.SymTagData:
-					ReadData(symbol, sb);
-					break;
-				case SymTagEnum.SymTagFunction:
-					sb.Append(symbol.callingConvention.ToString());
-					ReadName(symbol, sb);
-					break;
-				case SymTagEnum.SymTagBlock:
-					sb.AppendFormat("len({0:X08}) ", symbol.length);
-					ReadName(symbol, sb);
-					break;
-			}
+            {
+                case SymTagEnum.SymTagData:
+                    ReadData(symbol, sb);
+                    break;
+                case SymTagEnum.SymTagFunction:
+                    sb.Append(symbol.callingConvention.ToString());
+                    ReadName(symbol, sb);
+                    break;
+                case SymTagEnum.SymTagBlock:
+                    sb.AppendFormat("len({0:X08}) ", symbol.length);
+                    ReadName(symbol, sb);
+                    break;
+            }
 
-			ReadSymbolType(symbol, sb);*/
+            ReadSymbolType(symbol, sb);*/
         ReadName(symbol, sb);
     }
 

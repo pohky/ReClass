@@ -1,7 +1,5 @@
-using System;
-using System.IO;
+namespace ReClassNET.AddressParser;
 
-namespace ReClassNET.AddressParser; 
 public class Parser {
     private readonly ITokenizer tokenizer;
 
@@ -86,62 +84,62 @@ public class Parser {
     private IExpression ParseLeaf() {
         switch (tokenizer.Token) {
             case Token.Number: {
-                    var node = new ConstantExpression(tokenizer.Number);
+                var node = new ConstantExpression(tokenizer.Number);
 
-                    tokenizer.ReadNextToken();
+                tokenizer.ReadNextToken();
 
-                    return node;
-                }
+                return node;
+            }
             case Token.OpenParenthesis: {
-                    tokenizer.ReadNextToken();
+                tokenizer.ReadNextToken();
 
-                    var node = ParseAddSubtract();
+                var node = ParseAddSubtract();
 
-                    if (tokenizer.Token != Token.CloseParenthesis) {
-                        throw new ParseException("Missing close parenthesis");
-                    }
-
-                    tokenizer.ReadNextToken();
-
-                    return node;
+                if (tokenizer.Token != Token.CloseParenthesis) {
+                    throw new ParseException("Missing close parenthesis");
                 }
+
+                tokenizer.ReadNextToken();
+
+                return node;
+            }
             case Token.OpenBrackets: {
+                tokenizer.ReadNextToken();
+
+                var node = ParseAddSubtract();
+
+                var byteCount = IntPtr.Size;
+                if (tokenizer.Token == Token.Comma) {
                     tokenizer.ReadNextToken();
 
-                    var node = ParseAddSubtract();
-
-                    var byteCount = IntPtr.Size;
-                    if (tokenizer.Token == Token.Comma) {
-                        tokenizer.ReadNextToken();
-
-                        if (tokenizer.Token != Token.Number) {
-                            throw new ParseException("Missing read byte count");
-                        }
-
-                        if (tokenizer.Number != 4 && tokenizer.Number != 8) {
-                            throw new ParseException("The byte count must be 4 or 8.");
-                        }
-
-                        byteCount = (int)tokenizer.Number;
-
-                        tokenizer.ReadNextToken();
+                    if (tokenizer.Token != Token.Number) {
+                        throw new ParseException("Missing read byte count");
                     }
 
-                    if (tokenizer.Token != Token.CloseBrackets) {
-                        throw new ParseException("Missing close bracket");
+                    if (tokenizer.Number != 4 && tokenizer.Number != 8) {
+                        throw new ParseException("The byte count must be 4 or 8.");
                     }
+
+                    byteCount = (int)tokenizer.Number;
 
                     tokenizer.ReadNextToken();
-
-                    return new ReadMemoryExpression(node, byteCount);
                 }
+
+                if (tokenizer.Token != Token.CloseBrackets) {
+                    throw new ParseException("Missing close bracket");
+                }
+
+                tokenizer.ReadNextToken();
+
+                return new ReadMemoryExpression(node, byteCount);
+            }
             case Token.Identifier: {
-                    var node = new ModuleExpression(tokenizer.Identifier);
+                var node = new ModuleExpression(tokenizer.Identifier);
 
-                    tokenizer.ReadNextToken();
+                tokenizer.ReadNextToken();
 
-                    return node;
-                }
+                return node;
+            }
             default:
                 throw new ParseException($"Unexpect token: {tokenizer.Token}");
         }

@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using System.Reflection;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 public class EnumDescriptionDisplay<TEnum> where TEnum : struct {
     public TEnum Value { get; internal set; }
     public string Description { get; internal set; }

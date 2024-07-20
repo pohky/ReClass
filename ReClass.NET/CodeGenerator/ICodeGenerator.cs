@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
-namespace ReClassNET.CodeGenerator; 
+namespace ReClassNET.CodeGenerator;
+
 [ContractClass(typeof(CodeGeneratorContract))]
 public interface ICodeGenerator {
     /// <summary>The language this generator produces.</summary>

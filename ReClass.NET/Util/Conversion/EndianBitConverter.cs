@@ -1,13 +1,13 @@
-using System;
 using System.Runtime.InteropServices;
 
-namespace ReClassNET.Util.Conversion; 
+namespace ReClassNET.Util.Conversion;
+
 public abstract class EndianBitConverter {
-    public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
+    public static LittleEndianBitConverter Little { get; } = new();
 
-    public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
+    public static BigEndianBitConverter Big { get; } = new();
 
-    public static EndianBitConverter System { get; } = BitConverter.IsLittleEndian ? (EndianBitConverter)Little : Big;
+    public static EndianBitConverter System { get; } = BitConverter.IsLittleEndian ? Little : Big;
 
 
     public bool ToBoolean(byte[] value, int startIndex) => BitConverter.ToBoolean(value, startIndex);

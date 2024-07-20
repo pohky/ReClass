@@ -1,7 +1,8 @@
 using System.Diagnostics.Contracts;
 using System.Globalization;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 public static class NumberFormat {
     public static NumberFormatInfo GuessNumberFormat(string input) {
         Contract.Requires(input != null);

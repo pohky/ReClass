@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.IO;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.Plugins; 
+namespace ReClassNET.Plugins;
+
 internal class PluginInfo : IDisposable {
     public const string PluginName = "ReClass.NET Plugin";
     public const string PluginNativeName = "ReClass.NET Native Plugin";
@@ -50,18 +48,6 @@ internal class PluginInfo : IDisposable {
         }
     }
 
-    ~PluginInfo() {
-        ReleaseUnmanagedResources();
-    }
-
-    private void ReleaseUnmanagedResources() {
-        if (!NativeHandle.IsNull()) {
-            NativeMethods.FreeLibrary(NativeHandle);
-
-            NativeHandle = IntPtr.Zero;
-        }
-    }
-
     public void Dispose() {
         if (Interface != null) {
             try {
@@ -74,5 +60,17 @@ internal class PluginInfo : IDisposable {
         ReleaseUnmanagedResources();
 
         GC.SuppressFinalize(this);
+    }
+
+    ~PluginInfo() {
+        ReleaseUnmanagedResources();
+    }
+
+    private void ReleaseUnmanagedResources() {
+        if (!NativeHandle.IsNull()) {
+            NativeMethods.FreeLibrary(NativeHandle);
+
+            NativeHandle = IntPtr.Zero;
+        }
     }
 }

@@ -1,21 +1,27 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Xml.Linq;
 
-namespace ReClassNET.Util; 
+namespace ReClassNET.Util;
+
 /// <summary>
-/// A class which stores custom data items from plugins.
-/// The key to an item should consist of "a-zA-z0-9.,;_-+".
-/// The naming convention for keys is "PluginName.[Group.]Item".
+///     A class which stores custom data items from plugins.
+///     The key to an item should consist of "a-zA-z0-9.,;_-+".
+///     The naming convention for keys is "PluginName.[Group.]Item".
 /// </summary>
 public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
-    private readonly Dictionary<string, string> data = new Dictionary<string, string>();
+    private readonly Dictionary<string, string> data = new();
 
-    internal XElement Serialize(string name) {
-        return XElementSerializer.ToXml(name, data);
+    public string this[string key] {
+        get => GetString(key);
+        set => SetString(key, value);
     }
+
+    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => data.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    internal XElement Serialize(string name) => XElementSerializer.ToXml(name, data);
 
     internal void Deserialize(XElement element) {
         data.Clear();
@@ -25,21 +31,8 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
         }
     }
 
-    public IEnumerator<KeyValuePair<string, string>> GetEnumerator() {
-        return data.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator() {
-        return GetEnumerator();
-    }
-
-    public string this[string key] {
-        get => GetString(key);
-        set => SetString(key, value);
-    }
-
     /// <summary>
-    /// Removes an item.
+    ///     Removes an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     public void RemoveValue(string key) {
@@ -49,7 +42,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Sets the string value of an item.
+    ///     Sets the string value of an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="value">The value of the item.</param>
@@ -60,7 +53,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Sets the boolean value of an item.
+    ///     Sets the boolean value of an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="value">The value of the item.</param>
@@ -69,7 +62,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Sets the long value of an item.
+    ///     Sets the long value of an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="value">The value of the item.</param>
@@ -78,7 +71,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Sets the ulong value of an item.
+    ///     Sets the ulong value of an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="value">The value of the item.</param>
@@ -87,7 +80,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Sets the XElement value of an item.
+    ///     Sets the XElement value of an item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="value">The value of the item.</param>
@@ -96,20 +89,18 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Gets the string value of the item.
+    ///     Gets the string value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <returns>The value of the config item or null if the key does not exists.</returns>
-    public string GetString(string key) {
-        return GetString(key, null);
-    }
+    public string GetString(string key) => GetString(key, null);
 
     /// <summary>
-    /// Gets the string value of the item.
+    ///     Gets the string value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="def">The default value if the key does not exists.</param>
-    /// <returns>The value of the config item or <paramref name="def"/> if the key does not exists.</returns>
+    /// <returns>The value of the config item or <paramref name="def" /> if the key does not exists.</returns>
     public string GetString(string key, string def) {
         ValidateKey(key);
 
@@ -121,11 +112,11 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Gets the boolean value of the item.
+    ///     Gets the boolean value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="def">The default value if the key does not exists.</param>
-    /// <returns>The value of the config item or <paramref name="def"/> if the key does not exists.</returns>
+    /// <returns>The value of the config item or <paramref name="def" /> if the key does not exists.</returns>
     public bool GetBool(string key, bool def) {
         var value = GetString(key, null);
         if (string.IsNullOrEmpty(value)) {
@@ -136,11 +127,11 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Gets the long value of the item.
+    ///     Gets the long value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="def">The default value if the key does not exists.</param>
-    /// <returns>The value of the config item or <paramref name="def"/> if the key does not exists.</returns>
+    /// <returns>The value of the config item or <paramref name="def" /> if the key does not exists.</returns>
     public long GetLong(string key, long def) {
         var str = GetString(key, null);
         if (string.IsNullOrEmpty(str)) {
@@ -155,11 +146,11 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Gets the ulong value of the item.
+    ///     Gets the ulong value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="def">The default value if the key does not exists.</param>
-    /// <returns>The value of the config item or <paramref name="def"/> if the key does not exists.</returns>
+    /// <returns>The value of the config item or <paramref name="def" /> if the key does not exists.</returns>
     public ulong GetULong(string key, ulong def) {
         var str = GetString(key, null);
         if (string.IsNullOrEmpty(str)) {
@@ -174,11 +165,11 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Gets the XElement value of the item.
+    ///     Gets the XElement value of the item.
     /// </summary>
     /// <param name="key">The key of the item.</param>
     /// <param name="def">The default value if the key does not exists.</param>
-    /// <returns>The value of the config item or <paramref name="def"/> if the key does not exists.</returns>
+    /// <returns>The value of the config item or <paramref name="def" /> if the key does not exists.</returns>
     public XElement GetXElement(string key, XElement def) {
         var str = GetString(key, null);
         if (string.IsNullOrEmpty(str)) {
@@ -189,7 +180,7 @@ public class CustomDataMap : IEnumerable<KeyValuePair<string, string>> {
     }
 
     /// <summary>
-    /// Validates the given key.
+    ///     Validates the given key.
     /// </summary>
     /// <param name="key">The key of an item.</param>
     private static void ValidateKey(string key) {

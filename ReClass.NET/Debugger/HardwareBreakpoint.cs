@@ -1,8 +1,8 @@
-using System;
 using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 public enum HardwareBreakpointRegister {
     InvalidRegister,
 
@@ -15,7 +15,7 @@ public enum HardwareBreakpointRegister {
 public enum HardwareBreakpointTrigger {
     Execute,
     Access,
-    Write,
+    Write
 }
 
 public enum HardwareBreakpointSize {
@@ -26,12 +26,11 @@ public enum HardwareBreakpointSize {
 }
 
 public sealed class HardwareBreakpoint : IBreakpoint {
-    public IntPtr Address { get; }
+
+    private readonly BreakpointHandler handler;
     public HardwareBreakpointRegister Register { get; }
     public HardwareBreakpointTrigger Trigger { get; }
     public HardwareBreakpointSize Size { get; }
-
-    private readonly BreakpointHandler handler;
 
     public HardwareBreakpoint(IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, BreakpointHandler handler) {
         Contract.Requires(handler != null);
@@ -47,10 +46,9 @@ public sealed class HardwareBreakpoint : IBreakpoint {
 
         this.handler = handler;
     }
+    public IntPtr Address { get; }
 
-    public bool Set(RemoteProcess process) {
-        return process.CoreFunctions.SetHardwareBreakpoint(process.UnderlayingProcess.Id, Address, Register, Trigger, Size, true);
-    }
+    public bool Set(RemoteProcess process) => process.CoreFunctions.SetHardwareBreakpoint(process.UnderlayingProcess.Id, Address, Register, Trigger, Size, true);
 
     public void Remove(RemoteProcess process) {
         process.CoreFunctions.SetHardwareBreakpoint(process.UnderlayingProcess.Id, Address, Register, Trigger, Size, false);
@@ -67,7 +65,5 @@ public sealed class HardwareBreakpoint : IBreakpoint {
         return hwbp?.Register == Register;
     }
 
-    public override int GetHashCode() {
-        return Register.GetHashCode();
-    }
+    public override int GetHashCode() => Register.GetHashCode();
 }

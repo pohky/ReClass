@@ -1,10 +1,9 @@
-using System;
-using System.Drawing;
-using System.Linq;
 using ReClassNET.Controls;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public class UnionNode : BaseContainerNode {
     public override int MemorySize => Nodes.Max(n => n.MemorySize);
 
@@ -12,7 +11,7 @@ public class UnionNode : BaseContainerNode {
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "Union";
-        icon = Properties.Resources.B16x16_Button_Union;
+        icon = Resources.B16x16_Button_Union;
     }
 
     public override bool CanHandleChildNode(BaseNode node) {

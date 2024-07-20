@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using ColorCode;
 using ColorCode.Parsing;
 using ReClassNET.CodeGenerator;
@@ -15,7 +10,8 @@ using ReClassNET.Project;
 using ReClassNET.UI;
 using ReClassNET.Util.Rtf;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class CodeForm : IconForm {
     public CodeForm(ICodeGenerator generator, IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger) {
         Contract.Requires(generator != null);
@@ -56,7 +52,7 @@ public partial class CodeForm : IconForm {
 }
 
 internal class RtfFormatter : IFormatter {
-    private readonly RtfBuilder builder = new RtfBuilder(RtfFont.Consolas, 20);
+    private readonly RtfBuilder builder = new(RtfFont.Consolas, 20);
 
     public void Write(string parsedSourceCode, IList<Scope> scopes, IStyleSheet styleSheet, TextWriter textWriter) {
         if (scopes.Any()) {

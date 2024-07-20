@@ -1,43 +1,31 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner.Comparer;
 using ReClassNET.Util;
 
-namespace ReClassNET.MemoryScanner; 
+namespace ReClassNET.MemoryScanner;
+
 public class Scanner : IDisposable {
-    /// <summary>
-    /// Helper class for consolidated memory regions.
-    /// </summary>
-    private class ConsolidatedMemoryRegion {
-        public IntPtr Address { get; set; }
-        public int Size { get; set; }
-    }
 
     private readonly RemoteProcess process;
     private readonly CircularBuffer<ScanResultStore> stores;
+
+    private bool isFirstScan;
 
     public ScanSettings Settings { get; }
 
     private ScanResultStore CurrentStore => stores.Head;
 
     /// <summary>
-    /// Gets the total result count from the last scan.
+    ///     Gets the total result count from the last scan.
     /// </summary>
     public int TotalResultCount => CurrentStore?.TotalResultCount ?? 0;
 
     /// <summary>
-    /// Checks if the last scan can be undone.
+    ///     Checks if the last scan can be undone.
     /// </summary>
     public bool CanUndoLastScan => stores.Count > 1;
-
-    private bool isFirstScan;
 
     public Scanner(RemoteProcess process, ScanSettings settings) {
         Contract.Requires(process != null);
@@ -59,10 +47,10 @@ public class Scanner : IDisposable {
     }
 
     /// <summary>
-    /// Retrieves the results of the last scan from the store.
+    ///     Retrieves the results of the last scan from the store.
     /// </summary>
     /// <returns>
-    /// An enumeration of the <see cref="ScanResult"/>s of the last scan.
+    ///     An enumeration of the <see cref="ScanResult" />s of the last scan.
     /// </returns>
     public IEnumerable<ScanResult> GetResults() {
         Contract.Ensures(Contract.Result<IEnumerable<ScanResult>>() != null);
@@ -80,7 +68,7 @@ public class Scanner : IDisposable {
     }
 
     /// <summary>
-    /// Restores the results of the previous scan.
+    ///     Restores the results of the previous scan.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if no previous results are present.</exception>
     public void UndoLastScan() {
@@ -93,15 +81,13 @@ public class Scanner : IDisposable {
     }
 
     /// <summary>
-    /// Creates a new <see cref="ScanResultStore"/> and uses the system temporary path as file location.
+    ///     Creates a new <see cref="ScanResultStore" /> and uses the system temporary path as file location.
     /// </summary>
-    /// <returns>The new <see cref="ScanResultStore"/>.</returns>
-    private ScanResultStore CreateStore() {
-        return new ScanResultStore(Settings.ValueType, Path.GetTempPath());
-    }
+    /// <returns>The new <see cref="ScanResultStore" />.</returns>
+    private ScanResultStore CreateStore() => new(Settings.ValueType, Path.GetTempPath());
 
     /// <summary>
-    /// Gets a list of the sections which meet the provided scan settings.
+    ///     Gets a list of the sections which meet the provided scan settings.
     /// </summary>
     /// <returns>A list of searchable sections.</returns>
     private IList<Section> GetSearchableSections() {
@@ -146,23 +132,21 @@ public class Scanner : IDisposable {
     }
 
     /// <summary>
-    /// Starts an async search with the provided <see cref="IScanComparer"/>.
-    /// The results are stored in the store.
+    ///     Starts an async search with the provided <see cref="IScanComparer" />.
+    ///     The results are stored in the store.
     /// </summary>
     /// <param name="comparer">The comparer to scan for values.</param>
-    /// <param name="progress">The <see cref="IProgress{T}"/> object to report the current progress.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to stop the scan.</param>
+    /// <param name="progress">The <see cref="IProgress{T}" /> object to report the current progress.</param>
+    /// <param name="ct">The <see cref="CancellationToken" /> to stop the scan.</param>
     /// <returns> The asynchronous result indicating if the scan completed.</returns>
-    public Task<bool> Search(IScanComparer comparer, IProgress<int> progress, CancellationToken ct) {
-        return isFirstScan ? FirstScan(comparer, progress, ct) : NextScan(comparer, progress, ct);
-    }
+    public Task<bool> Search(IScanComparer comparer, IProgress<int> progress, CancellationToken ct) => isFirstScan ? FirstScan(comparer, progress, ct) : NextScan(comparer, progress, ct);
 
     /// <summary>
-    /// Starts an async first scan with the provided <see cref="IScanComparer"/>.
+    ///     Starts an async first scan with the provided <see cref="IScanComparer" />.
     /// </summary>
     /// <param name="comparer">The comparer to scan for values.</param>
-    /// <param name="progress">The <see cref="IProgress{T}"/> object to report the current progress.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to stop the scan.</param>
+    /// <param name="progress">The <see cref="IProgress{T}" /> object to report the current progress.</param>
+    /// <param name="ct">The <see cref="CancellationToken" /> to stop the scan.</param>
     /// <returns> The asynchronous result indicating if the scan completed.</returns>
     private Task<bool> FirstScan(IScanComparer comparer, IProgress<int> progress, CancellationToken ct) {
         Contract.Requires(comparer != null);
@@ -185,68 +169,69 @@ public class Scanner : IDisposable {
         var totalSectionCount = (float)regions.Count;
 
         return Task.Run(() => {
-            // Algorithm:
-            // 1. Partition the sections for the worker threads.
-            // 2. Create a ScannerContext per worker thread.
-            // 3. n Worker -> m Sections: Read data, search results, store results
+                // Algorithm:
+                // 1. Partition the sections for the worker threads.
+                // 2. Create a ScannerContext per worker thread.
+                // 3. n Worker -> m Sections: Read data, search results, store results
 
-            var result = Parallel.ForEach(
-                regions, // Sections get grouped by the framework to balance the workers.
-                () => new ScannerContext(CreateWorker(Settings, comparer), initialBufferSize), // Create a new context for every worker (thread).
-                (s, state, _, context) => {
-                    if (!ct.IsCancellationRequested) {
-                        var start = s.Address;
-                        var end = s.Address + s.Size;
-                        var size = s.Size;
+                var result = Parallel.ForEach(
+                    regions, // Sections get grouped by the framework to balance the workers.
+                    () => new ScannerContext(CreateWorker(Settings, comparer), initialBufferSize), // Create a new context for every worker (thread).
+                    (s, state, _, context) => {
+                        if (!ct.IsCancellationRequested) {
+                            var start = s.Address;
+                            var end = s.Address + s.Size;
+                            var size = s.Size;
 
-                        if (Settings.StartAddress.IsInRange(start, end)) {
-                            size -= Settings.StartAddress.Sub(start).ToInt32();
-                            start = Settings.StartAddress;
-                        }
-                        if (Settings.StopAddress.IsInRange(start, end)) {
-                            size -= end.Sub(Settings.StopAddress).ToInt32();
-                        }
-
-                        context.EnsureBufferSize(size);
-                        var buffer = context.Buffer;
-                        if (process.ReadRemoteMemoryIntoBuffer(start, ref buffer, 0, size)) // Fill the buffer.
-                        {
-                            var results = context.Worker.Search(buffer, size, ct) // Search for results.
-                                .OrderBy(r => r.Address, IntPtrComparer.Instance)
-                                .ToList();
-                            if (results.Count > 0) {
-                                var block = CreateResultBlock(results, start);
-                                store.AddBlock(block); // Store the result block.
+                            if (Settings.StartAddress.IsInRange(start, end)) {
+                                size -= Settings.StartAddress.Sub(start).ToInt32();
+                                start = Settings.StartAddress;
                             }
+                            if (Settings.StopAddress.IsInRange(start, end)) {
+                                size -= end.Sub(Settings.StopAddress).ToInt32();
+                            }
+
+                            context.EnsureBufferSize(size);
+                            var buffer = context.Buffer;
+                            if (process.ReadRemoteMemoryIntoBuffer(start, ref buffer, 0, size)) // Fill the buffer.
+                            {
+                                var results = context.Worker.Search(buffer, size, ct) // Search for results.
+                                    .OrderBy(r => r.Address, IntPtrComparer.Instance)
+                                    .ToList();
+                                if (results.Count > 0) {
+                                    var block = CreateResultBlock(results, start);
+                                    store.AddBlock(block); // Store the result block.
+                                }
+                            }
+
+                            progress?.Report((int)(Interlocked.Increment(ref counter) / totalSectionCount * 100));
+                        } else {
+                            state.Stop();
                         }
+                        return context;
+                    },
+                    w => { }
+                );
 
-                        progress?.Report((int)(Interlocked.Increment(ref counter) / totalSectionCount * 100));
-                    } else {
-                        state.Stop();
-                    }
-                    return context;
-                },
-                w => { }
-            );
+                store.Finish();
 
-            store.Finish();
+                var previousStore = stores.Enqueue(store);
+                previousStore?.Dispose();
 
-            var previousStore = stores.Enqueue(store);
-            previousStore?.Dispose();
+                isFirstScan = false;
 
-            isFirstScan = false;
-
-            return result.IsCompleted;
-        }, ct);
+                return result.IsCompleted;
+            },
+            ct);
     }
 
     /// <summary>
-    /// Starts an async next scan with the provided <see cref="IScanComparer"/>.
-    /// The next scan uses the previous results to refine the results.
+    ///     Starts an async next scan with the provided <see cref="IScanComparer" />.
+    ///     The next scan uses the previous results to refine the results.
     /// </summary>
     /// <param name="comparer">The comparer to scan for values.</param>
-    /// <param name="progress">The <see cref="IProgress{T}"/> object to report the current progress.</param>
-    /// <param name="ct">The <see cref="CancellationToken"/> to stop the scan.</param>
+    /// <param name="progress">The <see cref="IProgress{T}" /> object to report the current progress.</param>
+    /// <param name="ct">The <see cref="CancellationToken" /> to stop the scan.</param>
     /// <returns> The asynchronous result indicating if the scan completed.</returns>
     private Task<bool> NextScan(IScanComparer comparer, IProgress<int> progress, CancellationToken ct) {
         Contract.Requires(comparer != null);
@@ -260,43 +245,44 @@ public class Scanner : IDisposable {
         var totalResultCount = (float)CurrentStore.TotalResultCount;
 
         return Task.Run(() => {
-            var result = Parallel.ForEach(
-                CurrentStore.GetResultBlocks(),
-                () => new ScannerContext(CreateWorker(Settings, comparer), 0),
-                (b, state, _, context) => {
-                    if (!ct.IsCancellationRequested) {
-                        context.EnsureBufferSize(b.Size);
-                        var buffer = context.Buffer;
-                        if (process.ReadRemoteMemoryIntoBuffer(b.Start, ref buffer, 0, b.Size)) {
-                            var results = context.Worker.Search(buffer, buffer.Length, b.Results, ct)
-                                .OrderBy(r => r.Address, IntPtrComparer.Instance)
-                                .ToList();
-                            if (results.Count > 0) {
-                                var block = CreateResultBlock(results, b.Start);
-                                store.AddBlock(block);
+                var result = Parallel.ForEach(
+                    CurrentStore.GetResultBlocks(),
+                    () => new ScannerContext(CreateWorker(Settings, comparer), 0),
+                    (b, state, _, context) => {
+                        if (!ct.IsCancellationRequested) {
+                            context.EnsureBufferSize(b.Size);
+                            var buffer = context.Buffer;
+                            if (process.ReadRemoteMemoryIntoBuffer(b.Start, ref buffer, 0, b.Size)) {
+                                var results = context.Worker.Search(buffer, buffer.Length, b.Results, ct)
+                                    .OrderBy(r => r.Address, IntPtrComparer.Instance)
+                                    .ToList();
+                                if (results.Count > 0) {
+                                    var block = CreateResultBlock(results, b.Start);
+                                    store.AddBlock(block);
+                                }
                             }
+
+                            progress?.Report((int)(Interlocked.Add(ref counter, b.Results.Count) / totalResultCount * 100));
+                        } else {
+                            state.Stop();
                         }
+                        return context;
+                    },
+                    w => { }
+                );
 
-                        progress?.Report((int)(Interlocked.Add(ref counter, b.Results.Count) / totalResultCount * 100));
-                    } else {
-                        state.Stop();
-                    }
-                    return context;
-                },
-                w => { }
-            );
+                store.Finish();
 
-            store.Finish();
+                var previousStore = stores.Enqueue(store);
+                previousStore?.Dispose();
 
-            var previousStore = stores.Enqueue(store);
-            previousStore?.Dispose();
-
-            return result.IsCompleted;
-        }, ct);
+                return result.IsCompleted;
+            },
+            ct);
     }
 
     /// <summary>
-    /// Consolidate memory sections which are direct neighbours to reduce the number of work items.
+    ///     Consolidate memory sections which are direct neighbours to reduce the number of work items.
     /// </summary>
     /// <param name="sections">A list of sections.</param>
     /// <returns>A list of consolidated memory regions.</returns>
@@ -326,7 +312,7 @@ public class Scanner : IDisposable {
     }
 
     /// <summary>
-    /// Creates a result block from the scan results and adjusts the result offset.
+    ///     Creates a result block from the scan results and adjusts the result offset.
     /// </summary>
     /// <param name="results">The results in this block.</param>
     /// <param name="previousStartAddress">The start address of the previous block or section.</param>
@@ -362,5 +348,13 @@ public class Scanner : IDisposable {
         }
 
         throw new Exception();
+    }
+
+    /// <summary>
+    ///     Helper class for consolidated memory regions.
+    /// </summary>
+    private class ConsolidatedMemoryRegion {
+        public IntPtr Address { get; set; }
+        public int Size { get; set; }
     }
 }

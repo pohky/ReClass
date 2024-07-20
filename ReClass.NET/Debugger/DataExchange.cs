@@ -1,7 +1,7 @@
-using System;
 using System.Runtime.InteropServices;
 
-namespace ReClassNET.Debugger; 
+namespace ReClassNET.Debugger;
+
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct ExceptionDebugInfo {
     public IntPtr ExceptionCode;
@@ -42,7 +42,7 @@ public struct ExceptionDebugInfo {
 			public IntPtr Ebp;
 			public IntPtr Eip;
 #endif
-    };
+    }
 
     public RegisterInfo Registers;
 }

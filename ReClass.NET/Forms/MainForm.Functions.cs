@@ -1,12 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
 using ReClassNET.DataExchange.ReClass;
@@ -17,7 +10,8 @@ using ReClassNET.Nodes;
 using ReClassNET.Project;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class MainForm {
     public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses) {
         Contract.Requires(partialClasses != null);
@@ -75,31 +69,31 @@ public partial class MainForm {
         }
 
         void UpdateClassNodes(BaseNode node) {
-            projectView.UpdateClassNode((ClassNode)node);
+            ProjectView.UpdateClassNode((ClassNode)node);
         }
 
         currentProject = newProject;
         currentProject.ClassAdded += c => {
-            projectView.AddClass(c);
+            ProjectView.AddClass(c);
             c.NodesChanged += UpdateClassNodes;
             c.NameChanged += UpdateClassNodes;
         };
         currentProject.ClassRemoved += c => {
-            projectView.RemoveClass(c);
+            ProjectView.RemoveClass(c);
             c.NodesChanged -= UpdateClassNodes;
             c.NameChanged -= UpdateClassNodes;
         };
-        currentProject.EnumAdded += e => { projectView.AddEnum(e); };
+        currentProject.EnumAdded += e => { ProjectView.AddEnum(e); };
 
         ClassNode.ClassCreated += currentProject.AddClass;
 
-        projectView.Clear();
-        projectView.AddEnums(currentProject.Enums);
-        projectView.AddClasses(currentProject.Classes);
+        ProjectView.Clear();
+        ProjectView.AddEnums(currentProject.Enums);
+        ProjectView.AddClasses(currentProject.Classes);
         CurrentClassNode = currentProject.Classes.FirstOrDefault();
     }
 
-    /// <summary>Opens the <see cref="InputBytesForm"/> and calls <paramref name="callback"/> with the result.</summary>
+    /// <summary>Opens the <see cref="InputBytesForm" /> and calls <paramref name="callback" /> with the result.</summary>
     /// <param name="title">The title of the input form.</param>
     /// <param name="callback">The function to call afterwards.</param>
     private void AskAddOrInsertBytes(string title, Action<int> callback) {
@@ -121,7 +115,7 @@ public partial class MainForm {
     }
 
     /// <summary>
-    /// Adds <paramref name="bytes"/> bytes at the end of the current class.
+    ///     Adds <paramref name="bytes" /> bytes at the end of the current class.
     /// </summary>
     /// <param name="bytes">Amount of bytes</param>
     public void AddBytesToClass(int bytes) {
@@ -138,7 +132,7 @@ public partial class MainForm {
     }
 
     /// <summary>
-    /// Inserts <paramref name="bytes"/> bytes at the first selected node to the current class.
+    ///     Inserts <paramref name="bytes" /> bytes at the first selected node to the current class.
     /// </summary>
     /// <param name="bytes">Amount of bytes</param>
     public void InsertBytesInClass(int bytes) {
@@ -155,13 +149,13 @@ public partial class MainForm {
     }
 
     /// <summary>
-    /// Unselects all selected nodes.
+    ///     Unselects all selected nodes.
     /// </summary>
     public void ClearSelection() {
         memoryViewControl.ClearSelection();
     }
 
-    /// <summary>Shows an <see cref="OpenFileDialog"/> with all valid file extensions.</summary>
+    /// <summary>Shows an <see cref="OpenFileDialog" /> with all valid file extensions.</summary>
     /// <returns>The path to the selected file or null if no file was selected.</returns>
     public static string ShowOpenProjectFileDialog() {
         using var ofd = new OpenFileDialog {
@@ -233,9 +227,7 @@ public partial class MainForm {
         var index = 0;
 
         var progress = new Progress<Tuple<Module, IReadOnlyList<Module>>>(
-            report => {
-                infoToolStripStatusLabel.Text = $"[{++index}/{report.Item2.Count}] Loading symbols for module: {report.Item1.Name}";
-            }
+            report => { infoToolStripStatusLabel.Text = $"[{++index}/{report.Item2.Count}] Loading symbols for module: {report.Item1.Name}"; }
         );
 
         loadSymbolsTaskToken = new CancellationTokenSource();

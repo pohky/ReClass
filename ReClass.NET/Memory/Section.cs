@@ -1,6 +1,5 @@
-using System;
+namespace ReClassNET.Memory;
 
-namespace ReClassNET.Memory; 
 public enum SectionCategory {
     Unknown,
     CODE,

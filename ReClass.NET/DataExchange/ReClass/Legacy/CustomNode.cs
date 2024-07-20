@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Nodes;
 
-namespace ReClassNET.DataExchange.ReClass.Legacy; 
+namespace ReClassNET.DataExchange.ReClass.Legacy;
+
 public class CustomNode : BaseNode {
     public override int MemorySize => throw new NotImplementedException();
 
@@ -12,13 +10,9 @@ public class CustomNode : BaseNode {
         throw new NotImplementedException();
     }
 
-    public override int CalculateDrawnHeight(DrawContext context) {
-        throw new NotImplementedException();
-    }
+    public override int CalculateDrawnHeight(DrawContext context) => throw new NotImplementedException();
 
-    public override Size Draw(DrawContext context, int x, int y) {
-        throw new NotImplementedException();
-    }
+    public override Size Draw(DrawContext context, int x, int y) => throw new NotImplementedException();
 
     public IEnumerable<BaseNode> GetEquivalentNodes(int size) {
         while (size != 0) {

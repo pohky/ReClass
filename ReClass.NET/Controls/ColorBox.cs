@@ -1,21 +1,17 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Windows.Forms;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
+
 [DefaultEvent(nameof(ColorChanged))]
 [DefaultBindingProperty(nameof(Color))]
 public partial class ColorBox : UserControl {
     private const int DefaultWidth = 123;
     private const int DefaultHeight = 20;
 
-    private bool updateTextBox = true;
-
-    public event EventHandler ColorChanged;
-
     private Color color;
+
+    private bool updateTextBox = true;
     public Color Color {
         get => color;
         set {
@@ -36,15 +32,17 @@ public partial class ColorBox : UserControl {
         }
     }
 
+    public ColorBox() {
+        InitializeComponent();
+    }
+
+    public event EventHandler ColorChanged;
+
     protected virtual void OnColorChanged(EventArgs e) {
         Contract.Requires(e != null);
 
         var eh = ColorChanged;
         eh?.Invoke(this, e);
-    }
-
-    public ColorBox() {
-        InitializeComponent();
     }
 
     protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified) {

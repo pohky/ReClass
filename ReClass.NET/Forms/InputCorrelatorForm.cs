@@ -1,26 +1,22 @@
-using System;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using ReClassNET.Input;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
 using ReClassNET.UI;
 
-namespace ReClassNET.Forms; 
+namespace ReClassNET.Forms;
+
 public partial class InputCorrelatorForm : IconForm {
     private static readonly TimeSpan refineInterval = TimeSpan.FromMilliseconds(400);
 
-    private readonly ScannerForm scannerForm;
+    private readonly KeyboardInput input;
     private readonly RemoteProcess process;
 
-    private readonly KeyboardInput input;
-    private InputCorrelatedScanner scanner;
+    private readonly ScannerForm scannerForm;
 
-    private bool isScanning = false;
+    private bool isScanning;
     private DateTime lastRefineTime;
+    private InputCorrelatedScanner scanner;
 
     public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process) {
         Contract.Requires(scannerForm != null);
@@ -175,4 +171,5 @@ public partial class InputCorrelatorForm : IconForm {
     }
 
     #endregion
+
 }

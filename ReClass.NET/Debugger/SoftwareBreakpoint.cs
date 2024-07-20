@@ -1,14 +1,13 @@
-using System;
 using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 
-namespace ReClassNET.Debugger; 
-public sealed class SoftwareBreakpoint : IBreakpoint {
-    public IntPtr Address { get; }
+namespace ReClassNET.Debugger;
 
-    private byte orig;
+public sealed class SoftwareBreakpoint : IBreakpoint {
 
     private readonly BreakpointHandler handler;
+
+    private byte orig;
 
     public SoftwareBreakpoint(IntPtr address, BreakpointHandler handler) {
         Contract.Requires(handler != null);
@@ -17,6 +16,7 @@ public sealed class SoftwareBreakpoint : IBreakpoint {
 
         this.handler = handler;
     }
+    public IntPtr Address { get; }
 
     public bool Set(RemoteProcess process) {
         var temp = new byte[1];
@@ -44,7 +44,5 @@ public sealed class SoftwareBreakpoint : IBreakpoint {
         return Address == bp.Address;
     }
 
-    public override int GetHashCode() {
-        return Address.GetHashCode();
-    }
+    public override int GetHashCode() => Address.GetHashCode();
 }

@@ -1,38 +1,53 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Drawing;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
+using ReClassNET.Properties;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
-namespace ReClassNET.Nodes; 
+namespace ReClassNET.Nodes;
+
 public delegate void NodeEventHandler(BaseNode sender);
 
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 [ContractClass(typeof(BaseNodeContract))]
 public abstract class BaseNode {
-    private string DebuggerDisplay => $"Type: {GetType().Name} Name: {Name} Offset: 0x{Offset:X}";
 
-    internal static readonly List<INodeInfoReader> NodeInfoReader = new List<INodeInfoReader>();
+    internal static readonly List<INodeInfoReader> NodeInfoReader = new();
 
     protected static readonly int HiddenHeight = 0;
 
-    private static int nodeIndex = 0;
+    private static int nodeIndex;
+    private string comment = string.Empty;
 
     private string name = string.Empty;
-    private string comment = string.Empty;
+    private string DebuggerDisplay => $"Type: {GetType().Name} Name: {Name} Offset: 0x{Offset:X}";
 
     /// <summary>Gets or sets the offset of the node.</summary>
     public int Offset { get; set; }
 
     /// <summary>Gets or sets the name of the node. If a new name was set the property changed event gets fired.</summary>
-    public virtual string Name { get => name; set { if (value != null && name != value) { name = value; NameChanged?.Invoke(this); } } }
+    public virtual string Name {
+        get => name;
+        set {
+            if (value != null && name != value) {
+                name = value;
+                NameChanged?.Invoke(this);
+            }
+        }
+    }
 
     /// <summary>Gets or sets the comment of the node.</summary>
-    public string Comment { get => comment; set { if (value != null && comment != value) { comment = value; CommentChanged?.Invoke(this); } } }
+    public string Comment {
+        get => comment;
+        set {
+            if (value != null && comment != value) {
+                comment = value;
+                CommentChanged?.Invoke(this);
+            }
+        }
+    }
 
     /// <summary>Gets or sets the parent node.</summary>
     public BaseNode ParentNode { get; internal set; }
@@ -49,10 +64,21 @@ public abstract class BaseNode {
     /// <summary>Size of the node in bytes.</summary>
     public abstract int MemorySize { get; }
 
+    protected GrowingList<bool> LevelsOpen { get; } = new(false);
+
+    /// <summary>Constructor which sets a unique <see cref="Name" />.</summary>
+    protected BaseNode() {
+        Contract.Ensures(name != null);
+        Contract.Ensures(comment != null);
+
+        Name = $"N{nodeIndex++:X08}";
+        Comment = string.Empty;
+
+        LevelsOpen[0] = true;
+    }
+
     public event NodeEventHandler NameChanged;
     public event NodeEventHandler CommentChanged;
-
-    protected GrowingList<bool> LevelsOpen { get; } = new GrowingList<bool>(false);
 
     [ContractInvariantMethod]
     private void ObjectInvariants() {
@@ -63,19 +89,17 @@ public abstract class BaseNode {
     }
 
     /// <summary>
-    /// Creates an instance of the specific node type.
+    ///     Creates an instance of the specific node type.
     /// </summary>
-    /// <param name="nodeType">The <see cref="Type"/> of the node.</param>
+    /// <param name="nodeType">The <see cref="Type" /> of the node.</param>
     /// <returns>An instance of the node type or null if the type is not a valid node type.</returns>
-    public static BaseNode CreateInstanceFromType(Type nodeType) {
-        return CreateInstanceFromType(nodeType, true);
-    }
+    public static BaseNode CreateInstanceFromType(Type nodeType) => CreateInstanceFromType(nodeType, true);
 
     /// <summary>
-    /// Creates an instance of the specific node type.
+    ///     Creates an instance of the specific node type.
     /// </summary>
-    /// <param name="nodeType">The <see cref="Type"/> of the node.</param>
-    /// <param name="callInitialize">If true <see cref="Initialize"/> gets called for the new node.</param>
+    /// <param name="nodeType">The <see cref="Type" /> of the node.</param>
+    /// <param name="callInitialize">If true <see cref="Initialize" /> gets called for the new node.</param>
     /// <returns>An instance of the node type or null if the type is not a valid node type.</returns>
     public static BaseNode CreateInstanceFromType(Type nodeType, bool callInitialize) {
         var node = Activator.CreateInstance(nodeType) as BaseNode;
@@ -83,17 +107,6 @@ public abstract class BaseNode {
             node?.Initialize();
         }
         return node;
-    }
-
-    /// <summary>Constructor which sets a unique <see cref="Name"/>.</summary>
-    protected BaseNode() {
-        Contract.Ensures(name != null);
-        Contract.Ensures(comment != null);
-
-        Name = $"N{nodeIndex++:X08}";
-        Comment = string.Empty;
-
-        LevelsOpen[0] = true;
     }
 
     public abstract void GetUserInterfaceInfo(out string name, out Image icon);
@@ -131,7 +144,7 @@ public abstract class BaseNode {
     }
 
     /// <summary>
-    /// Gets the parent container of the node.
+    ///     Gets the parent container of the node.
     /// </summary>
     /// <returns></returns>
     public BaseContainerNode GetParentContainer() {
@@ -152,7 +165,7 @@ public abstract class BaseNode {
     }
 
     /// <summary>
-    /// Gets the parent class of the node.
+    ///     Gets the parent class of the node.
     /// </summary>
     /// <returns></returns>
     public ClassNode GetParentClass() {
@@ -169,9 +182,9 @@ public abstract class BaseNode {
     }
 
     /// <summary>
-    /// Gets the root wrapper node if this node is the inner node of a wrapper chain.
+    ///     Gets the root wrapper node if this node is the inner node of a wrapper chain.
     /// </summary>
-    /// <returns>The root <see cref="BaseWrapperNode"/> or null if this node is not wrapped or isn't itself a wrapper node.</returns>
+    /// <returns>The root <see cref="BaseWrapperNode" /> or null if this node is not wrapped or isn't itself a wrapper node.</returns>
     public BaseWrapperNode GetRootWrapperNode() {
         BaseWrapperNode rootWrapperNode = null;
 
@@ -205,15 +218,19 @@ public abstract class BaseNode {
     public abstract Size Draw(DrawContext context, int x, int y);
 
     /// <summary>
-    /// Calculates the height of the node if drawn.
-    /// This method is used to determine if a node outside the visible area should be drawn.
-    /// The returned height must be equal to the height which is returned by the <see cref="Draw(DrawContext, int, int)"/> method.
+    ///     Calculates the height of the node if drawn.
+    ///     This method is used to determine if a node outside the visible area should be drawn.
+    ///     The returned height must be equal to the height which is returned by the <see cref="Draw(DrawContext, int, int)" />
+    ///     method.
     /// </summary>
     /// <param name="context">The drawing context.</param>
     /// <returns>The calculated height.</returns>
     public abstract int CalculateDrawnHeight(DrawContext context);
 
-    /// <summary>Updates the node from the given <paramref name="spot"/>. Sets the <see cref="Name"/> and <see cref="Comment"/> of the node.</summary>
+    /// <summary>
+    ///     Updates the node from the given <paramref name="spot" />. Sets the <see cref="Name" /> and
+    ///     <see cref="Comment" /> of the node.
+    /// </summary>
     /// <param name="spot">The spot.</param>
     public virtual void Update(HotSpot spot) {
         Contract.Requires(spot != null);
@@ -238,7 +255,7 @@ public abstract class BaseNode {
         LevelsOpen[level] = open;
     }
 
-    /// <summary>Adds a <see cref="HotSpot"/> the user can interact with.</summary>
+    /// <summary>Adds a <see cref="HotSpot" /> the user can interact with.</summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="spot">The spot.</param>
     /// <param name="text">The text to edit.</param>
@@ -266,7 +283,10 @@ public abstract class BaseNode {
         });
     }
 
-    /// <summary>Draws the specific text and adds a <see cref="HotSpot"/> if <paramref name="hitId"/> is not <see cref="HotSpot.NoneId"/>.</summary>
+    /// <summary>
+    ///     Draws the specific text and adds a <see cref="HotSpot" /> if <paramref name="hitId" /> is not
+    ///     <see cref="HotSpot.NoneId" />.
+    /// </summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="x">The x coordinate.</param>
     /// <param name="y">The y coordinate.</param>
@@ -290,15 +310,15 @@ public abstract class BaseNode {
 
             context.Graphics.DrawStringEx(text, context.Font.Font, color, x, y);
             /*using (var brush = new SolidBrush(color))
-				{
-					context.Graphics.DrawString(text, context.Font.Font, brush, x, y);
-				}*/
+                {
+                    context.Graphics.DrawString(text, context.Font.Font, brush, x, y);
+                }*/
         }
 
         return x + width;
     }
 
-    /// <summary>Draws the address and <see cref="Offset"/> of the node.</summary>
+    /// <summary>Draws the address and <see cref="Offset" /> of the node.</summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="x">The x coordinate.</param>
     /// <param name="y">The y coordinate.</param>
@@ -319,7 +339,10 @@ public abstract class BaseNode {
         return x;
     }
 
-    /// <summary>Draws a bar which indicates the selection status of the node. A <see cref="HotSpot"/> for this area gets added too.</summary>
+    /// <summary>
+    ///     Draws a bar which indicates the selection status of the node. A <see cref="HotSpot" /> for this area gets
+    ///     added too.
+    /// </summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="x">The x coordinate.</param>
     /// <param name="y">The y coordinate.</param>
@@ -341,11 +364,12 @@ public abstract class BaseNode {
         AddHotSpot(context, new Rectangle(0, y, context.ClientArea.Right - (IsSelected ? 16 : 0), height), string.Empty, HotSpot.NoneId, HotSpotType.Select);
     }
 
-    protected int AddIconPadding(DrawContext view, int x) {
-        return x + view.IconProvider.Dimensions;
-    }
+    protected int AddIconPadding(DrawContext view, int x) => x + view.IconProvider.Dimensions;
 
-    /// <summary>Draws an icon and adds a <see cref="HotSpot"/> if <paramref name="id"/> is not <see cref="HotSpot.NoneId"/>.</summary>
+    /// <summary>
+    ///     Draws an icon and adds a <see cref="HotSpot" /> if <paramref name="id" /> is not <see cref="HotSpot.NoneId" />
+    ///     .
+    /// </summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="x">The x coordinate.</param>
     /// <param name="y">The y coordinate.</param>
@@ -422,7 +446,7 @@ public abstract class BaseNode {
         }
     }
 
-    /// <summary>Draws the <see cref="Comment"/>.</summary>
+    /// <summary>Draws the <see cref="Comment" />.</summary>
     /// <param name="context">The drawing context.</param>
     /// <param name="x">The x coordinate.</param>
     /// <param name="y">The y coordinate.</param>
@@ -459,7 +483,7 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     protected void DrawInvalidMemoryIndicatorIcon(DrawContext context, int y) {
         if (!context.Memory.ContainsValidData) {
-            AddIcon(context, 0, y, Properties.Resources.B16x16_Error, HotSpot.NoneId, HotSpotType.None);
+            AddIcon(context, 0, y, Resources.B16x16_Error, HotSpot.NoneId, HotSpotType.None);
         }
     }
 }

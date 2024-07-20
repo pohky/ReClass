@@ -345,11 +345,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
                 var objectLocatorPtr = this.ReadRemoteIntPtr(address - IntPtr.Size);
                 if (objectLocatorPtr.MayBeValid()) {
 
-#if RECLASSNET64
                     rtti = ReadRemoteRuntimeTypeInformation64(objectLocatorPtr);
-#else
-						rtti = ReadRemoteRuntimeTypeInformation32(objectLocatorPtr);
-#endif
 
                     rttiCache[address] = rtti;
                 }

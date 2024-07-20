@@ -67,11 +67,7 @@ public static class IRemoteMemoryReaderExtension {
     }
 
     public static IntPtr ReadRemoteIntPtr(this IRemoteMemoryReader reader, IntPtr address) {
-#if RECLASSNET64
         return (IntPtr)reader.ReadRemoteInt64(address);
-#else
-			return (IntPtr)reader.ReadRemoteInt32(address);
-#endif
     }
 
     public static string ReadRemoteString(this IRemoteMemoryReader reader, IntPtr address, Encoding encoding, int length) {

@@ -1,4 +1,4 @@
-﻿namespace ReClassNET;
+namespace ReClassNET;
 
 public class Constants {
     public const string ApplicationName = "ReClass.NET";
@@ -17,15 +17,9 @@ public class Constants {
 
     public const string PluginUrl = "https://github.com/ReClassNET/ReClass.NET#plugins";
 
-#if RECLASSNET64
     public const string Platform = "x64";
 
     public const string AddressHexFormat = "X016";
-#else
-    public const string Platform = "x86";
-
-    public const string AddressHexFormat = "X08";
-#endif
 
     public const string SettingsFile = "settings.xml";
 

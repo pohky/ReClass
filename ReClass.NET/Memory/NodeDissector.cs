@@ -53,18 +53,11 @@ public class NodeDissector {
             return true;
         }
 
-#if RECLASSNET64
         if (is8ByteAligned) {
             if (GuessPointerNode(data64.IntPtr, reader, out guessedNode)) {
                 return true;
             }
         }
-#else
-			if (GuessPointerNode(data32.IntPtr, reader, out guessedNode))
-			{
-				return true;
-			}
-#endif
 
         // 0 could be anything.
         if (data32.IntValue != 0) {

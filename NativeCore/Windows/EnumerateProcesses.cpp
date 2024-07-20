@@ -34,11 +34,7 @@ Platform GetProcessPlatform(HANDLE process)
 				return isWow64 ? Platform::X86 : Platform::X64;
 			}
 
-#ifdef RECLASSNET64
 			return Platform::X64;
-#else
-			return Platform::X86;
-#endif
 	}
 	return Platform::Unknown;
 }
@@ -63,11 +59,8 @@ void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess)
 				if (IsProcessValid(process))
 				{
 					const auto platform = GetProcessPlatform(process);
-#ifdef RECLASSNET64
+
 					if (platform == Platform::X64)
-#else
-					if (platform == Platform::X86)
-#endif
 					{
 						EnumerateProcessData data = { };
 						data.Id = pe32.th32ProcessID;
@@ -77,7 +70,6 @@ void RC_CallConv EnumerateProcesses(EnumerateProcessCallback callbackProcess)
 
 						callbackProcess(&data);
 					}
-
 				}
 				
 				CloseRemoteProcess(process);

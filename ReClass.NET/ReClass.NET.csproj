@@ -20,7 +20,6 @@
 
     <RootNamespace>ReClassNET</RootNamespace>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <DefineConstants>RECLASSNET64</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup>

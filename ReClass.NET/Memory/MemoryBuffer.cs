@@ -298,11 +298,7 @@ public class MemoryBuffer {
     public IntPtr ReadIntPtr(int offset) {
         Contract.Requires(offset >= 0);
 
-#if RECLASSNET64
         return (IntPtr)ReadInt64(offset);
-#else
-			return (IntPtr)ReadInt32(offset);
-#endif
     }
 
     /// <summary>Reads a <see cref="UIntPtr" /> from the specific offset.</summary>
@@ -311,11 +307,7 @@ public class MemoryBuffer {
     public UIntPtr ReadUIntPtr(int offset) {
         Contract.Requires(offset >= 0);
 
-#if RECLASSNET64
         return (UIntPtr)ReadUInt64(offset);
-#else
-			return (UIntPtr)ReadUInt32(offset);
-#endif
     }
 
     #endregion

@@ -17,12 +17,9 @@ public class CustomNode : BaseNode {
     public IEnumerable<BaseNode> GetEquivalentNodes(int size) {
         while (size != 0) {
             BaseNode paddingNode;
-#if RECLASSNET64
             if (size >= 8) {
                 paddingNode = new Hex64Node();
-            } else
-#endif
-            if (size >= 4) {
+            } else if (size >= 4) {
                 paddingNode = new Hex32Node();
             } else if (size >= 2) {
                 paddingNode = new Hex16Node();

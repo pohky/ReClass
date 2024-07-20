@@ -103,7 +103,6 @@ public partial class RemoteDebugger {
         var splits = new List<BreakpointSplit>();
 
         while (size > 0) {
-#if RECLASSNET64
             if (size >= 8) {
                 if (address.Mod(8) == 0) {
                     splits.Add(new BreakpointSplit { Address = address, Size = 8 });
@@ -114,7 +113,6 @@ public partial class RemoteDebugger {
                     continue;
                 }
             }
-#endif
             if (size >= 4) {
                 if (address.Mod(4) == 0) {
                     splits.Add(new BreakpointSplit { Address = address, Size = 4 });

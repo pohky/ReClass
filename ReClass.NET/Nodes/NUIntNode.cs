@@ -16,12 +16,7 @@ public class NUIntNode : BaseNumericNode {
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
-        var value = ReadValueFromMemory(context.Memory)
-#if RECLASSNET64
-            .ToUInt64();
-#else
-				.ToUInt32();
-#endif
+        var value = ReadValueFromMemory(context.Memory).ToUInt64();
         return DrawNumeric(context, x, y, context.IconProvider.Unsigned, "NUInt", value.ToString(), $"0x{value:X}");
     }
 
@@ -29,16 +24,9 @@ public class NUIntNode : BaseNumericNode {
         base.Update(spot);
 
         if (spot.Id == 0 || spot.Id == 1) {
-#if RECLASSNET64
             if (ulong.TryParse(spot.Text, out var val) || (spot.Text.TryGetHexString(out var hexValue) && ulong.TryParse(hexValue, NumberStyles.HexNumber, null, out val))) {
                 spot.Process.WriteRemoteMemory(spot.Address, val);
             }
-#else
-				if (uint.TryParse(spot.Text, out var val) || spot.Text.TryGetHexString(out var hexValue) && uint.TryParse(hexValue, NumberStyles.HexNumber, null, out val))
-				{
-					spot.Process.WriteRemoteMemory(spot.Address, val);
-				}
-#endif
         }
     }
 

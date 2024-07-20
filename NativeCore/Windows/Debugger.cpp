@@ -82,7 +82,7 @@ bool RC_CallConv AwaitDebugEvent(DebugEvent* evt, int timeoutInMilliseconds)
 
 		// Copy registers.
 		auto& reg = evt->ExceptionInfo.Registers;
-#ifdef RECLASSNET64
+
 		reg.Rax = reinterpret_cast<RC_Pointer>(ctx.Rax);
 		reg.Rbx = reinterpret_cast<RC_Pointer>(ctx.Rbx);
 		reg.Rcx = reinterpret_cast<RC_Pointer>(ctx.Rcx);
@@ -101,17 +101,6 @@ bool RC_CallConv AwaitDebugEvent(DebugEvent* evt, int timeoutInMilliseconds)
 		reg.R13 = reinterpret_cast<RC_Pointer>(ctx.R13);
 		reg.R14 = reinterpret_cast<RC_Pointer>(ctx.R14);
 		reg.R15 = reinterpret_cast<RC_Pointer>(ctx.R15);
-#else
-		reg.Eax = reinterpret_cast<RC_Pointer>(ctx.Eax);
-		reg.Ebx = reinterpret_cast<RC_Pointer>(ctx.Ebx);
-		reg.Ecx = reinterpret_cast<RC_Pointer>(ctx.Ecx);
-		reg.Edx = reinterpret_cast<RC_Pointer>(ctx.Edx);
-		reg.Edi = reinterpret_cast<RC_Pointer>(ctx.Edi);
-		reg.Esi = reinterpret_cast<RC_Pointer>(ctx.Esi);
-		reg.Esp = reinterpret_cast<RC_Pointer>(ctx.Esp);
-		reg.Ebp = reinterpret_cast<RC_Pointer>(ctx.Ebp);
-		reg.Eip = reinterpret_cast<RC_Pointer>(ctx.Eip);
-#endif
 
 		CloseHandle(handle);
 

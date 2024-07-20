@@ -42,12 +42,12 @@ bool AreOperandsStatic(const _DInst &instruction, const int prefixLength)
 				continue;
 			}
 
-#ifdef RECLASSNET64
+
 			if (ops[i].index == R_RIP)
 			{
 				continue;
 			}
-#endif
+
 			return false;
 		case O_PC:
 		case O_PTR:
@@ -65,12 +65,7 @@ _CodeInfo CreateCodeInfo(const uint8_t* address, int length, const _OffsetType v
 	info.code = address;
 	info.codeLen = length;
 	info.features = DF_NONE;
-
-#ifdef RECLASSNET64
 	info.dt = Decode64Bits;
-#else
-	info.dt = Decode32Bits;
-#endif
 
 	return info;
 }

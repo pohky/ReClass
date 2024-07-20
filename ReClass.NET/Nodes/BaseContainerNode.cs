@@ -191,11 +191,9 @@ public abstract class BaseContainerNode : BaseNode {
     protected virtual BaseNode CreateDefaultNodeForSize(int size) {
         Contract.Requires(size > 0);
 
-#if RECLASSNET64
         if (size >= 8) {
             return new Hex64Node();
         }
-#endif
         if (size >= 4) {
             return new Hex32Node();
         }

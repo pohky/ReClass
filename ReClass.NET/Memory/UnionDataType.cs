@@ -50,22 +50,12 @@ public struct UInt64FloatDoubleData {
     [FieldOffset(0)]
     public long LongValue;
 
-    public IntPtr IntPtr =>
-#if RECLASSNET64
-        (IntPtr)LongValue;
-#else
-			unchecked((IntPtr)(int)LongValue);
-#endif
+    public IntPtr IntPtr => (IntPtr)LongValue;
 
     [FieldOffset(0)]
     public ulong ULongValue;
 
-    public UIntPtr UIntPtr =>
-#if RECLASSNET64
-        (UIntPtr)ULongValue;
-#else
-			unchecked((UIntPtr)(uint)ULongValue);
-#endif
+    public UIntPtr UIntPtr => (UIntPtr)ULongValue;
 
     [FieldOffset(0)]
     public float FloatValue;

@@ -9,13 +9,8 @@ public delegate void ClassCreatedEventHandler(ClassNode node);
 public class ClassNode : BaseContainerNode {
     public static event ClassCreatedEventHandler ClassCreated;
 
-#if RECLASSNET64
     public static IntPtr DefaultAddress { get; } = (IntPtr)0x140000000;
     public static string DefaultAddressFormula { get; } = "140000000";
-#else
-		public static IntPtr DefaultAddress { get; } = (IntPtr)0x400000;
-		public static string DefaultAddressFormula { get; } = "400000";
-#endif
 
     public override int MemorySize => Nodes.Sum(n => n.MemorySize);
 

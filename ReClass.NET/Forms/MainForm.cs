@@ -777,20 +777,12 @@ public partial class MainForm : IconForm {
                 break;
             case NIntNode node: {
                 var value = node.ReadValueFromMemory(selectedNode.Memory);
-#if RECLASSNET64
                 comparer = new LongMemoryComparer(ScanCompareType.Equal, value.ToInt64(), 0L, bitConverter);
-#else
-					comparer = new IntegerMemoryComparer(ScanCompareType.Equal, value.ToInt32(), 0, bitConverter);
-#endif
                 break;
             }
             case NUIntNode node: {
                 var value = node.ReadValueFromMemory(selectedNode.Memory);
-#if RECLASSNET64
                 comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)value.ToUInt64(), 0L, bitConverter);
-#else
-					comparer = new IntegerMemoryComparer(ScanCompareType.Equal, (int)value.ToUInt32(), 0, bitConverter);
-#endif
                 break;
             }
             case Utf8TextNode node:

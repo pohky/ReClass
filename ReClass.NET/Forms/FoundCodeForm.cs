@@ -142,7 +142,6 @@ public partial class FoundCodeForm : IconForm {
 
         sb.AppendLine();
 
-#if RECLASSNET64
         sb.AppendLine($"RAX = {info.DebugInfo.Registers.Rax.ToString(Constants.AddressHexFormat)}");
         sb.AppendLine($"RBX = {info.DebugInfo.Registers.Rbx.ToString(Constants.AddressHexFormat)}");
         sb.AppendLine($"RCX = {info.DebugInfo.Registers.Rcx.ToString(Constants.AddressHexFormat)}");
@@ -161,17 +160,6 @@ public partial class FoundCodeForm : IconForm {
         sb.AppendLine($"R13 = {info.DebugInfo.Registers.R13.ToString(Constants.AddressHexFormat)}");
         sb.AppendLine($"R14 = {info.DebugInfo.Registers.R14.ToString(Constants.AddressHexFormat)}");
         sb.Append($"R15 = {info.DebugInfo.Registers.R15.ToString(Constants.AddressHexFormat)}");
-#else
-			sb.AppendLine($"EAX = {info.DebugInfo.Registers.Eax.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"EBX = {info.DebugInfo.Registers.Ebx.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"ECX = {info.DebugInfo.Registers.Ecx.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"EDX = {info.DebugInfo.Registers.Edx.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"EDI = {info.DebugInfo.Registers.Edi.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"ESI = {info.DebugInfo.Registers.Esi.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"ESP = {info.DebugInfo.Registers.Esp.ToString(Constants.AddressHexFormat)}");
-			sb.AppendLine($"EBP = {info.DebugInfo.Registers.Ebp.ToString(Constants.AddressHexFormat)}");
-			sb.Append($"EIP = {info.DebugInfo.Registers.Eip.ToString(Constants.AddressHexFormat)}");
-#endif
 
         infoTextBox.Text = sb.ToString();
     }

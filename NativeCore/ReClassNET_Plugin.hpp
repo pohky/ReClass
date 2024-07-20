@@ -167,7 +167,6 @@ struct ExceptionDebugInfo
 
 	struct RegisterInfo
 	{
-#ifdef RECLASSNET64
 		RC_Pointer Rax;
 		RC_Pointer Rbx;
 		RC_Pointer Rcx;
@@ -186,17 +185,6 @@ struct ExceptionDebugInfo
 		RC_Pointer R13;
 		RC_Pointer R14;
 		RC_Pointer R15;
-#else
-		RC_Pointer Eax;
-		RC_Pointer Ebx;
-		RC_Pointer Ecx;
-		RC_Pointer Edx;
-		RC_Pointer Edi;
-		RC_Pointer Esi;
-		RC_Pointer Esp;
-		RC_Pointer Ebp;
-		RC_Pointer Eip;
-#endif
 	};
 	RegisterInfo Registers;
 };

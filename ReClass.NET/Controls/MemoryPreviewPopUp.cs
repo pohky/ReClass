@@ -44,13 +44,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
         /// <param name="count">Number of nodes.</param>
         private void SetNodeCount(int count) {
             BaseHexNode CreateNode(int index) {
-                return new
-#if RECLASSNET64
-                Hex64Node
-#else
-					Hex32Node
-#endif
-                {
+                return new Hex64Node {
                     Offset = index * IntPtr.Size
                 };
             }

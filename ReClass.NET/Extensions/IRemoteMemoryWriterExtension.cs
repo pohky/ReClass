@@ -25,11 +25,7 @@ public static class IRemoteMemoryWriterExtension {
     public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, double value) => writer.WriteRemoteMemory(address, writer.BitConverter.GetBytes(value));
 
     public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, IntPtr value) {
-#if RECLASSNET64
         writer.WriteRemoteMemory(address, value.ToInt64());
-#else
-			writer.WriteRemoteMemory(address, value.ToInt32());
-#endif
     }
 
     public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, string value, Encoding encoding) => writer.WriteRemoteMemory(address, encoding.GetBytes(value));

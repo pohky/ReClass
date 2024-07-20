@@ -8,12 +8,7 @@ public enum SettingState {
 
 public class ScanSettings {
     public IntPtr StartAddress { get; set; } = IntPtr.Zero;
-    public IntPtr StopAddress { get; set; } =
-#if RECLASSNET64
-        (IntPtr)long.MaxValue;
-#else
-			(IntPtr)int.MaxValue;
-#endif
+    public IntPtr StopAddress { get; set; } = nint.MaxValue;
     public SettingState ScanWritableMemory { get; set; } = SettingState.Yes;
     public SettingState ScanExecutableMemory { get; set; } = SettingState.Indeterminate;
     public SettingState ScanCopyOnWriteMemory { get; set; } = SettingState.No;

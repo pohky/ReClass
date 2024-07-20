@@ -171,7 +171,7 @@ public partial class ProcessInfoForm : IconForm {
             }
 
             createDialogFn = () => new SaveFileDialog {
-                FileName = $"Section_{section.Start.ToString("X")}_{section.End.ToString("X")}.dat"
+                FileName = $"Section_{section.Start:X}_{section.End:X}.dat"
             };
 
             dumpFn = (reader, stream) => {

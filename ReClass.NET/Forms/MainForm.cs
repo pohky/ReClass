@@ -62,7 +62,7 @@ public partial class MainForm : IconForm {
         isLittleEndianToolStripMenuItem.Checked = BitConverter.IsLittleEndian;
 
         Program.RemoteProcess.ProcessAttached += sender => {
-            var text = $"{sender.UnderlayingProcess.Name} (ID: {sender.UnderlayingProcess.Id.ToString()})";
+            var text = $"{sender.UnderlayingProcess.Name} (ID: {sender.UnderlayingProcess.Id})";
             processInfoToolStripStatusLabel.Text = text;
             UpdateWindowTitle(text);
 

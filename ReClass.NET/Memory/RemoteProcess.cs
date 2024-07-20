@@ -181,15 +181,15 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         if (section != null) {
             if (section.Category == SectionCategory.CODE || section.Category == SectionCategory.DATA) {
                 // Code and Data sections belong to a module.
-                return $"<{section.Category}>{section.ModuleName}.{address.ToString("X")}";
+                return $"<{section.Category}>{section.ModuleName}.{address:X}";
             }
             if (section.Category == SectionCategory.HEAP) {
-                return $"<HEAP>{address.ToString("X")}";
+                return $"<HEAP>{address:X}";
             }
         }
         var module = GetModuleToPointer(address);
         if (module != null) {
-            return $"{module.Name}.{address.ToString("X")}";
+            return $"{module.Name}.{address:X}";
         }
         return null;
     }

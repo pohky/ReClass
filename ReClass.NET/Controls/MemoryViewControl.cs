@@ -35,11 +35,11 @@ public partial class MemoryViewControl : UserControl {
         memoryPreviewPopUp = new MemoryPreviewPopUp(font);
     }
 
-    public event DrawContextRequestEventHandler DrawContextRequested;
-    public event EventHandler SelectionChanged;
-    public event NodeClickEventHandler ChangeClassTypeClick;
-    public event NodeClickEventHandler ChangeWrappedTypeClick;
-    public event NodeClickEventHandler ChangeEnumTypeClick;
+    public event DrawContextRequestEventHandler? DrawContextRequested;
+    public event EventHandler? SelectionChanged;
+    public event NodeClickEventHandler? ChangeClassTypeClick;
+    public event NodeClickEventHandler? ChangeWrappedTypeClick;
+    public event NodeClickEventHandler? ChangeEnumTypeClick;
 
     protected override void OnPaint(PaintEventArgs e) {
         base.OnPaint(e);
@@ -52,8 +52,7 @@ public partial class MemoryViewControl : UserControl {
 
         var args = new DrawContextRequestEventArgs();
 
-        var requestHandler = DrawContextRequested;
-        requestHandler?.Invoke(this, args);
+        DrawContextRequested?.Invoke(this, args);
 
         hotSpots.Clear();
 

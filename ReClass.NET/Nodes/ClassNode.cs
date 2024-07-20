@@ -6,7 +6,7 @@ namespace ReClassNET.Nodes;
 public delegate void ClassCreatedEventHandler(ClassNode node);
 
 public class ClassNode : BaseContainerNode {
-    public static event ClassCreatedEventHandler ClassCreated;
+    public static event ClassCreatedEventHandler? ClassCreated;
 
     public static IntPtr DefaultAddress { get; } = (IntPtr)0x140000000;
     public static string DefaultAddressFormula { get; } = "140000000";
@@ -19,7 +19,7 @@ public class ClassNode : BaseContainerNode {
 
     public string AddressFormula { get; set; } = DefaultAddressFormula;
 
-    public event NodeEventHandler NodesChanged;
+    public event NodeEventHandler? NodesChanged;
 
     internal ClassNode(bool notifyClassCreated) {
         LevelsOpen.DefaultValue = true;

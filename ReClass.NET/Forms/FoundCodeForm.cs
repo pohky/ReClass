@@ -40,7 +40,7 @@ public partial class FoundCodeForm : IconForm {
         foundCodeDataGridView.DataSource = data;
     }
 
-    public event StopEventHandler Stop;
+    public event StopEventHandler? Stop;
 
     protected override void OnLoad(EventArgs e) {
         base.OnLoad(e);

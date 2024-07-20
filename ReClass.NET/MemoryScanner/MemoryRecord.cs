@@ -99,7 +99,7 @@ public class MemoryRecord : INotifyPropertyChanged {
         PreviousValueStr = ValueStr;
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     private void NotifyPropertyChanged(string propertyName) {
         var propertyChanged = PropertyChanged;

@@ -38,10 +38,10 @@ public class ReClassNetProject : IDisposable {
         EnumAdded = null;
         EnumRemoved = null;
     }
-    public event ClassesChangedEvent ClassAdded;
-    public event ClassesChangedEvent ClassRemoved;
-    public event EnumsChangedEvent EnumAdded;
-    public event EnumsChangedEvent EnumRemoved;
+    public event ClassesChangedEvent? ClassAdded;
+    public event ClassesChangedEvent? ClassRemoved;
+    public event EnumsChangedEvent? EnumAdded;
+    public event EnumsChangedEvent? EnumRemoved;
 
     public void AddClass(ClassNode node) {
         classes.Add(node);

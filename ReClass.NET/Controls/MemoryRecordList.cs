@@ -74,7 +74,7 @@ public partial class MemoryRecordList : UserControl {
         resultDataGridView.DataSource = bindings;
     }
 
-    public event MemorySearchResultControlResultDoubleClickEventHandler RecordDoubleClick;
+    public event MemorySearchResultControlResultDoubleClickEventHandler? RecordDoubleClick;
 
     private IEnumerable<MemoryRecord> GetSelectedRecords() => resultDataGridView.SelectedRows.Cast<DataGridViewRow>().Select(r => (MemoryRecord)r.DataBoundItem);
 
@@ -113,8 +113,7 @@ public partial class MemoryRecordList : UserControl {
     }
 
     private void OnRecordDoubleClick(MemoryRecord record) {
-        var evt = RecordDoubleClick;
-        evt?.Invoke(this, record);
+        RecordDoubleClick?.Invoke(this, record);
     }
 
     #region Event Handler

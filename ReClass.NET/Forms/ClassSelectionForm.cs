@@ -6,7 +6,7 @@ namespace ReClassNET.Forms;
 public partial class ClassSelectionForm : IconForm {
     private readonly List<ClassNode> allClasses;
 
-    public ClassNode SelectedClass => classesListBox.SelectedItem as ClassNode;
+    public ClassNode? SelectedClass => (ClassNode?)classesListBox.SelectedItem;
 
     public ClassSelectionForm(IEnumerable<ClassNode> classes) {
         allClasses = classes.ToList();

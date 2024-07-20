@@ -11,11 +11,11 @@ public sealed class GlobalWindowManagerEventArgs : EventArgs {
 public static class GlobalWindowManager {
     private static readonly List<Form> windows = [];
 
-    public static Form TopWindow => windows.LastOrDefault();
+    public static Form TopWindow => windows.Last();
     public static IEnumerable<Form> Windows => windows;
 
-    public static event EventHandler<GlobalWindowManagerEventArgs> WindowAdded;
-    public static event EventHandler<GlobalWindowManagerEventArgs> WindowRemoved;
+    public static event EventHandler<GlobalWindowManagerEventArgs>? WindowAdded;
+    public static event EventHandler<GlobalWindowManagerEventArgs>? WindowRemoved;
 
     public static void AddWindow(Form form) {
         windows.Add(form);

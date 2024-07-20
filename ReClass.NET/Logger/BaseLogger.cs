@@ -5,7 +5,7 @@ namespace ReClassNET.Logger;
 public abstract class BaseLogger : ILogger {
     private readonly object sync = new();
 
-    public event NewLogEntryEventHandler NewLogEntry;
+    public event NewLogEntryEventHandler? NewLogEntry;
 
     public void Log(Exception ex) {
         Log(LogLevel.Error, ExceptionMessageBox.GetMessageText(ex), ex);

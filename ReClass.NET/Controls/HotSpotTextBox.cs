@@ -4,7 +4,7 @@ using ReClassNET.UI;
 namespace ReClassNET.Controls;
 
 public class HotSpotTextBox : TextBox {
-    private HotSpot currentHotSpot;
+    private HotSpot? currentHotSpot;
 
     private FontEx font;
     private int minimumWidth;
@@ -26,9 +26,9 @@ public class HotSpotTextBox : TextBox {
         BorderStyle = BorderStyle.None;
     }
 
-    public event HotSpotTextBoxCommitEventHandler Committed;
+    public event HotSpotTextBoxCommitEventHandler? Committed;
 
-    public void ShowOnHotSpot(HotSpot hotSpot) {
+    public void ShowOnHotSpot(HotSpot? hotSpot) {
         currentHotSpot = hotSpot;
 
         if (hotSpot == null) {
@@ -88,6 +88,9 @@ public class HotSpotTextBox : TextBox {
 
     private void OnCommit() {
         Visible = false;
+
+        if (currentHotSpot == null)
+            return;
 
         currentHotSpot.Text = Text.Trim();
 

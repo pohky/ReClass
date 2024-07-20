@@ -10,7 +10,7 @@ public class FunctionNode : BaseFunctionNode {
     private int memorySize = IntPtr.Size;
     public string Signature { get; set; } = "void function()";
 
-    public ClassNode BelongsToClass { get; set; }
+    public ClassNode? BelongsToClass { get; set; }
     public override int MemorySize => memorySize;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {

@@ -27,7 +27,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
     public RemoteDebugger Debugger { get; }
 
-    public ProcessInfo UnderlayingProcess { get; private set; }
+    public ProcessInfo? UnderlayingProcess { get; private set; }
 
     public SymbolStore Symbols { get; } = new();
 
@@ -64,21 +64,21 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         Close();
     }
 
-    public Section GetSectionToPointer(IntPtr address) {
+    public Section? GetSectionToPointer(IntPtr address) {
         lock (sections) {
             var index = sections.BinarySearch(s => address.CompareToRange(s.Start, s.End));
             return index < 0 ? null : sections[index];
         }
     }
 
-    public Module GetModuleToPointer(IntPtr address) {
+    public Module? GetModuleToPointer(IntPtr address) {
         lock (modules) {
             var index = modules.BinarySearch(m => address.CompareToRange(m.Start, m.End));
             return index < 0 ? null : modules[index];
         }
     }
 
-    public Module GetModuleByName(string name) {
+    public Module? GetModuleByName(string name) {
         lock (modules) {
             return modules
                 .FirstOrDefault(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
@@ -116,13 +116,13 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     #endregion
 
     /// <summary>Event which gets invoked when a process was opened.</summary>
-    public event RemoteProcessEvent ProcessAttached;
+    public event RemoteProcessEvent? ProcessAttached;
 
     /// <summary>Event which gets invoked before a process gets closed.</summary>
-    public event RemoteProcessEvent ProcessClosing;
+    public event RemoteProcessEvent? ProcessClosing;
 
     /// <summary>Event which gets invoked after a process was closed.</summary>
-    public event RemoteProcessEvent ProcessClosed;
+    public event RemoteProcessEvent? ProcessClosed;
 
     /// <summary>Opens the given process to gather informations from.</summary>
     /// <param name="info">The process information.</param>

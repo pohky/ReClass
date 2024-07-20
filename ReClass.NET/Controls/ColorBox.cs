@@ -35,7 +35,7 @@ public partial class ColorBox : UserControl {
         InitializeComponent();
     }
 
-    public event EventHandler ColorChanged;
+    public event EventHandler? ColorChanged;
 
     protected virtual void OnColorChanged(EventArgs e) {
         var eh = ColorChanged;

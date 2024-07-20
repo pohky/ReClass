@@ -10,7 +10,7 @@ public class GuiLogger : BaseLogger {
 
     public GuiLogger() {
         form = new LogForm();
-        form.FormClosing += delegate (object sender, FormClosingEventArgs e) {
+        form.FormClosing += delegate (object? sender, FormClosingEventArgs e) {
             form.Clear();
 
             form.Hide();

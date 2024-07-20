@@ -71,8 +71,8 @@ public abstract class BaseNode {
         LevelsOpen[0] = true;
     }
 
-    public event NodeEventHandler NameChanged;
-    public event NodeEventHandler CommentChanged;
+    public event NodeEventHandler? NameChanged;
+    public event NodeEventHandler? CommentChanged;
 
     /// <summary>
     ///     Creates an instance of the specific node type.

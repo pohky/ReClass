@@ -24,20 +24,20 @@ public partial class MainForm : IconForm {
     private readonly MemoryBuffer memoryViewBuffer = new();
     private readonly PluginManager pluginManager;
 
-    private ClassNode currentClassNode;
+    private ClassNode? currentClassNode;
 
     private ReClassNetProject currentProject;
-    private Task loadSymbolsTask;
-    private CancellationTokenSource loadSymbolsTaskToken;
+    private Task? loadSymbolsTask;
+    private CancellationTokenSource? loadSymbolsTaskToken;
 
-    private Task updateProcessInformationsTask;
+    private Task? updateProcessInformationTask;
     public ReClassNetProject CurrentProject => currentProject;
 
     public ProjectView ProjectView { get; private set; }
 
     public MenuStrip MainMenu => mainMenuStrip;
 
-    public ClassNode CurrentClassNode {
+    public ClassNode? CurrentClassNode {
         get => currentClassNode;
         set {
             currentClassNode = value;
@@ -91,7 +91,7 @@ public partial class MainForm : IconForm {
 
         var createDefaultProject = true;
 
-        if (Program.CommandLineArgs.FileName != null) {
+        if (!string.IsNullOrEmpty(Program.CommandLineArgs.FileName)) {
             try {
                 LoadProjectFromPath(Program.CommandLineArgs.FileName);
 
@@ -107,7 +107,7 @@ public partial class MainForm : IconForm {
             LinkedWindowFeatures.CreateDefaultClass();
         }
 
-        if (Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo] != null) {
+        if (!string.IsNullOrEmpty(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo])) {
             AttachToProcess(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo]);
         }
     }
@@ -125,13 +125,14 @@ public partial class MainForm : IconForm {
         processUpdateTimer.Stop();
 
         // and cancel all running tasks.
-        if (loadSymbolsTask != null || updateProcessInformationsTask != null) {
+        if (loadSymbolsTask != null || updateProcessInformationTask != null) {
             e.Cancel = true;
 
             Hide();
 
             if (loadSymbolsTask != null) {
-                loadSymbolsTaskToken.Cancel();
+                if (loadSymbolsTaskToken != null)
+                    await loadSymbolsTaskToken.CancelAsync();
 
                 try {
                     await loadSymbolsTask;
@@ -142,14 +143,14 @@ public partial class MainForm : IconForm {
                 loadSymbolsTask = null;
             }
 
-            if (updateProcessInformationsTask != null) {
+            if (updateProcessInformationTask != null) {
                 try {
-                    await updateProcessInformationsTask;
+                    await updateProcessInformationTask;
                 } catch {
                     // ignored
                 }
 
-                updateProcessInformationsTask = null;
+                updateProcessInformationTask = null;
             }
 
             Close();
@@ -183,16 +184,16 @@ public partial class MainForm : IconForm {
     }
 
     private void processUpdateTimer_Tick(object sender, EventArgs e) {
-        if (updateProcessInformationsTask != null && !updateProcessInformationsTask.IsCompleted) {
+        if (updateProcessInformationTask != null && !updateProcessInformationTask.IsCompleted) {
             return;
         }
 
-        updateProcessInformationsTask = Program.RemoteProcess.UpdateProcessInformationsAsync();
+        updateProcessInformationTask = Program.RemoteProcess.UpdateProcessInformationsAsync();
     }
 
-    private void classesView_ClassSelected(object sender, ClassNode node) {
+    private void classesView_ClassSelected(object sender, ClassNode? node) {
         CurrentClassNode = node;
-        CurrentProject.CustomData.SetString("LastSelectedClass", node.Name);
+        CurrentProject.CustomData.SetString("LastSelectedClass", node?.Name ?? string.Empty);
     }
 
     private void memoryViewControl_KeyDown(object sender, KeyEventArgs args) {
@@ -258,7 +259,7 @@ public partial class MainForm : IconForm {
 
             if (csf.ShowDialog() == DialogResult.OK) {
                 var selectedClassNode = csf.SelectedClass;
-                if (refNode.CanChangeInnerNodeTo(selectedClassNode)) {
+                if (selectedClassNode != null && refNode.CanChangeInnerNodeTo(selectedClassNode)) {
                     if (!refNode.GetRootWrapperNode().ShouldPerformCycleCheckForInnerNode() || IsCycleFree(e.Node.GetParentClass(), selectedClassNode)) {
                         refNode.ChangeInnerNode(selectedClassNode);
                     }
@@ -274,8 +275,7 @@ public partial class MainForm : IconForm {
                 if (wrapperNode.CanChangeInnerNodeTo(node)) {
                     wrapperNode.ChangeInnerNode(node);
                 }
-            },
-                wrapperNode.CanChangeInnerNodeTo(null));
+            }, wrapperNode.CanChangeInnerNodeTo(null));
 
             var menu = new ContextMenuStrip();
             menu.Items.AddRange(items.ToArray());
@@ -384,24 +384,25 @@ public partial class MainForm : IconForm {
         var process = Program.RemoteProcess;
 
         var classNode = CurrentClassNode;
-        if (classNode != null) {
-            memoryViewBuffer.Size = classNode.MemorySize;
+        if (classNode == null)
+            return;
 
-            IntPtr address;
-            try {
-                address = process.ParseAddress(classNode.AddressFormula);
-            } catch (ParseException) {
-                address = IntPtr.Zero;
-            }
-            memoryViewBuffer.UpdateFrom(process, address);
+        memoryViewBuffer.Size = classNode.MemorySize;
 
-            args.Settings = Program.Settings;
-            args.IconProvider = iconProvider;
-            args.Process = process;
-            args.Memory = memoryViewBuffer;
-            args.Node = classNode;
-            args.BaseAddress = address;
+        IntPtr address;
+        try {
+            address = process.ParseAddress(classNode.AddressFormula);
+        } catch (ParseException) {
+            address = IntPtr.Zero;
         }
+        memoryViewBuffer.UpdateFrom(process, address);
+
+        args.Settings = Program.Settings;
+        args.IconProvider = iconProvider;
+        args.Process = process;
+        args.Memory = memoryViewBuffer;
+        args.Node = classNode;
+        args.BaseAddress = address;
     }
 
     #region Menustrip

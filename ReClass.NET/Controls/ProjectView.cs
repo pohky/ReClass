@@ -8,7 +8,7 @@ using ReClassNET.Properties;
 namespace ReClassNET.Controls;
 
 public partial class ProjectView : UserControl {
-    public delegate void SelectionChangedEvent(object sender, ClassNode node);
+    public delegate void SelectionChangedEvent(object sender, ClassNode? node);
 
     private readonly TreeNode classesRootNode;
 
@@ -17,11 +17,11 @@ public partial class ProjectView : UserControl {
     private bool autoExpandClassNodes;
     private bool enableClassHierarchyView;
 
-    private ClassNode selectedClass;
+    private ClassNode? selectedClass;
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ClassNode SelectedClass {
+    public ClassNode? SelectedClass {
         get => selectedClass;
         set {
             if (selectedClass != value) {
@@ -77,6 +77,8 @@ public partial class ProjectView : UserControl {
 
     public ContextMenuStrip EnumContextMenuStrip { get; set; }
 
+    public event SelectionChangedEvent? SelectionChanged;
+
     public ProjectView() {
         InitializeComponent();
 
@@ -107,7 +109,6 @@ public partial class ProjectView : UserControl {
 
         projectTreeView.Nodes.Add(enumsRootNode);
     }
-    public event SelectionChangedEvent SelectionChanged;
 
     public void ExpandAllClassNodes() {
         classesRootNode.ExpandAll();

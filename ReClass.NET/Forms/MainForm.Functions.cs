@@ -144,13 +144,9 @@ public partial class MainForm {
     /// <summary>Shows an <see cref="OpenFileDialog" /> with all valid file extensions.</summary>
     /// <returns>The path to the selected file or null if no file was selected.</returns>
     public static string ShowOpenProjectFileDialog() {
-        using var ofd = new OpenFileDialog {
-            CheckFileExists = true,
-            Filter = $"All ReClass Types |*{ReClassNetFile.FileExtension};*{ReClassFile.FileExtension};*{ReClassQtFile.FileExtension}"
-                     + $"|{ReClassNetFile.FormatName} (*{ReClassNetFile.FileExtension})|*{ReClassNetFile.FileExtension}"
-                     + $"|{ReClassFile.FormatName} (*{ReClassFile.FileExtension})|*{ReClassFile.FileExtension}"
-                     + $"|{ReClassQtFile.FormatName} (*{ReClassQtFile.FileExtension})|*{ReClassQtFile.FileExtension}"
-        };
+        using var ofd = new OpenFileDialog();
+        ofd.CheckFileExists = true;
+        ofd.Filter = $"All ReClass Types |*{ReClassNetFile.FileExtension}|{ReClassNetFile.FormatName} (*{ReClassNetFile.FileExtension})|*{ReClassNetFile.FileExtension}";
 
         if (ofd.ShowDialog() == DialogResult.OK) {
             return ofd.FileName;
@@ -178,27 +174,13 @@ public partial class MainForm {
     /// <param name="path">Full pathname of the file.</param>
     /// <param name="project">[in,out] The project.</param>
     private static void LoadProjectFromPath(string path, ref ReClassNetProject project) {
-        IReClassImport import;
-        switch (Path.GetExtension(path)?.ToLower()) {
-            case ReClassNetFile.FileExtension:
-                import = new ReClassNetFile(project);
-                break;
-            case ReClassQtFile.FileExtension:
-                import = new ReClassQtFile(project);
-                break;
-            case ReClassFile.FileExtension:
-                import = new ReClassFile(project);
-                break;
-            default:
-                Program.Logger.Log(LogLevel.Error, $"The file '{path}' has an unknown type.");
-                return;
-        }
+        var import = new ReClassNetFile(project);
         import.Load(path, Program.Logger);
     }
 
     /// <summary>Loads all symbols for the current process and displays the progress status.</summary>
     private void LoadAllSymbolsForCurrentProcess() {
-        if (loadSymbolsTask != null && !loadSymbolsTask.IsCompleted) {
+        if (loadSymbolsTask is { IsCompleted: false }) {
             return;
         }
 

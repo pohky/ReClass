@@ -158,16 +158,11 @@ public partial class MainForm : IconForm {
     }
 
     private void MainForm_DragEnter(object sender, DragEventArgs e) {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] files && files.Any()) {
-                switch (Path.GetExtension(files.First())) {
-                    case ReClassNetFile.FileExtension:
-                    case ReClassQtFile.FileExtension:
-                    case ReClassFile.FileExtension:
-                        e.Effect = DragDropEffects.Copy;
-                        break;
-                }
-            }
+        if (e.Data == null || !e.Data.GetDataPresent(DataFormats.FileDrop))
+            return;
+
+        if (e.Data.GetData(DataFormats.FileDrop) is string[] files && files.Any()) {
+            e.Effect = DragDropEffects.Copy;
         }
     }
 

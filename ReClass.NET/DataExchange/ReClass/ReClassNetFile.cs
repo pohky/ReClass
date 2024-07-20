@@ -1,10 +1,9 @@
-using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
 
 namespace ReClassNET.DataExchange.ReClass;
 
-public partial class ReClassNetFile : IReClassImport, IReClassExport {
+public partial class ReClassNetFile(ReClassNetProject project) {
     private static readonly Dictionary<string, Type> buildInStringToTypeMap = new[] {
         typeof(BoolNode),
         typeof(BitFieldNode),
@@ -47,25 +46,4 @@ public partial class ReClassNetFile : IReClassImport, IReClassExport {
     }.ToDictionary(t => t.Name, t => t);
 
     private static readonly Dictionary<Type, string> buildInTypeToStringMap = buildInStringToTypeMap.ToDictionary(kv => kv.Value, kv => kv.Key);
-    private readonly ReClassNetProject project;
-
-    static ReClassNetFile() {
-        // Obsolete: The name of the class was changed. Because of this older versions can't load these nodes.
-        buildInStringToTypeMap["UTF8TextNode"] = typeof(Utf8TextNode);
-        buildInStringToTypeMap["UTF8TextPtrNode"] = typeof(Utf8TextPtrNode);
-        buildInStringToTypeMap["UTF16TextNode"] = typeof(Utf16TextNode);
-        buildInStringToTypeMap["UTF16TextPtrNode"] = typeof(Utf16TextPtrNode);
-        buildInStringToTypeMap["UTF32TextNode"] = typeof(Utf32TextNode);
-        buildInStringToTypeMap["UTF32TextPtrNode"] = typeof(Utf32TextPtrNode);
-        buildInStringToTypeMap["VTableNode"] = typeof(VirtualMethodTableNode);
-
-        // Legacy
-        buildInStringToTypeMap["ClassInstanceArrayNode"] = typeof(ClassInstanceArrayNode);
-        buildInStringToTypeMap["ClassPtrArrayNode"] = typeof(ClassPointerArrayNode);
-        buildInStringToTypeMap["ClassPtrNode"] = typeof(ClassPointerNode);
-    }
-
-    public ReClassNetFile(ReClassNetProject project) {
-        this.project = project;
-    }
 }

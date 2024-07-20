@@ -11,7 +11,7 @@ internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions
     private const string CoreFunctionsModuleWindows = "NativeCore.dll";
     private const string CoreFunctionsModuleUnix = "NativeCore.so";
 
-    private static readonly Keys[] empty = new Keys[0];
+    private static readonly Keys[] empty = [];
 
     private readonly DisassembleCodeDelegate disassembleCodeDelegate;
     private readonly GetPressedKeysDelegate getPressedKeysDelegate;

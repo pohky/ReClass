@@ -25,11 +25,11 @@ public sealed class SoftwareBreakpoint : IBreakpoint {
         }
         orig = temp[0];
 
-        return process.WriteRemoteMemory(Address, new byte[] { 0xCC });
+        return process.WriteRemoteMemory(Address, [0xCC]);
     }
 
     public void Remove(RemoteProcess process) {
-        process.WriteRemoteMemory(Address, new[] { orig });
+        process.WriteRemoteMemory(Address, [orig]);
     }
 
     public void Handler(ref DebugEvent evt) {

@@ -14,7 +14,7 @@ public class ReClassQtFile : IReClassImport {
 
     private readonly ReClassNetProject project;
 
-    private readonly Type[] typeMap = {
+    private readonly Type[] typeMap = [
         null,
         null,
         typeof(ClassPointerNode),
@@ -37,7 +37,7 @@ public class ReClassQtFile : IReClassImport {
         typeof(Vector4Node),
         typeof(Vector3Node),
         typeof(Vector2Node)
-    };
+    ];
 
     public ReClassQtFile(ReClassNetProject project) {
         Contract.Requires(project != null);

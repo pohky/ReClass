@@ -4,9 +4,9 @@ using ReClassNET.Memory;
 namespace ReClassNET.Extensions;
 
 public static class IRemoteMemoryWriterExtension {
-    public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, sbyte value) => writer.WriteRemoteMemory(address, new[] { (byte)value });
+    public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, sbyte value) => writer.WriteRemoteMemory(address, [(byte)value]);
 
-    public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, byte value) => writer.WriteRemoteMemory(address, new[] { value });
+    public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, byte value) => writer.WriteRemoteMemory(address, [value]);
 
     public static void WriteRemoteMemory(this IRemoteMemoryWriter writer, IntPtr address, short value) => writer.WriteRemoteMemory(address, writer.BitConverter.GetBytes(value));
 

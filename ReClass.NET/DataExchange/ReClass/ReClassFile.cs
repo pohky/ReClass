@@ -14,7 +14,7 @@ public class ReClassFile : IReClassImport {
 
     #region ReClass 2011 / ReClass 2013
 
-    private static readonly Type[] typeMap2013 = {
+    private static readonly Type[] typeMap2013 = [
         null,
         typeof(ClassInstanceNode),
         null,
@@ -46,13 +46,13 @@ public class ReClassFile : IReClassImport {
         typeof(DoubleNode),
         typeof(Utf16TextNode),
         typeof(ClassPointerArrayNode)
-    };
+    ];
 
     #endregion
 
     #region ReClass 2015 / ReClass 2016
 
-    private static readonly Type[] typeMap2016 = {
+    private static readonly Type[] typeMap2016 = [
         null,
         typeof(ClassInstanceNode),
         null,
@@ -87,7 +87,7 @@ public class ReClassFile : IReClassImport {
         typeof(BitFieldNode),
         typeof(UInt64Node),
         typeof(FunctionNode)
-    };
+    ];
 
     #endregion
 

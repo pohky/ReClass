@@ -317,7 +317,7 @@ public partial class MainForm : IconForm {
             return;
         }
 
-        ShowPartialCodeGeneratorForm(new[] { classNode });
+        ShowPartialCodeGeneratorForm([classNode]);
     }
 
     private void enableHierarchyViewToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -854,7 +854,7 @@ public partial class MainForm : IconForm {
 
     private void showCodeOfClassToolStripMenuItem_Click(object sender, EventArgs e) {
         if (memoryViewControl.GetSelectedNodes().FirstOrDefault()?.Node is ClassNode node) {
-            ShowPartialCodeGeneratorForm(new[] { node });
+            ShowPartialCodeGeneratorForm([node]);
         }
     }
 

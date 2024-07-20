@@ -16,7 +16,7 @@ public partial class MainForm {
     public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses) {
         Contract.Requires(partialClasses != null);
 
-        ShowCodeGeneratorForm(partialClasses, new EnumDescription[0], new CppCodeGenerator(currentProject.TypeMapping));
+        ShowCodeGeneratorForm(partialClasses, [], new CppCodeGenerator(currentProject.TypeMapping));
     }
 
     public void ShowCodeGeneratorForm(ICodeGenerator generator) {

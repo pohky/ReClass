@@ -3,7 +3,7 @@ using System.Text;
 namespace ReClassNET.Util.Rtf;
 
 public partial class RtfBuilder {
-    private static readonly char[] slashable = { '{', '}', '\\' };
+    private static readonly char[] slashable = ['{', '}', '\\'];
 
     private readonly StringBuilder buffer;
     private readonly Color defaultBackColor = Color.Empty;

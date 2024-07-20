@@ -8,10 +8,10 @@ namespace ReClassNET.Forms;
 public partial class ProcessBrowserForm : IconForm {
     private const string NoPreviousProcess = "No previous process";
 
-    private static readonly string[] commonProcesses = {
+    private static readonly string[] commonProcesses = [
         "[system process]", "system", "svchost.exe", "services.exe", "wininit.exe",
         "smss.exe", "csrss.exe", "lsass.exe", "winlogon.exe", "wininit.exe", "dwm.exe"
-    };
+    ];
 
     /// <summary>Gets the selected process.</summary>
     public ProcessInfo SelectedProcess => (processDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView)

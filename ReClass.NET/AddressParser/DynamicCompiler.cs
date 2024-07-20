@@ -31,19 +31,19 @@ public class DynamicCompiler : IExecutor {
         Contract.Requires(processParameter != null);
 
         static MethodInfo GetIntPtrExtension(string name) {
-            return typeof(IntPtrExtension).GetRuntimeMethod(name, new[] { typeof(IntPtr), typeof(IntPtr) });
+            return typeof(IntPtrExtension).GetRuntimeMethod(name, [typeof(IntPtr), typeof(IntPtr)]);
         }
 
         switch (expression) {
             case ConstantExpression constantExpression: {
-                var convertFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.From), new[] { typeof(long) });
+                var convertFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.From), [typeof(long)]);
 
                 return Expression.Call(null, convertFn, Expression.Constant(constantExpression.Value));
             }
             case NegateExpression negateExpression: {
                 var argument = GenerateMethodBody(negateExpression.Expression, processParameter);
 
-                var negateFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.Negate), new[] { typeof(IntPtr) });
+                var negateFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.Negate), [typeof(IntPtr)]);
 
                 return Expression.Call(null, negateFn, argument);
             }
@@ -72,14 +72,14 @@ public class DynamicCompiler : IExecutor {
                 return Expression.Call(null, GetIntPtrExtension(nameof(IntPtrExtension.Div)), argument1, argument2);
             }
             case ModuleExpression moduleExpression: {
-                var getModuleByNameFunc = typeof(IProcessReader).GetRuntimeMethod(nameof(IProcessReader.GetModuleByName), new[] { typeof(string) });
+                var getModuleByNameFunc = typeof(IProcessReader).GetRuntimeMethod(nameof(IProcessReader.GetModuleByName), [typeof(string)]);
                 var moduleNameConstant = Expression.Constant(moduleExpression.Name);
 
                 var moduleVariable = Expression.Variable(typeof(Module));
                 var assignExpression = Expression.Assign(moduleVariable, Expression.Call(processParameter, getModuleByNameFunc, moduleNameConstant));
 
                 return Expression.Block(
-                    new[] { moduleVariable },
+                    [moduleVariable],
                     assignExpression,
                     Expression.Condition(
                         Expression.Equal(moduleVariable, Expression.Constant(null)),
@@ -92,12 +92,12 @@ public class DynamicCompiler : IExecutor {
                 var addressParameter = GenerateMethodBody(readMemoryExpression.Expression, processParameter);
 
                 var functionName = readMemoryExpression.ByteCount == 4 ? nameof(IRemoteMemoryReaderExtension.ReadRemoteInt32) : nameof(IRemoteMemoryReaderExtension.ReadRemoteInt64);
-                var readRemoteIntPtrFn = typeof(IRemoteMemoryReaderExtension).GetRuntimeMethod(functionName, new[] { typeof(IRemoteMemoryReader), typeof(IntPtr) });
+                var readRemoteIntPtrFn = typeof(IRemoteMemoryReaderExtension).GetRuntimeMethod(functionName, [typeof(IRemoteMemoryReader), typeof(IntPtr)]);
 
                 var callExpression = Expression.Call(null, readRemoteIntPtrFn, processParameter, addressParameter);
 
                 var paramType = readMemoryExpression.ByteCount == 4 ? typeof(int) : typeof(long);
-                var convertFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.From), new[] { paramType });
+                var convertFn = typeof(IntPtrExtension).GetRuntimeMethod(nameof(IntPtrExtension.From), [paramType]);
 
                 return Expression.Call(null, convertFn, callExpression);
             }

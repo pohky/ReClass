@@ -151,7 +151,7 @@ public partial class ProjectView : UserControl {
     public void AddClass(ClassNode @class) {
         Contract.Requires(@class != null);
 
-        AddClasses(new[] { @class });
+        AddClasses([@class]);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public partial class ProjectView : UserControl {
     public void AddEnum(EnumDescription @enum) {
         Contract.Requires(@enum != null);
 
-        AddEnums(new[] { @enum });
+        AddEnums([@enum]);
     }
 
     /// <summary>Adds the enums to the view.</summary>

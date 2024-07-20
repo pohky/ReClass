@@ -19,7 +19,6 @@
     <OutputPath>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutputPath>
 
     <RootNamespace>ReClassNET</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <DefineConstants>RECLASSNET64</DefineConstants>
   </PropertyGroup>

@@ -56,7 +56,7 @@ public class Scanner : IDisposable {
         Contract.Ensures(Contract.Result<IEnumerable<ScanResult>>() != null);
 
         if (CurrentStore == null) {
-            return Enumerable.Empty<ScanResult>();
+            return [];
         }
 
         return CurrentStore.GetResultBlocks().SelectMany(rb => rb.Results.Select(r => {

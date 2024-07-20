@@ -125,7 +125,7 @@ public class CppCodeGenerator : ICodeGenerator {
             Contract.Ensures(Contract.Result<IEnumerable<ClassNode>>() != null);
 
             if (!alreadySeen.Add(node)) {
-                return Enumerable.Empty<ClassNode>();
+                return [];
             }
 
             var classNodes = node.Nodes

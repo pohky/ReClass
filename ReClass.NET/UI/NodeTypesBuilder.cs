@@ -119,7 +119,7 @@ internal static class NodeTypesBuilder {
         Contract.Requires(createPluginItem != null);
 
         if (!defaultNodeTypeGroupList.Any()) {
-            return Enumerable.Empty<ToolStripItem>();
+            return [];
         }
 
         var items = defaultNodeTypeGroupList

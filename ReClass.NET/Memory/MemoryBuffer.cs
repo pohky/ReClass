@@ -37,8 +37,8 @@ public class MemoryBuffer {
         Contract.Ensures(data != null);
         Contract.Ensures(historyData != null);
 
-        data = Array.Empty<byte>();
-        historyData = Array.Empty<byte>();
+        data = [];
+        historyData = [];
     }
 
     [ContractInvariantMethod]

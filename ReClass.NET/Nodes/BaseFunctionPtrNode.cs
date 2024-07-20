@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
@@ -18,10 +17,6 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
     }
 
     protected Size Draw(DrawContext context, int x, int y, string type, string name) {
-        Contract.Requires(context != null);
-        Contract.Requires(type != null);
-        Contract.Requires(name != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }
@@ -93,8 +88,6 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
     }
 
     private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
-        Contract.Requires(process != null);
-
         if (Address != address) {
             Instructions.Clear();
 

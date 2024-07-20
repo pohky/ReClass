@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Util.Rtf;
 
 partial class RtfBuilder {
@@ -7,8 +5,6 @@ partial class RtfBuilder {
         private readonly RtfBuilder builder;
 
         public RtfFormatWrapper(RtfBuilder builder) {
-            Contract.Requires(builder != null);
-
             this.builder = builder;
 
             var buffer = builder.buffer;

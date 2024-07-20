@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Reflection;
 
 namespace ReClassNET.Controls;
@@ -9,15 +8,10 @@ public class EnumDescriptionDisplay<TEnum> where TEnum : struct {
     public string Description { get; internal set; }
 
     public static List<EnumDescriptionDisplay<TEnum>> Create() {
-        Contract.Ensures(Contract.Result<List<EnumDescriptionDisplay<TEnum>>>() != null);
-
         return CreateExact(Enum.GetValues(typeof(TEnum)).Cast<TEnum>());
     }
 
     public static List<EnumDescriptionDisplay<TEnum>> CreateExact(IEnumerable<TEnum> include) {
-        Contract.Requires(include != null);
-        Contract.Ensures(Contract.Result<List<EnumDescriptionDisplay<TEnum>>>() != null);
-
         return include
             .Select(value => new EnumDescriptionDisplay<TEnum> {
                 Description = GetDescription(value),
@@ -28,9 +22,6 @@ public class EnumDescriptionDisplay<TEnum> where TEnum : struct {
     }
 
     public static List<EnumDescriptionDisplay<TEnum>> CreateExclude(IEnumerable<TEnum> exclude) {
-        Contract.Requires(exclude != null);
-        Contract.Ensures(Contract.Result<List<EnumDescriptionDisplay<TEnum>>>() != null);
-
         return Enum.GetValues(typeof(TEnum))
             .Cast<TEnum>()
             .Except(exclude)
@@ -43,8 +34,6 @@ public class EnumDescriptionDisplay<TEnum> where TEnum : struct {
     }
 
     private static string GetDescription(TEnum value) {
-        Contract.Ensures(Contract.Result<string>() != null);
-
         return value.GetType().GetField(value.ToString()).GetCustomAttribute<DescriptionAttribute>()?.Description ?? value.ToString();
     }
 }

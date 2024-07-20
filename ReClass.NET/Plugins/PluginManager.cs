@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Core;
 using ReClassNET.DataExchange.ReClass;
@@ -12,22 +11,16 @@ using ReClassNET.UI;
 namespace ReClassNET.Plugins;
 
 internal sealed class PluginManager {
-
     private readonly IPluginHost host;
     private readonly List<PluginInfo> plugins = [];
 
     public IEnumerable<PluginInfo> Plugins => plugins;
 
     public PluginManager(IPluginHost host) {
-        Contract.Requires(host != null);
-
         this.host = host;
     }
 
     public void LoadAllPlugins(string path, ILogger logger) {
-        Contract.Requires(path != null);
-        Contract.Requires(logger != null);
-
         try {
             if (!Directory.Exists(path)) {
                 return;
@@ -48,8 +41,8 @@ internal sealed class PluginManager {
     private void LoadPlugins(IEnumerable<FileInfo> files, ILogger logger, bool checkProductName) {
         // TODO: How to include plugin infos for unix files as they don't have embedded version info.
 
-        Contract.Requires(files != null);
-        Contract.Requires(logger != null);
+
+
 
         foreach (var fi in files) {
             FileVersionInfo fvi;
@@ -105,8 +98,6 @@ internal sealed class PluginManager {
     }
 
     private static Plugin CreatePluginInstance(string filePath) {
-        Contract.Requires(filePath != null);
-
         var type = Path.GetFileNameWithoutExtension(filePath);
         type = type + "." + type + "Ext";
 
@@ -119,8 +110,6 @@ internal sealed class PluginManager {
     }
 
     private static IntPtr CreateNativePluginInstance(string filePath) {
-        Contract.Requires(filePath != null);
-
         var handle = NativeMethods.LoadLibrary(filePath);
         if (handle.IsNull()) {
             throw new FileLoadException($"Failed to load native plugin: {Path.GetFileName(filePath)}");
@@ -129,8 +118,6 @@ internal sealed class PluginManager {
     }
 
     private static void RegisterNodeInfoReaders(PluginInfo pluginInfo) {
-        Contract.Requires(pluginInfo != null);
-
         var nodeInfoReaders = pluginInfo.Interface.GetNodeInfoReaders();
 
         if (nodeInfoReaders == null || nodeInfoReaders.Count == 0) {
@@ -143,8 +130,6 @@ internal sealed class PluginManager {
     }
 
     private static void DeregisterNodeInfoReaders(PluginInfo pluginInfo) {
-        Contract.Requires(pluginInfo != null);
-
         if (pluginInfo.NodeInfoReaders == null) {
             return;
         }
@@ -155,8 +140,6 @@ internal sealed class PluginManager {
     }
 
     private static void RegisterCustomNodeTypes(PluginInfo pluginInfo) {
-        Contract.Requires(pluginInfo != null);
-
         var customNodeTypes = pluginInfo.Interface.GetCustomNodeTypes();
 
         if (customNodeTypes == null) {
@@ -182,8 +165,6 @@ internal sealed class PluginManager {
     }
 
     private static void DeregisterCustomNodeTypes(PluginInfo pluginInfo) {
-        Contract.Requires(pluginInfo != null);
-
         if (pluginInfo.CustomNodeTypes == null) {
             return;
         }

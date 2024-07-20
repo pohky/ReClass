@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 
@@ -16,9 +15,6 @@ public class NodeClickEventArgs : EventArgs {
     public Point Location { get; }
 
     public NodeClickEventArgs(BaseNode node, IntPtr address, MemoryBuffer memory, MouseButtons button, Point location) {
-        Contract.Requires(node != null);
-        Contract.Requires(memory != null);
-
         Node = node;
         Address = address;
         Memory = memory;

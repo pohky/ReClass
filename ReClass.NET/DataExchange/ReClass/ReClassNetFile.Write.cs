@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.IO.Compression;
 using System.Xml.Linq;
 using ReClassNET.Logger;
@@ -52,11 +51,6 @@ public partial class ReClassNetFile {
     }
 
     private static IEnumerable<XElement> CreateClassElements(IEnumerable<ClassNode> classes, ILogger logger) {
-        Contract.Requires(classes != null);
-        Contract.Requires(Contract.ForAll(classes, c => c != null));
-        Contract.Requires(logger != null);
-        Contract.Ensures(Contract.Result<IEnumerable<XElement>>() != null);
-
         return classes.Select(c => new XElement(
             XmlClassElement,
             new XAttribute(XmlUuidAttribute, c.Uuid),
@@ -68,9 +62,6 @@ public partial class ReClassNetFile {
     }
 
     private static XElement CreateElementFromNode(BaseNode node, ILogger logger) {
-        Contract.Requires(node != null);
-        Contract.Requires(logger != null);
-
         XElement CreateElement() {
             var converter = CustomNodeSerializer.GetWriteConverter(node);
             if (converter != null) {
@@ -111,51 +102,46 @@ public partial class ReClassNetFile {
 
         switch (node) {
             case VirtualMethodTableNode vtableNode: {
-                element.Add(vtableNode.Nodes.Select(n => new XElement(
-                    XmlMethodElement,
-                    new XAttribute(XmlNameAttribute, n.Name ?? string.Empty),
-                    new XAttribute(XmlCommentAttribute, n.Comment ?? string.Empty),
-                    new XAttribute(XmlHiddenAttribute, n.IsHidden)
-                )));
-                break;
-            }
+                    element.Add(vtableNode.Nodes.Select(n => new XElement(
+                        XmlMethodElement,
+                        new XAttribute(XmlNameAttribute, n.Name ?? string.Empty),
+                        new XAttribute(XmlCommentAttribute, n.Comment ?? string.Empty),
+                        new XAttribute(XmlHiddenAttribute, n.IsHidden)
+                    )));
+                    break;
+                }
             case UnionNode unionNode: {
-                element.Add(unionNode.Nodes.Select(n => CreateElementFromNode(n, logger)));
-                break;
-            }
+                    element.Add(unionNode.Nodes.Select(n => CreateElementFromNode(n, logger)));
+                    break;
+                }
             case BaseWrapperArrayNode arrayNode: {
-                element.SetAttributeValue(XmlCountAttribute, arrayNode.Count);
-                break;
-            }
+                    element.SetAttributeValue(XmlCountAttribute, arrayNode.Count);
+                    break;
+                }
             case BaseTextNode textNode: {
-                element.SetAttributeValue(XmlLengthAttribute, textNode.Length);
-                break;
-            }
+                    element.SetAttributeValue(XmlLengthAttribute, textNode.Length);
+                    break;
+                }
             case BitFieldNode bitFieldNode: {
-                element.SetAttributeValue(XmlBitsAttribute, bitFieldNode.Bits);
-                break;
-            }
+                    element.SetAttributeValue(XmlBitsAttribute, bitFieldNode.Bits);
+                    break;
+                }
             case FunctionNode functionNode: {
-                var uuid = functionNode.BelongsToClass?.Uuid ?? Guid.Empty;
-                element.SetAttributeValue(XmlReferenceAttribute, uuid);
-                element.SetAttributeValue(XmlSignatureAttribute, functionNode.Signature);
-                break;
-            }
+                    var uuid = functionNode.BelongsToClass?.Uuid ?? Guid.Empty;
+                    element.SetAttributeValue(XmlReferenceAttribute, uuid);
+                    element.SetAttributeValue(XmlSignatureAttribute, functionNode.Signature);
+                    break;
+                }
             case EnumNode enumNode: {
-                element.SetAttributeValue(XmlReferenceAttribute, enumNode.Enum.Name);
-                break;
-            }
+                    element.SetAttributeValue(XmlReferenceAttribute, enumNode.Enum.Name);
+                    break;
+                }
         }
 
         return element;
     }
 
     public static void SerializeNodesToStream(Stream output, IEnumerable<BaseNode> nodes, ILogger logger) {
-        Contract.Requires(output != null);
-        Contract.Requires(nodes != null);
-        Contract.Requires(Contract.ForAll(nodes, n => n != null));
-        Contract.Requires(logger != null);
-
         using var project = new ReClassNetProject();
 
         void RecursiveAddClasses(BaseNode node) {

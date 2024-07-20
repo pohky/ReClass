@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 namespace ReClassNET.Extensions;
 
 public static class StringExtension {
-
     private static readonly Regex hexadecimalValueRegex = new("^(0x|h)?([0-9A-F]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     [Pure]
     [DebuggerStepThrough]
@@ -13,15 +12,11 @@ public static class StringExtension {
 
     [DebuggerStepThrough]
     public static IEnumerable<char> InterpretAsSingleByteCharacter(this IEnumerable<byte> source) {
-        Contract.Requires(source != null);
-
         return source.Select(b => (char)b);
     }
 
     [DebuggerStepThrough]
     public static IEnumerable<char> InterpretAsDoubleByteCharacter(this IEnumerable<byte> source) {
-        Contract.Requires(source != null);
-
         var bytes = source.ToArray();
         var chars = new char[bytes.Length / 2];
         Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
@@ -30,15 +25,11 @@ public static class StringExtension {
 
     [DebuggerStepThrough]
     public static bool IsPrintableData(this IEnumerable<char> source) {
-        Contract.Requires(source != null);
-
         return CalculatePrintableDataThreshold(source) >= 1.0f;
     }
 
     [DebuggerStepThrough]
     public static bool IsLikelyPrintableData(this IEnumerable<char> source) {
-        Contract.Requires(source != null);
-
         return CalculatePrintableDataThreshold(source) >= 0.75f;
     }
 
@@ -70,17 +61,12 @@ public static class StringExtension {
     [Pure]
     [DebuggerStepThrough]
     public static string LimitLength(this string s, int length) {
-        Contract.Requires(s != null);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         if (s.Length <= length) {
             return s;
         }
         return s.Substring(0, length);
     }
     public static bool TryGetHexString(this string s, out string value) {
-        Contract.Requires(s != null);
-
         var match = hexadecimalValueRegex.Match(s);
         value = match.Success ? match.Groups[2].Value : null;
 

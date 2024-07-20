@@ -11,9 +11,6 @@ public interface IReClassImport {
 [ContractClassFor(typeof(IReClassImport))]
 internal abstract class ReClassImportContract : IReClassImport {
     public void Load(string filePath, ILogger logger) {
-        Contract.Requires(filePath != null);
-        Contract.Requires(logger != null);
-
         throw new NotImplementedException();
     }
 }

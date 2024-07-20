@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.AddressParser;
 using ReClassNET.CodeGenerator;
@@ -51,9 +50,6 @@ public partial class MainForm : IconForm {
     }
 
     public MainForm() {
-        Contract.Ensures(pluginManager != null);
-        Contract.Ensures(currentProject != null);
-
         InitializeComponent();
         UpdateWindowTitle();
 
@@ -274,11 +270,11 @@ public partial class MainForm : IconForm {
     private void memoryViewControl_ChangeWrappedTypeClick(object sender, NodeClickEventArgs e) {
         if (e.Node is BaseWrapperNode wrapperNode) {
             var items = NodeTypesBuilder.CreateToolStripMenuItems(t => {
-                    var node = BaseNode.CreateInstanceFromType(t);
-                    if (wrapperNode.CanChangeInnerNodeTo(node)) {
-                        wrapperNode.ChangeInnerNode(node);
-                    }
-                },
+                var node = BaseNode.CreateInstanceFromType(t);
+                if (wrapperNode.CanChangeInnerNodeTo(node)) {
+                    wrapperNode.ChangeInnerNode(node);
+                }
+            },
                 wrapperNode.CanChangeInnerNodeTo(null));
 
             var menu = new ContextMenuStrip();
@@ -776,15 +772,15 @@ public partial class MainForm : IconForm {
                 comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)node.ReadValueFromMemory(selectedNode.Memory), 0L, bitConverter);
                 break;
             case NIntNode node: {
-                var value = node.ReadValueFromMemory(selectedNode.Memory);
-                comparer = new LongMemoryComparer(ScanCompareType.Equal, value.ToInt64(), 0L, bitConverter);
-                break;
-            }
+                    var value = node.ReadValueFromMemory(selectedNode.Memory);
+                    comparer = new LongMemoryComparer(ScanCompareType.Equal, value.ToInt64(), 0L, bitConverter);
+                    break;
+                }
             case NUIntNode node: {
-                var value = node.ReadValueFromMemory(selectedNode.Memory);
-                comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)value.ToUInt64(), 0L, bitConverter);
-                break;
-            }
+                    var value = node.ReadValueFromMemory(selectedNode.Memory);
+                    comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)value.ToUInt64(), 0L, bitConverter);
+                    break;
+                }
             case Utf8TextNode node:
                 comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.UTF8, true);
                 break;

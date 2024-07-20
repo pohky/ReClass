@@ -1,5 +1,4 @@
 using System.CodeDom.Compiler;
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -64,7 +63,6 @@ public abstract class CustomCppCodeGenerator {
 }
 
 public class CppCodeGenerator : ICodeGenerator {
-
     private readonly Dictionary<Type, string> nodeTypeToTypeDefinationMap;
 
     public CppCodeGenerator(CppTypeMapping typeMapping) {
@@ -121,9 +119,6 @@ public class CppCodeGenerator : ICodeGenerator {
         var alreadySeen = new HashSet<ClassNode>();
 
         IEnumerable<ClassNode> GetReversedClassHierarchy(ClassNode node) {
-            Contract.Requires(node != null);
-            Contract.Ensures(Contract.Result<IEnumerable<ClassNode>>() != null);
-
             if (!alreadySeen.Add(node)) {
                 return [];
             }
@@ -168,9 +163,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="writer">The writer to output to.</param>
     /// <param name="enum">The enum to output.</param>
     private void WriteEnum(IndentedTextWriter writer, EnumDescription @enum) {
-        Contract.Requires(writer != null);
-        Contract.Requires(@enum != null);
-
         writer.Write($"enum class {@enum.Name} : ");
         switch (@enum.Size) {
             case EnumDescription.UnderlyingTypeSize.OneByte:
@@ -211,10 +203,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="classes">The list of all available classes.</param>
     /// <param name="logger">The logger.</param>
     private void WriteClass(IndentedTextWriter writer, ClassNode @class, IEnumerable<ClassNode> classes, ILogger logger) {
-        Contract.Requires(writer != null);
-        Contract.Requires(@class != null);
-        Contract.Requires(classes != null);
-
         writer.Write("class ");
         writer.Write(@class.Name);
 
@@ -284,9 +272,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="nodes">The nodes to output.</param>
     /// <param name="logger">The logger.</param>
     private void WriteNodes(IndentedTextWriter writer, IEnumerable<BaseNode> nodes, ILogger logger) {
-        Contract.Requires(writer != null);
-        Contract.Requires(nodes != null);
-
         var fill = 0;
         var fillStart = 0;
 
@@ -333,9 +318,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="node">The node to output.</param>
     /// <param name="logger">The logger.</param>
     private void WriteNode(IndentedTextWriter writer, BaseNode node, ILogger logger) {
-        Contract.Requires(writer != null);
-        Contract.Requires(node != null);
-
         var custom = GetCustomCodeGeneratorForNode(node);
         if (custom != null) {
             if (custom.WriteNode(writer, node, WriteNode, logger)) {
@@ -410,28 +392,28 @@ public class CppCodeGenerator : ICodeGenerator {
 
         switch (node) {
             case BaseTextNode textNode: {
-                var arrayNode = new ArrayNode { Count = textNode.Length };
-                arrayNode.CopyFromNode(node);
-                arrayNode.ChangeInnerNode(GetCharacterNodeForEncoding(textNode.Encoding));
-                return arrayNode;
-            }
+                    var arrayNode = new ArrayNode { Count = textNode.Length };
+                    arrayNode.CopyFromNode(node);
+                    arrayNode.ChangeInnerNode(GetCharacterNodeForEncoding(textNode.Encoding));
+                    return arrayNode;
+                }
             case BaseTextPtrNode textPtrNode: {
-                var pointerNode = new PointerNode();
-                pointerNode.CopyFromNode(node);
-                pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
-                return pointerNode;
-            }
+                    var pointerNode = new PointerNode();
+                    pointerNode.CopyFromNode(node);
+                    pointerNode.ChangeInnerNode(GetCharacterNodeForEncoding(textPtrNode.Encoding));
+                    return pointerNode;
+                }
             case BitFieldNode bitFieldNode: {
-                var underlayingNode = bitFieldNode.GetUnderlayingNode();
-                underlayingNode.CopyFromNode(node);
-                return underlayingNode;
-            }
+                    var underlayingNode = bitFieldNode.GetUnderlayingNode();
+                    underlayingNode.CopyFromNode(node);
+                    return underlayingNode;
+                }
             case BaseHexNode hexNode: {
-                var arrayNode = new ArrayNode { Count = hexNode.MemorySize };
-                arrayNode.CopyFromNode(node);
-                arrayNode.ChangeInnerNode(new Utf8CharacterNode());
-                return arrayNode;
-            }
+                    var arrayNode = new ArrayNode { Count = hexNode.MemorySize };
+                    arrayNode.CopyFromNode(node);
+                    arrayNode.ChangeInnerNode(new Utf8CharacterNode());
+                    return arrayNode;
+                }
         }
 
         return node;
@@ -444,8 +426,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="logger">The logger.</param>
     /// <returns>The type definition for the node or null if no simple type is available.</returns>
     private string GetTypeDefinition(BaseNode node, ILogger logger) {
-        Contract.Requires(node != null);
-
         var custom = GetCustomCodeGeneratorForNode(node);
         if (custom != null) {
             return custom.GetTypeDefinition(node, GetTypeDefinition, ResolveWrappedType, logger);
@@ -474,8 +454,6 @@ public class CppCodeGenerator : ICodeGenerator {
     /// <param name="logger">The logger.</param>
     /// <returns>The resolved type of the node.</returns>
     private string ResolveWrappedType(BaseNode node, bool isAnonymousExpression, ILogger logger) {
-        Contract.Requires(node != null);
-
         var sb = new StringBuilder();
         if (!isAnonymousExpression) {
             sb.Append(node.Name);

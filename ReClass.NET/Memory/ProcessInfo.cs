@@ -1,10 +1,8 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Native;
 
 namespace ReClassNET.Memory;
 
 public class ProcessInfo {
-
     private readonly Lazy<Image> icon;
     public IntPtr Id { get; }
     public string Name { get; }
@@ -12,9 +10,6 @@ public class ProcessInfo {
     public Image Icon => icon.Value;
 
     public ProcessInfo(IntPtr id, string name, string path) {
-        Contract.Requires(name != null);
-        Contract.Requires(path != null);
-
         Id = id;
         Name = name;
         Path = path;

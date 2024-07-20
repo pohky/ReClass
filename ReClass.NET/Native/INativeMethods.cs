@@ -32,15 +32,11 @@ namespace ReClassNET.Native
     {
         public IntPtr LoadLibrary(string fileName)
         {
-            Contract.Requires(fileName != null);
-
             throw new NotImplementedException();
         }
 
         public IntPtr GetProcAddress(IntPtr handle, string name)
         {
-            Contract.Requires(name != null);
-
             throw new NotImplementedException();
         }
 
@@ -51,8 +47,6 @@ namespace ReClassNET.Native
 
         public Icon GetIconForFile(string path)
         {
-            Contract.Requires(path != null);
-
             throw new NotImplementedException();
         }
 
@@ -63,9 +57,6 @@ namespace ReClassNET.Native
 
         public string UndecorateSymbolName(string name)
         {
-            Contract.Requires(name != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             throw new NotImplementedException();
         }
 
@@ -76,19 +67,11 @@ namespace ReClassNET.Native
 
         public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-            Contract.Requires(applicationPath != null);
-            Contract.Requires(applicationName != null);
-
             throw new NotImplementedException();
         }
 
         public void UnregisterExtension(string fileExtension, string extensionId)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
             throw new NotImplementedException();
         }
     }
@@ -123,15 +106,11 @@ namespace ReClassNET.Native;
     {
         public IntPtr LoadLibrary(string fileName)
         {
-            Contract.Requires(fileName != null);
-
             throw new NotImplementedException();
         }
 
         public IntPtr GetProcAddress(IntPtr handle, string name)
         {
-            Contract.Requires(name != null);
-
             throw new NotImplementedException();
         }
 
@@ -142,8 +121,6 @@ namespace ReClassNET.Native;
 
         public Icon GetIconForFile(string path)
         {
-            Contract.Requires(path != null);
-
             throw new NotImplementedException();
         }
 
@@ -154,9 +131,6 @@ namespace ReClassNET.Native;
 
         public string UndecorateSymbolName(string name)
         {
-            Contract.Requires(name != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             throw new NotImplementedException();
         }
 
@@ -167,19 +141,11 @@ namespace ReClassNET.Native;
 
         public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-            Contract.Requires(applicationPath != null);
-            Contract.Requires(applicationName != null);
-
             throw new NotImplementedException();
         }
 
         public void UnregisterExtension(string fileExtension, string extensionId)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
             throw new NotImplementedException();
         }
     }
@@ -210,14 +176,10 @@ internal interface INativeMethods {
 [ContractClassFor(typeof(INativeMethods))]
 internal abstract class NativeMethodsContract : INativeMethods {
     public IntPtr LoadLibrary(string fileName) {
-        Contract.Requires(fileName != null);
-
         throw new NotImplementedException();
     }
 
     public IntPtr GetProcAddress(IntPtr handle, string name) {
-        Contract.Requires(name != null);
-
         throw new NotImplementedException();
     }
 
@@ -226,8 +188,6 @@ internal abstract class NativeMethodsContract : INativeMethods {
     }
 
     public Icon GetIconForFile(string path) {
-        Contract.Requires(path != null);
-
         throw new NotImplementedException();
     }
 
@@ -236,9 +196,6 @@ internal abstract class NativeMethodsContract : INativeMethods {
     }
 
     public string UndecorateSymbolName(string name) {
-        Contract.Requires(name != null);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         throw new NotImplementedException();
     }
 
@@ -247,18 +204,10 @@ internal abstract class NativeMethodsContract : INativeMethods {
     }
 
     public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) {
-        Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-        Contract.Requires(!string.IsNullOrEmpty(extensionId));
-        Contract.Requires(applicationPath != null);
-        Contract.Requires(applicationName != null);
-
         throw new NotImplementedException();
     }
 
     public void UnregisterExtension(string fileExtension, string extensionId) {
-        Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-        Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
         throw new NotImplementedException();
     }
 }

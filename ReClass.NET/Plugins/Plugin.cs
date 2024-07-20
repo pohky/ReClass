@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.CodeGenerator;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Nodes;
@@ -6,20 +5,16 @@ using ReClassNET.Nodes;
 namespace ReClassNET.Plugins;
 
 public class Plugin {
-
     /// <summary>
     ///     The icon of the plugin.
     /// </summary>
     public virtual Image Icon => null;
 
     public virtual bool Initialize(IPluginHost host) {
-        Contract.Requires(host != null);
-
         return true;
     }
 
     public virtual void Terminate() {
-
     }
 
     /// <summary>

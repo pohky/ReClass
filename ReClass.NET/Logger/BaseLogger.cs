@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using Microsoft.SqlServer.MessageBox;
 
 namespace ReClassNET.Logger;
@@ -17,8 +16,6 @@ public abstract class BaseLogger : ILogger {
     }
 
     private void Log(LogLevel level, string message, Exception ex) {
-        Contract.Requires(message != null);
-
         lock (sync) {
             NewLogEntry?.Invoke(level, message, ex);
         }

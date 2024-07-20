@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.IO.Compression;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
@@ -17,9 +16,6 @@ public partial class ReClassNetFile {
     }
 
     public void Load(Stream input, ILogger logger) {
-        Contract.Requires(input != null);
-        Contract.Requires(logger != null);
-
         using var archive = new ZipArchive(input, ZipArchiveMode.Read);
         var dataEntry = archive.GetEntry(DataFileName);
         if (dataEntry == null) {
@@ -110,9 +106,6 @@ public partial class ReClassNetFile {
     }
 
     private BaseNode CreateNodeFromElement(XElement element, BaseNode parent, ILogger logger) {
-        Contract.Requires(element != null);
-        Contract.Requires(logger != null);
-
         BaseNode CreateNode() {
             var converter = CustomNodeSerializer.GetReadConverter(element);
             if (converter != null) {
@@ -200,53 +193,53 @@ public partial class ReClassNetFile {
 
         switch (node) {
             case VirtualMethodTableNode vtableNode: {
-                var nodes = element
-                    .Elements(XmlMethodElement)
-                    .Select(e => new VirtualMethodNode {
-                        Name = e.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
-                        Comment = e.Attribute(XmlCommentAttribute)?.Value ?? string.Empty,
-                        IsHidden = (bool?)e.Attribute(XmlHiddenAttribute) ?? false
-                    });
+                    var nodes = element
+                        .Elements(XmlMethodElement)
+                        .Select(e => new VirtualMethodNode {
+                            Name = e.Attribute(XmlNameAttribute)?.Value ?? string.Empty,
+                            Comment = e.Attribute(XmlCommentAttribute)?.Value ?? string.Empty,
+                            IsHidden = (bool?)e.Attribute(XmlHiddenAttribute) ?? false
+                        });
 
-                vtableNode.AddNodes(nodes);
-                break;
-            }
-            case UnionNode unionNode: {
-                var nodes = element
-                    .Elements()
-                    .Select(e => CreateNodeFromElement(e, unionNode, logger));
-
-                unionNode.AddNodes(nodes);
-                break;
-            }
-            case BaseWrapperArrayNode arrayNode: {
-                arrayNode.Count = (int?)element.Attribute(XmlCountAttribute) ?? 0;
-                break;
-            }
-            case BaseTextNode textNode: {
-                textNode.Length = (int?)element.Attribute(XmlLengthAttribute) ?? 0;
-                break;
-            }
-            case BitFieldNode bitFieldNode: {
-                bitFieldNode.Bits = (int?)element.Attribute(XmlBitsAttribute) ?? 0;
-                break;
-            }
-            case FunctionNode functionNode: {
-                functionNode.Signature = element.Attribute(XmlSignatureAttribute)?.Value ?? string.Empty;
-
-                var reference = ParseUuid(element.Attribute(XmlReferenceAttribute)?.Value);
-                if (project.ContainsClass(reference)) {
-                    functionNode.BelongsToClass = project.GetClassByUuid(reference);
+                    vtableNode.AddNodes(nodes);
+                    break;
                 }
-                break;
-            }
-            case EnumNode enumNode: {
-                var enumName = element.Attribute(XmlReferenceAttribute)?.Value ?? string.Empty;
-                var @enum = project.Enums.FirstOrDefault(e => e.Name == enumName) ?? EnumDescription.Default;
+            case UnionNode unionNode: {
+                    var nodes = element
+                        .Elements()
+                        .Select(e => CreateNodeFromElement(e, unionNode, logger));
 
-                enumNode.ChangeEnum(@enum);
-                break;
-            }
+                    unionNode.AddNodes(nodes);
+                    break;
+                }
+            case BaseWrapperArrayNode arrayNode: {
+                    arrayNode.Count = (int?)element.Attribute(XmlCountAttribute) ?? 0;
+                    break;
+                }
+            case BaseTextNode textNode: {
+                    textNode.Length = (int?)element.Attribute(XmlLengthAttribute) ?? 0;
+                    break;
+                }
+            case BitFieldNode bitFieldNode: {
+                    bitFieldNode.Bits = (int?)element.Attribute(XmlBitsAttribute) ?? 0;
+                    break;
+                }
+            case FunctionNode functionNode: {
+                    functionNode.Signature = element.Attribute(XmlSignatureAttribute)?.Value ?? string.Empty;
+
+                    var reference = ParseUuid(element.Attribute(XmlReferenceAttribute)?.Value);
+                    if (project.ContainsClass(reference)) {
+                        functionNode.BelongsToClass = project.GetClassByUuid(reference);
+                    }
+                    break;
+                }
+            case EnumNode enumNode: {
+                    var enumName = element.Attribute(XmlReferenceAttribute)?.Value ?? string.Empty;
+                    var @enum = project.Enums.FirstOrDefault(e => e.Name == enumName) ?? EnumDescription.Default;
+
+                    enumNode.ChangeEnum(@enum);
+                    break;
+                }
         }
 
         return node;
@@ -256,10 +249,6 @@ public partial class ReClassNetFile {
         raw.Length == 24 ? new Guid(Convert.FromBase64String(raw)) : Guid.Parse(raw);
 
     public static Tuple<List<ClassNode>, List<BaseNode>> DeserializeNodesFromStream(Stream input, ReClassNetProject templateProject, ILogger logger) {
-        Contract.Requires(input != null);
-        Contract.Requires(logger != null);
-        Contract.Ensures(Contract.Result<Tuple<List<ClassNode>, List<BaseNode>>>() != null);
-
         using var project = new ReClassNetProject();
         templateProject?.Classes.ForEach(project.AddClass);
 

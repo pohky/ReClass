@@ -24,14 +24,10 @@ internal abstract class LoggerContract : ILogger {
     public event NewLogEntryEventHandler NewLogEntry { add { throw new NotImplementedException(); } remove { } }
 
     public void Log(Exception ex) {
-        Contract.Requires(ex != null);
-
         throw new NotImplementedException();
     }
 
     public void Log(LogLevel level, string message) {
-        Contract.Requires(message != null);
-
         throw new NotImplementedException();
     }
 }

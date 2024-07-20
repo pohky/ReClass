@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-
-/* Unmerged change from project 'ReClass.NET'
+﻿/* Unmerged change from project 'ReClass.NET'
 Before:
 namespace ReClassNET.Util
 {
@@ -79,8 +76,6 @@ namespace ReClassNET.Util
         /// </returns>
         internal static KeyValuePair<string, string> GetParameter(string str)
         {
-            Contract.Requires(str != null);
-
             if (str.StartsWith("--"))
             {
                 str = str.Remove(0, 2);
@@ -196,8 +191,6 @@ namespace ReClassNET.Util;
         /// </returns>
         internal static KeyValuePair<string, string> GetParameter(string str)
         {
-            Contract.Requires(str != null);
-
             if (str.StartsWith("--"))
             {
                 str = str.Remove(0, 2);
@@ -300,8 +293,6 @@ public class CommandLineArgs {
     ///     The parameter split in key and value. An empty key signals a file name.
     /// </returns>
     internal static KeyValuePair<string, string> GetParameter(string str) {
-        Contract.Requires(str != null);
-
         if (str.StartsWith("--")) {
             str = str.Remove(0, 2);
         } else if (str.StartsWith("-")) {

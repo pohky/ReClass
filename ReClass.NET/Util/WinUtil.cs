@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Security.Principal;
 using Microsoft.Win32;
 
@@ -67,8 +66,6 @@ namespace ReClassNET.Util
         /// <returns>True if it succeeds, false if it fails.</returns>
         public static bool RunElevated(string applicationPath, string arguments)
         {
-            Contract.Requires(applicationPath != null);
-
             try
             {
                 var processStartInfo = new ProcessStartInfo
@@ -160,8 +157,6 @@ namespace ReClassNET.Util;
         /// <returns>True if it succeeds, false if it fails.</returns>
         public static bool RunElevated(string applicationPath, string arguments)
         {
-            Contract.Requires(applicationPath != null);
-
             try
             {
                 var processStartInfo = new ProcessStartInfo
@@ -244,8 +239,6 @@ public static class WinUtil {
     /// <param name="arguments">The arguments.</param>
     /// <returns>True if it succeeds, false if it fails.</returns>
     public static bool RunElevated(string applicationPath, string arguments) {
-        Contract.Requires(applicationPath != null);
-
         try {
             var processStartInfo = new ProcessStartInfo {
                 FileName = applicationPath,

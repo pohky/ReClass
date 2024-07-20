@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Project;
 using ReClassNET.UI;
 
@@ -10,8 +9,6 @@ public partial class EnumListForm : IconForm {
     public EnumDescription SelectedItem => itemListBox.SelectedItem as EnumDescription;
 
     public EnumListForm(ReClassNetProject project) {
-        Contract.Requires(project != null);
-
         this.project = project;
 
         InitializeComponent();

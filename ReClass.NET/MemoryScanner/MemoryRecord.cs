@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 using ReClassNET.Extensions;
@@ -55,12 +54,9 @@ public class MemoryRecord : INotifyPropertyChanged {
     public bool ShowValueHexadecimal { get; set; }
 
     public MemoryRecord() {
-
     }
 
     public MemoryRecord(ScanResult result) {
-        Contract.Requires(result != null);
-
         addressOrOffset = result.Address;
         AddressMode = MemoryRecordAddressMode.Unknown;
         ValueType = result.ValueType;
@@ -111,8 +107,6 @@ public class MemoryRecord : INotifyPropertyChanged {
     }
 
     public void ResolveAddress(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         if (AddressMode == MemoryRecordAddressMode.Unknown) {
             RealAddress = addressOrOffset;
 
@@ -134,8 +128,6 @@ public class MemoryRecord : INotifyPropertyChanged {
     }
 
     public void RefreshValue(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         byte[] buffer;
 
         switch (ValueType) {
@@ -202,9 +194,6 @@ public class MemoryRecord : INotifyPropertyChanged {
     }
 
     public void SetValue(RemoteProcess process, string input, bool isHex) {
-        Contract.Requires(process != null);
-        Contract.Requires(input != null);
-
         byte[] data = null;
 
         if (ValueType == ScanValueType.Byte || ValueType == ScanValueType.Short || ValueType == ScanValueType.Integer || ValueType == ScanValueType.Long) {

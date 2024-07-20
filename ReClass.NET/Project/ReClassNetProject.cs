@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Nodes;
 using ReClassNET.Util;
 
@@ -45,8 +44,6 @@ public class ReClassNetProject : IDisposable {
     public event EnumsChangedEvent EnumRemoved;
 
     public void AddClass(ClassNode node) {
-        Contract.Requires(node != null);
-
         classes.Add(node);
 
         node.NodesChanged += NodesChanged_Handler;
@@ -55,14 +52,10 @@ public class ReClassNetProject : IDisposable {
     }
 
     public bool ContainsClass(Guid uuid) {
-        Contract.Requires(uuid != null);
-
         return classes.Any(c => c.Uuid.Equals(uuid));
     }
 
     public ClassNode GetClassByUuid(Guid uuid) {
-        Contract.Requires(uuid != null);
-
         return classes.First(c => c.Uuid.Equals(uuid));
     }
 
@@ -91,16 +84,12 @@ public class ReClassNetProject : IDisposable {
     }
 
     private IEnumerable<ClassNode> GetClassReferences(ClassNode node) {
-        Contract.Requires(node != null);
-
         return classes
             .Where(c => c != node)
             .Where(c => c.Nodes.OfType<BaseWrapperNode>().Any(w => w.ResolveMostInnerNode() == node));
     }
 
     public void Remove(ClassNode node) {
-        Contract.Requires(node != null);
-
         var references = GetClassReferences(node).ToList();
         if (references.Any()) {
             throw new ClassReferencedException(node, references);
@@ -126,16 +115,12 @@ public class ReClassNetProject : IDisposable {
     }
 
     public void AddEnum(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         enums.Add(@enum);
 
         EnumAdded?.Invoke(@enum);
     }
 
     public void RemoveEnum(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         var refrences = GetEnumReferences(@enum).ToList();
         if (refrences.Any()) {
             throw new EnumReferencedException(@enum, refrences.Select(e => e.GetParentClass()).Distinct());
@@ -147,8 +132,6 @@ public class ReClassNetProject : IDisposable {
     }
 
     private IEnumerable<EnumNode> GetEnumReferences(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         return classes
             .SelectMany(c => c.Nodes.Where(n => n is EnumNode || (n as BaseWrapperNode)?.ResolveMostInnerNode() is EnumNode))
             .Cast<EnumNode>()
@@ -162,10 +145,6 @@ public class ClassReferencedException : Exception {
 
     public ClassReferencedException(ClassNode node, IEnumerable<ClassNode> references)
         : base($"The class '{node.Name}' is referenced in other classes.") {
-        Contract.Requires(node != null);
-        Contract.Requires(references != null);
-        Contract.Requires(Contract.ForAll(references, c => c != null));
-
         ClassNode = node;
         References = references;
     }
@@ -177,10 +156,6 @@ public class EnumReferencedException : Exception {
 
     public EnumReferencedException(EnumDescription @enum, IEnumerable<ClassNode> references)
         : base($"The enum '{@enum.Name}' is referenced in other classes.") {
-        Contract.Requires(@enum != null);
-        Contract.Requires(references != null);
-        Contract.Requires(Contract.ForAll(references, c => c != null));
-
         Enum = @enum;
         References = references;
     }

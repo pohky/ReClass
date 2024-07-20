@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using ReClassNET.Core;
 using ReClassNET.Extensions;
@@ -12,8 +11,6 @@ public class Disassembler {
     private readonly CoreFunctionsManager coreFunctions;
 
     public Disassembler(CoreFunctionsManager coreFunctions) {
-        Contract.Requires(coreFunctions != null);
-
         this.coreFunctions = coreFunctions;
     }
 
@@ -26,9 +23,6 @@ public class Disassembler {
     /// <param name="length">The length of the code in bytes.</param>
     /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleCode(IRemoteMemoryReader process, IntPtr address, int length) {
-        Contract.Requires(process != null);
-        Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
-
         return RemoteDisassembleCode(process, address, length, -1);
     }
 
@@ -45,9 +39,6 @@ public class Disassembler {
     /// </param>
     /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleCode(IRemoteMemoryReader process, IntPtr address, int length, int maxInstructions) {
-        Contract.Requires(process != null);
-        Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
-
         var buffer = process.ReadRemoteMemory(address, length);
 
         return DisassembleCode(buffer, address, maxInstructions);
@@ -65,9 +56,6 @@ public class Disassembler {
     /// </param>
     /// <returns>A list of <see cref="DisassembledInstruction" />.</returns>
     public IReadOnlyList<DisassembledInstruction> DisassembleCode(byte[] data, IntPtr virtualAddress, int maxInstructions) {
-        Contract.Requires(data != null);
-        Contract.Ensures(Contract.Result<IList<DisassembledInstruction>>() != null);
-
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         try {
             var instructions = new List<DisassembledInstruction>();
@@ -99,9 +87,6 @@ public class Disassembler {
     /// <param name="maxLength">The maximum maxLength of the code.</param>
     /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleFunction(IRemoteMemoryReader process, IntPtr address, int maxLength) {
-        Contract.Requires(process != null);
-        Contract.Ensures(Contract.Result<IEnumerable<DisassembledInstruction>>() != null);
-
         var buffer = process.ReadRemoteMemory(address, maxLength);
 
         return DisassembleFunction(buffer, address);
@@ -115,9 +100,6 @@ public class Disassembler {
     /// </param>
     /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
     public IReadOnlyList<DisassembledInstruction> DisassembleFunction(byte[] data, IntPtr virtualAddress) {
-        Contract.Requires(data != null);
-        Contract.Ensures(Contract.Result<IEnumerable<DisassembledInstruction>>() != null);
-
         var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
         try {
             var instructions = new List<DisassembledInstruction>();

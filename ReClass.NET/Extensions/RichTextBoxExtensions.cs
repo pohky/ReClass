@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 namespace ReClassNET.Extensions;
 
 public static class RichTextBoxExtension {
-
     private const int EmGetrect = 0xB2;
     private const int EmSetrect = 0xB3;
     public static void SetInnerMargin(this TextBoxBase textBox, int left, int top, int right, int bottom) {

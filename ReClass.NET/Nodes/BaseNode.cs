@@ -13,7 +13,6 @@ public delegate void NodeEventHandler(BaseNode sender);
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 [ContractClass(typeof(BaseNodeContract))]
 public abstract class BaseNode {
-
     internal static readonly List<INodeInfoReader> NodeInfoReader = [];
 
     protected static readonly int HiddenHeight = 0;
@@ -68,9 +67,6 @@ public abstract class BaseNode {
 
     /// <summary>Constructor which sets a unique <see cref="Name" />.</summary>
     protected BaseNode() {
-        Contract.Ensures(name != null);
-        Contract.Ensures(comment != null);
-
         Name = $"N{nodeIndex++:X08}";
         Comment = string.Empty;
 
@@ -82,10 +78,6 @@ public abstract class BaseNode {
 
     [ContractInvariantMethod]
     private void ObjectInvariants() {
-        Contract.Invariant(name != null);
-        Contract.Invariant(comment != null);
-        Contract.Invariant(Offset >= 0);
-        Contract.Invariant(LevelsOpen != null);
     }
 
     /// <summary>
@@ -112,8 +104,6 @@ public abstract class BaseNode {
     public abstract void GetUserInterfaceInfo(out string name, out Image icon);
 
     public virtual bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
-        Contract.Requires(spot != null);
-
         address = IntPtr.Zero;
 
         return false;
@@ -123,21 +113,16 @@ public abstract class BaseNode {
     /// <param name="spot">The spot.</param>
     /// <returns>The information to show in a tool tip or null if no information should be shown.</returns>
     public virtual string GetToolTipText(HotSpot spot) {
-        Contract.Requires(spot != null);
-
         return null;
     }
 
     /// <summary>Called when the node was created. Does not get called after loading a project.</summary>
     public virtual void Initialize() {
-
     }
 
     /// <summary>Initializes this object from the given node. It copies the name and the comment.</summary>
     /// <param name="node">The node to copy from.</param>
     public virtual void CopyFromNode(BaseNode node) {
-        Contract.Requires(node != null);
-
         Name = node.Name;
         Comment = node.Comment;
         Offset = node.Offset;
@@ -233,8 +218,6 @@ public abstract class BaseNode {
     /// </summary>
     /// <param name="spot">The spot.</param>
     public virtual void Update(HotSpot spot) {
-        Contract.Requires(spot != null);
-
         if (spot.Id == HotSpot.NameId) {
             Name = spot.Text;
         } else if (spot.Id == HotSpot.CommentId) {
@@ -262,10 +245,6 @@ public abstract class BaseNode {
     /// <param name="id">The id of the spot.</param>
     /// <param name="type">The type of the spot.</param>
     protected void AddHotSpot(DrawContext context, Rectangle spot, string text, int id, HotSpotType type) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Memory != null);
-        Contract.Requires(text != null);
-
         if (spot.Top > context.ClientArea.Bottom || spot.Bottom < 0) {
             return;
         }
@@ -295,11 +274,6 @@ public abstract class BaseNode {
     /// <param name="text">The text to draw.</param>
     /// <returns>The new x coordinate after drawing the text.</returns>
     protected int AddText(DrawContext context, int x, int y, Color color, int hitId, string text) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-        Contract.Requires(context.Font != null);
-        Contract.Requires(text != null);
-
         var width = Math.Max(text.Length, hitId != HotSpot.NoneId ? 1 : 0) * context.Font.Width;
 
         if (y >= -context.Font.Height && y + context.Font.Height <= context.ClientArea.Bottom + context.Font.Height) {
@@ -324,10 +298,6 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The new x coordinate after drawing the text.</returns>
     protected int AddAddressOffset(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-        Contract.Requires(context.Font != null);
-
         if (context.Settings.ShowNodeOffset) {
             x = AddText(context, x, y, context.Settings.OffsetColor, HotSpot.NoneId, $"{Offset:X04}") + context.Font.Width;
         }
@@ -348,9 +318,6 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <param name="height">The height of the bar.</param>
     protected void AddSelection(DrawContext context, int x, int y, int height) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-
         if (y > context.ClientArea.Bottom || y + height < 0 || IsWrapped) {
             return;
         }
@@ -378,10 +345,6 @@ public abstract class BaseNode {
     /// <param name="type">The type of the spot.</param>
     /// <returns>The new x coordinate after drawing the icon.</returns>
     protected int AddIcon(DrawContext context, int x, int y, Image icon, int id, HotSpotType type) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-        Contract.Requires(icon != null);
-
         var size = context.IconProvider.Dimensions;
 
         if (y > context.ClientArea.Bottom || y + size < 0) {
@@ -403,9 +366,6 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The new x coordinate after drawing the icon.</returns>
     protected int AddOpenCloseIcon(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-
         if (y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0) {
             return x + context.IconProvider.Dimensions;
         }
@@ -418,9 +378,6 @@ public abstract class BaseNode {
     /// <param name="context">The drawing context.</param>
     /// <param name="y">The y coordinate.</param>
     protected void AddContextDropDownIcon(DrawContext context, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-
         if (context.MultipleNodesSelected || y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0 || IsWrapped) {
             return;
         }
@@ -434,9 +391,6 @@ public abstract class BaseNode {
     /// <param name="context">The drawing context.</param>
     /// <param name="y">The y coordinate.</param>
     protected void AddDeleteIcon(DrawContext context, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-
         if (y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0 || IsWrapped) {
             return;
         }
@@ -452,10 +406,6 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The new x coordinate after drawing the comment.</returns>
     protected virtual int AddComment(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-        Contract.Requires(context.Font != null);
-
         x = AddText(context, x, y, context.Settings.CommentColor, HotSpot.NoneId, "//");
         x = AddText(context, x, y, context.Settings.CommentColor, HotSpot.CommentId, Comment) + context.Font.Width;
 
@@ -468,9 +418,6 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The size of the drawing.</returns>
     protected Size DrawHidden(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-        Contract.Requires(context.Graphics != null);
-
         using (var brush = new SolidBrush(IsSelected ? context.Settings.SelectedColor : context.Settings.HiddenColor)) {
             context.Graphics.FillRectangle(brush, 0, y, context.ClientArea.Right, 1);
         }
@@ -492,21 +439,15 @@ public abstract class BaseNode {
 internal abstract class BaseNodeContract : BaseNode {
     public override int MemorySize {
         get {
-            Contract.Ensures(Contract.Result<int>() >= 0);
-
             throw new NotImplementedException();
         }
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-
         throw new NotImplementedException();
     }
 
     public override int CalculateDrawnHeight(DrawContext context) {
-        Contract.Requires(context != null);
-
         throw new NotImplementedException();
     }
 }

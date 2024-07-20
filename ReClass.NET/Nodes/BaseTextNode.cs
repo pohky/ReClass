@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -23,9 +22,6 @@ public abstract class BaseTextNode : BaseNode {
     }
 
     protected Size DrawText(DrawContext context, int x, int y, string type) {
-        Contract.Requires(context != null);
-        Contract.Requires(type != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }

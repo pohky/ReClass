@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Extensions;
 
@@ -9,7 +8,6 @@ namespace ReClassNET.MemoryScanner;
 ///     the results are stored in temporary files.
 /// </summary>
 internal class ScanResultStore : IDisposable {
-
     private const int MaximumMemoryResultsCount = 10000000;
 
     private readonly List<ScanResultBlock> store = [];
@@ -56,8 +54,6 @@ internal class ScanResultStore : IDisposable {
     ///     Gets the result blocks from the store. This may read results from files..
     /// </summary>
     public IEnumerable<ScanResultBlock> GetResultBlocks() {
-        Contract.Ensures(Contract.Result<IEnumerable<ScanResultBlock>>() != null);
-
         return mode == StorageMode.Memory ? store : ReadBlocksFromFile();
     }
 
@@ -67,8 +63,6 @@ internal class ScanResultStore : IDisposable {
     /// </summary>
     /// <param name="block">The result block to add.</param>
     public void AddBlock(ScanResultBlock block) {
-        Contract.Requires(block != null);
-
         lock (store) {
             TotalResultCount += block.Results.Count;
 
@@ -99,8 +93,6 @@ internal class ScanResultStore : IDisposable {
     /// </summary>
     /// <param name="block">The result block to add.</param>
     private void AppendBlockToFile(ScanResultBlock block) {
-        Contract.Requires(block != null);
-
         using var bw = new BinaryWriter(fileStream, Encoding.Unicode, true);
         bw.Write(block.Start);
         bw.Write(block.End);
@@ -115,8 +107,6 @@ internal class ScanResultStore : IDisposable {
     ///     Reads all memory blocks from the file.
     /// </summary>
     private IEnumerable<ScanResultBlock> ReadBlocksFromFile() {
-        Contract.Ensures(Contract.Result<IEnumerable<ScanResultBlock>>() != null);
-
         using var stream = File.OpenRead(storePath);
         using var br = new BinaryReader(stream, Encoding.Unicode);
 
@@ -144,8 +134,6 @@ internal class ScanResultStore : IDisposable {
     /// <param name="br">The <see cref="BinaryReader" /> to read from.</param>
     /// <returns>The scan result.</returns>
     private ScanResult ReadScanResult(BinaryReader br) {
-        Contract.Ensures(Contract.Result<ScanResult>() != null);
-
         var address = br.ReadIntPtr();
 
         ScanResult result;
@@ -197,9 +185,6 @@ internal class ScanResultStore : IDisposable {
     /// <param name="bw">The <see cref="BinaryWriter" /> to write to.</param>
     /// <param name="result">The result to write.</param>
     private static void WriteSearchResult(BinaryWriter bw, ScanResult result) {
-        Contract.Requires(bw != null);
-        Contract.Requires(result != null);
-
         bw.Write(result.Address);
 
         switch (result) {

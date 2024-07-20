@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
@@ -6,7 +5,6 @@ using ReClassNET.Project;
 namespace ReClassNET.DataExchange.ReClass;
 
 public partial class ReClassNetFile : IReClassImport, IReClassExport {
-
     private static readonly Dictionary<string, Type> buildInStringToTypeMap = new[] {
         typeof(BoolNode),
         typeof(BitFieldNode),
@@ -68,8 +66,6 @@ public partial class ReClassNetFile : IReClassImport, IReClassExport {
     }
 
     public ReClassNetFile(ReClassNetProject project) {
-        Contract.Requires(project != null);
-
         this.project = project;
     }
 }

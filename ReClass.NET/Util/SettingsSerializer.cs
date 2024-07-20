@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Xml.Linq;
 
 namespace ReClassNET.Util;
@@ -78,8 +77,6 @@ internal sealed class SettingsSerializer {
     #region Write Settings
 
     public static void Save(Settings settings) {
-        Contract.Requires(settings != null);
-
         EnsureSettingsDirectoryAvailable();
 
         var path = Path.Combine(PathUtil.SettingsFolderPath, Constants.SettingsFile);

@@ -1,17 +1,13 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 
 namespace ReClassNET.Debugger;
 
 public sealed class SoftwareBreakpoint : IBreakpoint {
-
     private readonly BreakpointHandler handler;
 
     private byte orig;
 
     public SoftwareBreakpoint(IntPtr address, BreakpointHandler handler) {
-        Contract.Requires(handler != null);
-
         Address = address;
 
         this.handler = handler;

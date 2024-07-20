@@ -53,36 +53,18 @@ public interface ICustomNodeSerializer {
 [ContractClassFor(typeof(ICustomNodeSerializer))]
 internal abstract class CustomNodeSerializerContract : ICustomNodeSerializer {
     public bool CanHandleElement(XElement element) {
-        Contract.Requires(element != null);
-
         throw new NotImplementedException();
     }
 
     public bool CanHandleNode(BaseNode node) {
-        Contract.Requires(node != null);
-
         throw new NotImplementedException();
     }
 
     public BaseNode CreateNodeFromElement(XElement element, BaseNode parent, IEnumerable<ClassNode> classes, ILogger logger, CreateNodeFromElementHandler defaultHandler) {
-        Contract.Requires(element != null);
-        Contract.Requires(CanHandleElement(element));
-        Contract.Requires(parent != null);
-        Contract.Requires(classes != null);
-        Contract.Requires(Contract.ForAll(classes, c => c != null));
-        Contract.Requires(logger != null);
-        Contract.Requires(defaultHandler != null);
-
         throw new NotImplementedException();
     }
 
     public XElement CreateElementFromNode(BaseNode node, ILogger logger, CreateElementFromNodeHandler defaultHandler) {
-        Contract.Requires(node != null);
-        Contract.Requires(CanHandleNode(node));
-        Contract.Requires(logger != null);
-        Contract.Requires(defaultHandler != null);
-        Contract.Ensures(Contract.Result<XElement>() != null);
-
         throw new NotImplementedException();
     }
 }
@@ -91,26 +73,18 @@ internal class CustomNodeSerializer {
     private static readonly List<ICustomNodeSerializer> converters = [];
 
     public static void Add(ICustomNodeSerializer serializer) {
-        Contract.Requires(serializer != null);
-
         converters.Add(serializer);
     }
 
     public static void Remove(ICustomNodeSerializer serializer) {
-        Contract.Requires(serializer != null);
-
         converters.Remove(serializer);
     }
 
     public static ICustomNodeSerializer GetReadConverter(XElement element) {
-        Contract.Requires(element != null);
-
         return converters.FirstOrDefault(c => c.CanHandleElement(element));
     }
 
     public static ICustomNodeSerializer GetWriteConverter(BaseNode node) {
-        Contract.Requires(node != null);
-
         return converters.FirstOrDefault(c => c.CanHandleNode(node));
     }
 }

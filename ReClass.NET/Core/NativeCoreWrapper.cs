@@ -6,7 +6,6 @@ using ReClassNET.Native;
 namespace ReClassNET.Core;
 
 public class NativeCoreWrapper : ICoreProcessFunctions {
-
     public NativeCoreWrapper(IntPtr handle) {
         if (handle.IsNull()) {
             throw new ArgumentNullException();
@@ -100,9 +99,9 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
     private delegate void DetachDebuggerFromProcessDelegate(IntPtr id);
 
     [return: MarshalAs(UnmanagedType.I1)]
-    private delegate bool AwaitDebugEventDelegate([In] [Out] ref DebugEvent evt, int timeoutInMilliseconds);
+    private delegate bool AwaitDebugEventDelegate([In][Out] ref DebugEvent evt, int timeoutInMilliseconds);
 
-    private delegate void HandleDebugEventDelegate([In] [Out] ref DebugEvent evt);
+    private delegate void HandleDebugEventDelegate([In][Out] ref DebugEvent evt);
 
     [return: MarshalAs(UnmanagedType.I1)]
     private delegate bool SetHardwareBreakpointDelegate(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, [param: MarshalAs(UnmanagedType.I1)] bool set);

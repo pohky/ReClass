@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 
@@ -13,8 +12,6 @@ public class Tokenizer : ITokenizer {
     private char currentCharacter;
 
     public Tokenizer(TextReader reader) {
-        Contract.Requires(reader != null);
-
         this.reader = reader;
 
         ReadNextCharacter();

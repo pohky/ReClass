@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Forms;
 
 namespace ReClassNET.Logger;
@@ -11,7 +10,7 @@ public class GuiLogger : BaseLogger {
 
     public GuiLogger() {
         form = new LogForm();
-        form.FormClosing += delegate(object sender, FormClosingEventArgs e) {
+        form.FormClosing += delegate (object sender, FormClosingEventArgs e) {
             form.Clear();
 
             form.Hide();
@@ -23,8 +22,6 @@ public class GuiLogger : BaseLogger {
     }
 
     private void OnNewLogEntry(LogLevel level, string message, Exception ex) {
-        Contract.Requires(message != null);
-
         if (level < Level) {
             return;
         }

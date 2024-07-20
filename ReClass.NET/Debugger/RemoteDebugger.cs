@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Forms;
 using ReClassNET.Memory;
@@ -6,21 +5,16 @@ using ReClassNET.Memory;
 namespace ReClassNET.Debugger;
 
 public partial class RemoteDebugger {
-
     private readonly HashSet<IBreakpoint> breakpoints = [];
 
     private readonly RemoteProcess process;
     private readonly object syncBreakpoint = new();
 
     public RemoteDebugger(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         this.process = process;
     }
 
     public void AddBreakpoint(IBreakpoint breakpoint) {
-        Contract.Requires(breakpoint != null);
-
         lock (syncBreakpoint) {
             if (!breakpoints.Add(breakpoint)) {
                 throw new BreakpointAlreadySetException(breakpoint);
@@ -31,8 +25,6 @@ public partial class RemoteDebugger {
     }
 
     public void RemoveBreakpoint(IBreakpoint bp) {
-        Contract.Requires(bp != null);
-
         lock (syncBreakpoint) {
             if (breakpoints.Remove(bp)) {
                 bp.Remove(process);

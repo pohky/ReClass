@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using Dia2Lib;
 using ReClassNET.Extensions;
@@ -37,15 +36,11 @@ public class SymbolReader : IDisposable {
     }
 
     public static void TryResolveSymbolsForModule(Module module, string searchPath) {
-        Contract.Requires(module != null);
-
         using var diaSource = new ComDisposableWrapper<DiaSource>(new DiaSource());
         diaSource.Interface.loadDataForExe(module.Path, searchPath, null);
     }
 
     public static SymbolReader FromModule(Module module, string searchPath) {
-        Contract.Requires(module != null);
-
         var reader = new SymbolReader();
         reader.diaSource.Interface.loadDataForExe(module.Path, searchPath, null);
         reader.CreateSession();
@@ -53,8 +48,6 @@ public class SymbolReader : IDisposable {
     }
 
     public static SymbolReader FromDatabase(string path) {
-        Contract.Requires(path != null);
-
         var reader = new SymbolReader();
         reader.diaSource.Interface.loadDataFromPdb(path);
         reader.CreateSession();
@@ -62,16 +55,12 @@ public class SymbolReader : IDisposable {
     }
 
     private void CreateSession() {
-        Contract.Ensures(diaSession != null);
-
         diaSource.Interface.openSession(out var session);
 
         diaSession = new ComDisposableWrapper<IDiaSession>(session);
     }
 
     public string GetSymbolString(IntPtr address, Module module) {
-        Contract.Requires(module != null);
-
         var rva = address.Sub(module.Start);
 
         diaSession.Interface.findSymbolByRVA((uint)rva.ToInt32(), SymTagEnum.SymTagNull, out var diaSymbol);
@@ -86,9 +75,6 @@ public class SymbolReader : IDisposable {
     }
 
     private void ReadSymbol(IDiaSymbol symbol, StringBuilder sb) {
-        Contract.Requires(symbol != null);
-        Contract.Requires(sb != null);
-
         /*switch ((SymTagEnum)symbol.symTag)
             {
                 case SymTagEnum.SymTagData:
@@ -109,9 +95,6 @@ public class SymbolReader : IDisposable {
     }
 
     private void ReadSymbolType(IDiaSymbol symbol, StringBuilder sb) {
-        Contract.Requires(symbol != null);
-        Contract.Requires(sb != null);
-
         if (symbol.type != null) {
             using var type = new ComDisposableWrapper<IDiaSymbol>(symbol.type);
 
@@ -120,16 +103,10 @@ public class SymbolReader : IDisposable {
     }
 
     private void ReadType(IDiaSymbol symbol, StringBuilder sb) {
-        Contract.Requires(symbol != null);
-        Contract.Requires(sb != null);
-
         throw new NotImplementedException();
     }
 
     private void ReadName(IDiaSymbol symbol, StringBuilder sb) {
-        Contract.Requires(symbol != null);
-        Contract.Requires(sb != null);
-
         if (string.IsNullOrEmpty(symbol.name)) {
             return;
         }
@@ -157,9 +134,6 @@ public class SymbolReader : IDisposable {
     }
 
     private void ReadData(IDiaSymbol symbol, StringBuilder sb) {
-        Contract.Requires(symbol != null);
-        Contract.Requires(sb != null);
-
         throw new NotImplementedException();
     }
 }

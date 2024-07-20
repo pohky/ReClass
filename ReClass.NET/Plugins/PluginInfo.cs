@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 using ReClassNET.Nodes;
@@ -31,9 +30,6 @@ internal class PluginInfo : IDisposable {
     public Plugin.CustomNodeTypes CustomNodeTypes { get; set; }
 
     public PluginInfo(string filePath, FileVersionInfo versionInfo) {
-        Contract.Requires(filePath != null);
-        Contract.Requires(versionInfo != null);
-
         FilePath = filePath;
         IsNative = versionInfo.ProductName == null /* Unix */ || versionInfo.ProductName == PluginNativeName;
 

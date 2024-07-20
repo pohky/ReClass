@@ -47,7 +47,6 @@ namespace ReClassNET.Native
 
         public void EnableDebugPrivileges()
         {
-
         }
 
         public string UndecorateSymbolName(string name)
@@ -57,7 +56,6 @@ namespace ReClassNET.Native
 
         public void SetProcessDpiAwareness()
         {
-
         }
 
         public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
@@ -67,7 +65,6 @@ namespace ReClassNET.Native
 
         public void UnregisterExtension(string fileExtension, string extensionId)
         {
-
         }
     }
 }
@@ -116,7 +113,6 @@ namespace ReClassNET.Native;
 
         public void EnableDebugPrivileges()
         {
-
         }
 
         public string UndecorateSymbolName(string name)
@@ -126,7 +122,6 @@ namespace ReClassNET.Native;
 
         public void SetProcessDpiAwareness()
         {
-
         }
 
         public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
@@ -136,14 +131,12 @@ namespace ReClassNET.Native;
 
         public void UnregisterExtension(string fileExtension, string extensionId)
         {
-
         }
     }
 */
 namespace ReClassNET.Native;
 
 internal class NativeMethodsUnix : INativeMethods {
-
     public IntPtr LoadLibrary(string fileName) => dlopen(fileName, RTLD_NOW);
 
     public IntPtr GetProcAddress(IntPtr handle, string name) =>
@@ -158,19 +151,16 @@ internal class NativeMethodsUnix : INativeMethods {
     public Icon GetIconForFile(string path) => null;
 
     public void EnableDebugPrivileges() {
-
     }
 
     public string UndecorateSymbolName(string name) => name;
 
     public void SetProcessDpiAwareness() {
-
     }
 
     public bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) => false;
 
     public void UnregisterExtension(string fileExtension, string extensionId) {
-
     }
 
     #region Imports

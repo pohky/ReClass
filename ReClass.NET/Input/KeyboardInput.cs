@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Input;
 
 public class KeyboardInput : IDisposable {
@@ -24,8 +22,6 @@ public class KeyboardInput : IDisposable {
     }
 
     public Keys[] GetPressedKeys() {
-        Contract.Ensures(Contract.Result<Keys[]>() != null);
-
         return Program.CoreFunctions.GetPressedKeys(handle);
     }
 }

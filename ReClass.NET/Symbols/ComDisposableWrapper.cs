@@ -7,8 +7,6 @@ internal class DisposableWrapper : IDisposable {
     protected object Object;
 
     public DisposableWrapper(object obj) {
-        Contract.Requires(obj != null);
-
         Object = obj;
     }
 
@@ -20,7 +18,6 @@ internal class DisposableWrapper : IDisposable {
 
     [ContractInvariantMethod]
     private void ObjectInvariants() {
-        Contract.Invariant(Object != null);
     }
 
     protected virtual void Dispose(bool disposing) {
@@ -39,6 +36,5 @@ internal class ComDisposableWrapper<T> : DisposableWrapper {
 
     public ComDisposableWrapper(T com)
         : base(com) {
-        Contract.Requires(com != null);
     }
 }

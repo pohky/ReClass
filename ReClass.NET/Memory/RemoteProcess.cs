@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.AddressParser;
 using ReClassNET.Core;
@@ -13,7 +12,6 @@ namespace ReClassNET.Memory;
 public delegate void RemoteProcessEvent(RemoteProcess sender);
 
 public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWriter, IProcessReader {
-
     private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = [];
 
     private readonly List<Module> modules = [];
@@ -57,8 +55,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     public bool IsValid => UnderlayingProcess != null && CoreFunctions.IsProcessValid(handle);
 
     public RemoteProcess(CoreFunctionsManager coreFunctions) {
-        Contract.Requires(coreFunctions != null);
-
         this.CoreFunctions = coreFunctions;
 
         Debugger = new RemoteDebugger(this);
@@ -110,8 +106,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     #region WriteMemory
 
     public bool WriteRemoteMemory(IntPtr address, byte[] data) {
-        Contract.Requires(data != null);
-
         if (!IsValid) {
             return false;
         }
@@ -133,8 +127,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     /// <summary>Opens the given process to gather informations from.</summary>
     /// <param name="info">The process information.</param>
     public void Open(ProcessInfo info) {
-        Contract.Requires(info != null);
-
         if (UnderlayingProcess != info) {
             lock (processSync) {
                 Close();
@@ -202,8 +194,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     /// <summary>Updates the process informations asynchronous.</summary>
     /// <returns>The Task.</returns>
     public Task UpdateProcessInformationsAsync() {
-        Contract.Ensures(Contract.Result<Task>() != null);
-
         if (!IsValid) {
             lock (modules) {
                 modules.Clear();
@@ -238,8 +228,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     /// <param name="addressFormula">The address formula.</param>
     /// <returns>The result of the parsed address or <see cref="IntPtr.Zero" />.</returns>
     public IntPtr ParseAddress(string addressFormula) {
-        Contract.Requires(addressFormula != null);
-
         if (!formulaCache.TryGetValue(addressFormula, out var func)) {
             var expression = Parser.Parse(addressFormula);
 
@@ -305,20 +293,10 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     #region ReadMemory
 
     public bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer) {
-        Contract.Requires(buffer != null);
-        Contract.Ensures(Contract.ValueAtReturn(out buffer) != null);
-
         return ReadRemoteMemoryIntoBuffer(address, ref buffer, 0, buffer.Length);
     }
 
     public bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer, int offset, int length) {
-        Contract.Requires(buffer != null);
-        Contract.Requires(offset >= 0);
-        Contract.Requires(length >= 0);
-        Contract.Requires(offset + length <= buffer.Length);
-        Contract.Ensures(Contract.ValueAtReturn(out buffer) != null);
-        Contract.EndContractBlock();
-
         if (!IsValid) {
             Close();
 
@@ -331,9 +309,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     }
 
     public byte[] ReadRemoteMemory(IntPtr address, int size) {
-        Contract.Requires(size >= 0);
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-
         var data = new byte[size];
         ReadRemoteMemoryIntoBuffer(address, ref data);
         return data;
@@ -344,7 +319,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             if (!rttiCache.TryGetValue(address, out var rtti)) {
                 var objectLocatorPtr = this.ReadRemoteIntPtr(address - IntPtr.Size);
                 if (objectLocatorPtr.MayBeValid()) {
-
                     rtti = ReadRemoteRuntimeTypeInformation64(objectLocatorPtr);
 
                     rttiCache[address] = rtti;

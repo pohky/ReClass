@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
@@ -8,7 +7,6 @@ using ReClassNET.Util;
 namespace ReClassNET.Controls;
 
 public partial class MemoryViewControl : UserControl {
-
     private readonly FontEx font;
 
     private readonly List<HotSpot> hotSpots = [];
@@ -205,10 +203,6 @@ public partial class MemoryViewControl : UserControl {
         public int Level { get; }
 
         public SelectedNodeInfo(BaseNode node, RemoteProcess process, MemoryBuffer memory, IntPtr address, int level) {
-            Contract.Requires(node != null);
-            Contract.Requires(process != null);
-            Contract.Requires(memory != null);
-
             Node = node;
             Process = process;
             Memory = memory;
@@ -220,8 +214,6 @@ public partial class MemoryViewControl : UserControl {
     #region Process Input
 
     protected override void OnMouseClick(MouseEventArgs e) {
-        Contract.Requires(e != null);
-
         hotSpotEditBox.Hide();
 
         var invalidate = false;
@@ -353,8 +345,6 @@ public partial class MemoryViewControl : UserControl {
     }
 
     protected override void OnMouseDoubleClick(MouseEventArgs e) {
-        Contract.Requires(e != null);
-
         hotSpotEditBox.Hide();
 
         var invalidate = false;
@@ -398,8 +388,6 @@ public partial class MemoryViewControl : UserControl {
 
     private Point toolTipPosition;
     protected override void OnMouseHover(EventArgs e) {
-        Contract.Requires(e != null);
-
         base.OnMouseHover(e);
 
         if (selectedNodes.Count > 1) {
@@ -426,8 +414,6 @@ public partial class MemoryViewControl : UserControl {
     }
 
     protected override void OnMouseMove(MouseEventArgs e) {
-        Contract.Requires(e != null);
-
         base.OnMouseMove(e);
 
         if (e.Location != toolTipPosition) {

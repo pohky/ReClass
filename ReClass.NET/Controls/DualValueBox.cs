@@ -54,7 +54,6 @@ public partial class DualValueBox : UserControl {
 }
 
 internal class DualValueControlDesigner : ControlDesigner {
-
     public override SelectionRules SelectionRules => SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
     private DualValueControlDesigner() {
         AutoResizeHandles = true;

@@ -4,7 +4,6 @@ using ReClassNET.Util.Conversion;
 namespace ReClassNET.MemoryScanner.Comparer;
 
 public class LongMemoryComparer : ISimpleScanComparer {
-
     private readonly EndianBitConverter bitConverter;
     public long Value1 { get; }
     public long Value2 { get; }

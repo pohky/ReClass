@@ -35,8 +35,6 @@ public static class IntPtrExtension {
     [Pure]
     [DebuggerStepThrough]
     public static IntPtr Div(this IntPtr lhs, IntPtr rhs) {
-        Contract.Requires(!rhs.IsNull());
-
         return new IntPtr(lhs.ToInt64() / rhs.ToInt64());
     }
 

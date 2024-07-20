@@ -1,5 +1,4 @@
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
@@ -10,7 +9,6 @@ using ReClassNET.UI;
 namespace ReClassNET.Forms;
 
 public partial class FoundCodeForm : IconForm {
-
     public delegate void StopEventHandler(object sender, EventArgs e);
 
     private readonly DataTable data;
@@ -19,8 +17,6 @@ public partial class FoundCodeForm : IconForm {
     private volatile bool acceptNewRecords = true;
 
     public FoundCodeForm(RemoteProcess process, IntPtr address, HardwareBreakpointTrigger trigger) {
-        Contract.Requires(process != null);
-
         this.process = process;
 
         InitializeComponent();

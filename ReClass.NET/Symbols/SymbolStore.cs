@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using Dia2Lib;
 using Microsoft.Win32;
@@ -15,8 +14,6 @@ internal class DiaUtil : IDisposable {
     private bool isDisposed;
 
     public DiaUtil(string pdbName) {
-        Contract.Requires(pdbName != null);
-
         DiaDataSource = new DiaSource();
         DiaDataSource.loadDataFromPdb(pdbName);
         DiaDataSource.openSession(out DiaSession);
@@ -91,9 +88,6 @@ public class SymbolStore {
     }
 
     public void TryResolveSymbolsForModule(Module module) {
-        Contract.Requires(module != null);
-        Contract.Requires(module.Name != null);
-
         if (NativeMethods.IsUnix()) {
             return;
         }
@@ -122,9 +116,6 @@ public class SymbolStore {
     }
 
     public void LoadSymbolsForModule(Module module) {
-        Contract.Requires(module != null);
-        Contract.Requires(module.Name != null);
-
         if (NativeMethods.IsUnix()) {
             return;
         }
@@ -146,8 +137,6 @@ public class SymbolStore {
     }
 
     public void LoadSymbolsFromPDB(string path) {
-        Contract.Requires(path != null);
-
         if (NativeMethods.IsUnix()) {
             return;
         }
@@ -172,9 +161,6 @@ public class SymbolStore {
     }
 
     public SymbolReader GetSymbolsForModule(Module module) {
-        Contract.Requires(module != null);
-        Contract.Requires(module.Name != null);
-
         if (NativeMethods.IsUnix()) {
             return null;
         }

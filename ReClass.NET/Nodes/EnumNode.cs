@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -20,8 +19,6 @@ public class EnumNode : BaseNode {
     }
 
     public void ChangeEnum(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         Enum = @enum;
 
         GetParentContainer()?.ChildHasChanged(this);

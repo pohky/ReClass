@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
@@ -36,9 +35,6 @@ public class CoreFunctionsManager : IDisposable {
     #endregion
 
     public void RegisterFunctions(string provider, ICoreProcessFunctions functions) {
-        Contract.Requires(provider != null);
-        Contract.Requires(functions != null);
-
         functionsRegistry.Add(provider, functions);
     }
 
@@ -53,7 +49,7 @@ public class CoreFunctionsManager : IDisposable {
     #region Plugin Functions
 
     public void EnumerateProcesses(Action<ProcessInfo> callbackProcess) {
-        var c = callbackProcess == null ? null : (EnumerateProcessCallback)delegate(ref EnumerateProcessData data) { callbackProcess(new ProcessInfo(data.Id, data.Name, data.Path)); };
+        var c = callbackProcess == null ? null : (EnumerateProcessCallback)delegate (ref EnumerateProcessData data) { callbackProcess(new ProcessInfo(data.Id, data.Name, data.Path)); };
 
         CurrentFunctions.EnumerateProcesses(c);
     }
@@ -67,7 +63,7 @@ public class CoreFunctionsManager : IDisposable {
     public void EnumerateRemoteSectionsAndModules(IntPtr process, Action<Section> callbackSection, Action<Module> callbackModule) {
         var c1 = callbackSection == null
             ? null
-            : (EnumerateRemoteSectionCallback)delegate(ref EnumerateRemoteSectionData data) {
+            : (EnumerateRemoteSectionCallback)delegate (ref EnumerateRemoteSectionData data) {
                 callbackSection(new Section {
                     Start = data.BaseAddress,
                     End = data.BaseAddress.Add(data.Size),
@@ -83,7 +79,7 @@ public class CoreFunctionsManager : IDisposable {
 
         var c2 = callbackModule == null
             ? null
-            : (EnumerateRemoteModuleCallback)delegate(ref EnumerateRemoteModuleData data) {
+            : (EnumerateRemoteModuleCallback)delegate (ref EnumerateRemoteModuleData data) {
                 callbackModule(new Module {
                     Start = data.BaseAddress,
                     End = data.BaseAddress.Add(data.Size),

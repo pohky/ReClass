@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 
@@ -10,8 +9,6 @@ public partial class ClassSelectionForm : IconForm {
     public ClassNode SelectedClass => classesListBox.SelectedItem as ClassNode;
 
     public ClassSelectionForm(IEnumerable<ClassNode> classes) {
-        Contract.Requires(classes != null);
-
         allClasses = classes.ToList();
 
         InitializeComponent();

@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
@@ -16,9 +15,6 @@ public class ReClassClipboard {
     /// <param name="nodes">The nodes to copy.</param>
     /// <param name="logger">The logger.</param>
     public static void Copy(IEnumerable<BaseNode> nodes, ILogger logger) {
-        Contract.Requires(nodes != null);
-        Contract.Requires(logger != null);
-
         using var ms = new MemoryStream();
 
         ReClassNetFile.SerializeNodesToStream(ms, nodes, logger);
@@ -31,10 +27,6 @@ public class ReClassClipboard {
     /// <param name="logger">The logger.</param>
     /// <returns>A list of <see cref="ClassNode" /> and <see cref="BaseNode" />. If no data was present, both lists are empty.</returns>
     public static Tuple<List<ClassNode>, List<BaseNode>> Paste(ReClassNetProject templateProject, ILogger logger) {
-        Contract.Requires(templateProject != null);
-        Contract.Requires(logger != null);
-        Contract.Ensures(Contract.Result<Tuple<List<ClassNode>, List<BaseNode>>>() != null);
-
         if (ContainsNodes && Clipboard.GetData(ClipboardFormat) is byte[] data) {
             using var ms = new MemoryStream(data);
 

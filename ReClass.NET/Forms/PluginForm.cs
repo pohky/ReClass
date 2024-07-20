@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using ReClassNET.Plugins;
 using ReClassNET.Properties;
 using ReClassNET.UI;
@@ -7,10 +6,7 @@ using ReClassNET.UI;
 namespace ReClassNET.Forms;
 
 public partial class PluginForm : IconForm {
-
     internal PluginForm(PluginManager pluginManager) {
-        Contract.Requires(pluginManager != null);
-
         InitializeComponent();
 
         // Plugins Tab
@@ -64,9 +60,6 @@ public partial class PluginForm : IconForm {
         public string Description => plugin.Description;
 
         public PluginInfoRow(PluginInfo plugin) {
-            Contract.Requires(plugin != null);
-            Contract.Ensures(this.plugin != null);
-
             this.plugin = plugin;
         }
     }

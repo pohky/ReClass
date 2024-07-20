@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -21,9 +20,6 @@ public abstract class BaseTextPtrNode : BaseNode {
     /// <param name="type">The name of the type.</param>
     /// <returns>The pixel size the node occupies.</returns>
     public Size DrawText(DrawContext context, int x, int y, string type) {
-        Contract.Requires(context != null);
-        Contract.Requires(type != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }

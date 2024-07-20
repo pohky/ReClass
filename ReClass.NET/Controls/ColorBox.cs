@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 
 namespace ReClassNET.Controls;
 
@@ -39,8 +38,6 @@ public partial class ColorBox : UserControl {
     public event EventHandler ColorChanged;
 
     protected virtual void OnColorChanged(EventArgs e) {
-        Contract.Requires(e != null);
-
         var eh = ColorChanged;
         eh?.Invoke(this, e);
     }

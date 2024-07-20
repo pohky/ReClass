@@ -58,7 +58,6 @@ public partial class HotkeyBox : UserControl {
 }
 
 internal class HotkeyBoxDesigner : ControlDesigner {
-
     public override SelectionRules SelectionRules => SelectionRules.LeftSizeable | SelectionRules.RightSizeable | SelectionRules.Moveable;
     private HotkeyBoxDesigner() {
         AutoResizeHandles = true;

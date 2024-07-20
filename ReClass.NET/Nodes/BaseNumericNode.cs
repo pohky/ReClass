@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.UI;
 
@@ -15,11 +14,6 @@ public abstract class BaseNumericNode : BaseNode {
     /// <param name="alternativeValue">An alternative value of the node.</param>
     /// <returns>The pixel size the node occupies.</returns>
     protected Size DrawNumeric(DrawContext context, int x, int y, Image icon, string type, string value, string alternativeValue) {
-        Contract.Requires(context != null);
-        Contract.Requires(icon != null);
-        Contract.Requires(type != null);
-        Contract.Requires(value != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }

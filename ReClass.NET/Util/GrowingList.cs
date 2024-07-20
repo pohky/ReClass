@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Util;
 
 public class GrowingList<T> {
@@ -11,15 +9,11 @@ public class GrowingList<T> {
 
     public T this[int index] {
         get {
-            Contract.Requires(index >= 0);
-
             CheckIndex(index);
 
             return list[index];
         }
         set {
-            Contract.Requires(index >= 0);
-
             CheckIndex(index);
 
             list[index] = value;
@@ -27,8 +21,6 @@ public class GrowingList<T> {
     }
 
     public GrowingList() {
-        Contract.Ensures(list != null);
-
         list = [];
     }
 
@@ -46,8 +38,6 @@ public class GrowingList<T> {
     }
 
     private void CheckIndex(int index) {
-        Contract.Requires(index >= 0);
-
         if (index >= list.Count) {
             GrowToSize(index);
         }

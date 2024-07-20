@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -23,9 +22,6 @@ public static class BannerFactory {
     /// <param name="skipCache">True to skip cache.</param>
     /// <returns>The created banner.</returns>
     public static Image CreateBanner(int bannerWidth, int bannerHeight, Image icon, string title, string text, bool skipCache) {
-        Contract.Requires(title != null);
-        Contract.Requires(text != null);
-
         var bannerId = $"{bannerWidth}x{bannerHeight}:{title}:{text}";
 
         if (skipCache || !imageCache.TryGetValue(bannerId, out var image)) {

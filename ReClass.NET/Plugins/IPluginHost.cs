@@ -28,40 +28,30 @@ public interface IPluginHost {
 internal abstract class PluginHostContract : IPluginHost {
     public ILogger Logger {
         get {
-            Contract.Ensures(Logger != null);
-
             throw new NotImplementedException();
         }
     }
 
     public MainForm MainWindow {
         get {
-            Contract.Ensures(MainWindow != null);
-
             throw new NotImplementedException();
         }
     }
 
     public RemoteProcess Process {
         get {
-            Contract.Ensures(Process != null);
-
             throw new NotImplementedException();
         }
     }
 
     public ResourceManager Resources {
         get {
-            Contract.Ensures(Resources != null);
-
             throw new NotImplementedException();
         }
     }
 
     public Settings Settings {
         get {
-            Contract.Ensures(Settings != null);
-
             throw new NotImplementedException();
         }
     }

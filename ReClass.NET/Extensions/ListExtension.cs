@@ -19,9 +19,6 @@ public static class ListExtension {
     [Pure]
     [DebuggerStepThrough]
     public static int BinarySearch<T>(this IList<T> source, Func<T, int> comparer) {
-        Contract.Requires(source != null);
-        Contract.Requires(comparer != null);
-
         var lo = 0;
         var hi = source.Count - 1;
 

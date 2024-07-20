@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Extensions;
 
@@ -16,7 +15,6 @@ public enum PatternMaskFormat {
 }
 
 public class BytePattern {
-
     private readonly List<IPatternByte> pattern = [];
 
     /// <summary>
@@ -30,7 +28,6 @@ public class BytePattern {
     public bool HasWildcards => pattern.Any(pb => pb is PatternByte pb2 && pb2.HasWildcard);
 
     private BytePattern() {
-
     }
 
     /// <summary>
@@ -47,9 +44,6 @@ public class BytePattern {
     /// <param name="value">The byte pattern in hex format.</param>
     /// <returns>The corresponding <see cref="BytePattern" />.</returns>
     public static BytePattern Parse(string value) {
-        Contract.Requires(!string.IsNullOrEmpty(value));
-        Contract.Ensures(Contract.Result<BytePattern>() != null);
-
         var pattern = new BytePattern();
 
         using var sr = new StringReader(value);
@@ -109,8 +103,6 @@ public class BytePattern {
     /// <param name="index">The index into the byte array.</param>
     /// <returns>True if the pattern matches, false if they are not.</returns>
     public bool Equals(byte[] data, int index) {
-        Contract.Requires(data != null);
-
         for (var j = 0; j < pattern.Count; ++j) {
             if (!pattern[j].Equals(data[index + j])) {
                 return false;
@@ -128,8 +120,6 @@ public class BytePattern {
     ///     The bytes of the pattern.
     /// </returns>
     public byte[] ToByteArray() {
-        Contract.Ensures(Contract.Result<byte[]>() != null);
-
         if (HasWildcards) {
             throw new InvalidOperationException();
         }
@@ -189,7 +179,6 @@ public class BytePattern {
     }
 
     private class PatternByte : IPatternByte {
-
         private Nibble nibble1;
         private Nibble nibble2;
 
@@ -242,8 +231,6 @@ public class BytePattern {
         }
 
         public bool TryRead(StringReader sr) {
-            Contract.Requires(sr != null);
-
             var temp = sr.ReadSkipWhitespaces();
             if (temp == -1 || (!IsHexValue((char)temp) && (char)temp != '?')) {
                 return false;

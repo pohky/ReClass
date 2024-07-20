@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
 using ReClassNET.Controls;
@@ -15,7 +14,6 @@ using ReClassNET.Util;
 namespace ReClassNET.Forms;
 
 public partial class ScannerForm : IconForm {
-
     private const int MaxVisibleResults = 10000;
 
     private readonly RemoteProcess process;
@@ -28,8 +26,6 @@ public partial class ScannerForm : IconForm {
     private Scanner scanner;
 
     public ScannerForm(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         this.process = process;
 
         InitializeComponent();
@@ -73,8 +69,6 @@ public partial class ScannerForm : IconForm {
     ///     Shows some of the scanner results.
     /// </summary>
     public void ShowScannerResults(Scanner scanner) {
-        Contract.Requires(scanner != null);
-
         SetResultCount(scanner.TotalResultCount);
 
         resultMemoryRecordList.SetRecords(
@@ -229,9 +223,6 @@ public partial class ScannerForm : IconForm {
     /// <param name="settings">The scan settings.</param>
     /// <param name="comparer">The comparer.</param>
     public void ExcuteScan(ScanSettings settings, IScanComparer comparer) {
-        Contract.Requires(settings != null);
-        Contract.Requires(comparer != null);
-
         Reset();
 
         SetGuiFromSettings(settings);
@@ -289,8 +280,6 @@ public partial class ScannerForm : IconForm {
     /// </summary>
     /// <returns>The scan settings.</returns>
     private ScanSettings CreateSearchSettings() {
-        Contract.Ensures(Contract.Result<ScanSettings>() != null);
-
         var settings = new ScanSettings {
             ValueType = valueTypeComboBox.SelectedValue
         };
@@ -329,8 +318,6 @@ public partial class ScannerForm : IconForm {
     /// </summary>
     /// <param name="settings">The scan settings.</param>
     private void SetGuiFromSettings(ScanSettings settings) {
-        Contract.Requires(settings != null);
-
         valueTypeComboBox.SelectedValue = settings.ValueType;
 
         startAddressTextBox.Text = settings.StartAddress.ToString(Constants.AddressHexFormat);
@@ -363,9 +350,6 @@ public partial class ScannerForm : IconForm {
     /// </summary>
     /// <returns>The scan comparer.</returns>
     private IScanComparer CreateComparer(ScanSettings settings) {
-        Contract.Requires(settings != null);
-        Contract.Ensures(Contract.Result<IScanComparer>() != null);
-
         var compareType = compareTypeComboBox.SelectedValue;
         var checkBothInputFields = compareType == ScanCompareType.Between || compareType == ScanCompareType.BetweenOrEqual;
 
@@ -392,9 +376,6 @@ public partial class ScannerForm : IconForm {
             }
         } else if (settings.ValueType == ScanValueType.Float || settings.ValueType == ScanValueType.Double) {
             int CalculateSignificantDigits(string input, NumberFormatInfo numberFormat) {
-                Contract.Requires(input != null);
-                Contract.Requires(numberFormat != null);
-
                 var digits = 0;
 
                 var decimalIndex = input.IndexOf(numberFormat.NumberDecimalSeparator, StringComparison.Ordinal);
@@ -767,6 +748,5 @@ public partial class ScannerForm : IconForm {
 internal class InvalidInputException : Exception {
     public InvalidInputException(string input)
         : base($"'{input}' is not a valid input.") {
-
     }
 }

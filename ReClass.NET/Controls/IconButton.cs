@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms.Design;
 
@@ -10,7 +9,6 @@ namespace ReClassNET.Controls;
 /// </summary>
 [DefaultEvent("Click")]
 public class IconButton : Panel {
-
     private readonly ProfessionalColorTable colorTable = new();
     public bool Pressed { get; set; }
     public bool Selected { get; set; }
@@ -71,8 +69,6 @@ public class IconButton : Panel {
     }
 
     private void RenderButtonBackground(Graphics g) {
-        Contract.Requires(g != null);
-
         var bounds = new Rectangle(Point.Empty, Size);
         var drawHotBorder = true;
 
@@ -95,8 +91,6 @@ public class IconButton : Panel {
     }
 
     private void RenderPressedButtonFill(Graphics g, Rectangle bounds) {
-        Contract.Requires(g != null);
-
         if (bounds.Width == 0 || bounds.Height == 0) {
             return;
         }
@@ -107,8 +101,6 @@ public class IconButton : Panel {
     }
 
     private void RenderSelectedButtonFill(Graphics g, Rectangle bounds) {
-        Contract.Requires(g != null);
-
         if (bounds.Width == 0 || bounds.Height == 0) {
             return;
         }
@@ -119,8 +111,6 @@ public class IconButton : Panel {
     }
 
     private void RenderImage(Graphics g) {
-        Contract.Requires(g != null);
-
         var image = Image;
         if (image == null) {
             return;
@@ -151,7 +141,6 @@ public class IconButton : Panel {
 }
 
 internal class IconButtonDesigner : ControlDesigner {
-
     public override SelectionRules SelectionRules => SelectionRules.Moveable;
     private IconButtonDesigner() {
         AutoResizeHandles = true;

@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Nodes;
 using ReClassNET.Plugins;
@@ -23,9 +22,6 @@ internal static class NodeTypesBuilder {
     }
 
     public static void AddPluginNodeGroup(Plugin plugin, IReadOnlyList<Type> nodeTypes) {
-        Contract.Requires(plugin != null);
-        Contract.Requires(nodeTypes != null);
-
         if (pluginNodeTypes.ContainsKey(plugin)) {
             throw new InvalidOperationException(); // TODO
         }
@@ -34,28 +30,24 @@ internal static class NodeTypesBuilder {
     }
 
     public static void RemovePluginNodeGroup(Plugin plugin) {
-        Contract.Requires(plugin != null);
-
         pluginNodeTypes.Remove(plugin);
     }
 
     public static IEnumerable<ToolStripItem> CreateToolStripButtons(Action<Type> handler) {
-        Contract.Requires(handler != null);
-
         var clickHandler = new EventHandler((sender, e) => handler((sender as TypeToolStripButton)?.Value ?? ((TypeToolStripMenuItem)sender).Value));
 
         return CreateToolStripItems(t => {
-                GetNodeInfoFromType(t, out var label, out var icon);
+            GetNodeInfoFromType(t, out var label, out var icon);
 
-                var item = new TypeToolStripButton {
-                    Value = t,
-                    ToolTipText = label,
-                    DisplayStyle = ToolStripItemDisplayStyle.Image,
-                    Image = icon
-                };
-                item.Click += clickHandler;
-                return item;
-            },
+            var item = new TypeToolStripButton {
+                Value = t,
+                ToolTipText = label,
+                DisplayStyle = ToolStripItemDisplayStyle.Image,
+                Image = icon
+            };
+            item.Click += clickHandler;
+            return item;
+        },
             p => new ToolStripDropDownButton {
                 ToolTipText = "",
                 Image = p.Icon
@@ -74,21 +66,19 @@ internal static class NodeTypesBuilder {
     }
 
     public static IEnumerable<ToolStripItem> CreateToolStripMenuItems(Action<Type> handler, bool addNoneType) {
-        Contract.Requires(handler != null);
-
         var clickHandler = new EventHandler((sender, e) => handler(((TypeToolStripMenuItem)sender).Value));
 
         var items = CreateToolStripItems(t => {
-                GetNodeInfoFromType(t, out var label, out var icon);
+            GetNodeInfoFromType(t, out var label, out var icon);
 
-                var item = new TypeToolStripMenuItem {
-                    Value = t,
-                    Text = label,
-                    Image = icon
-                };
-                item.Click += clickHandler;
-                return item;
-            },
+            var item = new TypeToolStripMenuItem {
+                Value = t,
+                Text = label,
+                Image = icon
+            };
+            item.Click += clickHandler;
+            return item;
+        },
             p => new ToolStripMenuItem {
                 Text = p.GetType().ToString(),
                 Image = p.Icon
@@ -107,17 +97,10 @@ internal static class NodeTypesBuilder {
     }
 
     private static IEnumerable<ToolStripItem> CreateToolStripItems(Func<Type, ToolStripItem> createItem, Func<Plugin, ToolStripDropDownItem> createPluginContainerItem) {
-        Contract.Requires(createItem != null);
-        Contract.Requires(createPluginContainerItem != null);
-
         return CreateToolStripItems(createItem, createPluginContainerItem, createItem);
     }
 
     private static IEnumerable<ToolStripItem> CreateToolStripItems(Func<Type, ToolStripItem> createItem, Func<Plugin, ToolStripDropDownItem> createPluginContainerItem, Func<Type, ToolStripItem> createPluginItem) {
-        Contract.Requires(createItem != null);
-        Contract.Requires(createPluginContainerItem != null);
-        Contract.Requires(createPluginItem != null);
-
         if (!defaultNodeTypeGroupList.Any()) {
             return [];
         }
@@ -143,8 +126,6 @@ internal static class NodeTypesBuilder {
     }
 
     private static void GetNodeInfoFromType(Type nodeType, out string label, out Image icon) {
-        Contract.Requires(nodeType != null);
-
         var node = BaseNode.CreateInstanceFromType(nodeType, false);
         if (node == null) {
             throw new InvalidOperationException($"'{nodeType}' is not a valid node type.");

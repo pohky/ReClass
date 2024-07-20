@@ -1,11 +1,10 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.UI;
 
-namespace ReClassNET.Controls; 
+namespace ReClassNET.Controls;
 [ToolboxItem(false)]
 public class MemoryPreviewPopUp : ToolStripDropDown {
     private const int ToolTipWidth = 1000 + ToolTipPadding;
@@ -20,8 +19,6 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
         private readonly List<BaseHexNode> nodes;
 
         public MemoryPreviewPanel(FontEx font) {
-            Contract.Requires(font != null);
-
             DoubleBuffered = true;
 
             nodes = [];
@@ -124,8 +121,6 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
     }
 
     public MemoryPreviewPopUp(FontEx font) {
-        Contract.Requires(font != null);
-
         AutoSize = false;
         AutoClose = false;
         DoubleBuffered = true;
@@ -173,8 +168,6 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
     /// <param name="process">The process to use.</param>
     /// <param name="address">The address to read from.</param>
     public void InitializeMemory(RemoteProcess process, IntPtr address) {
-        Contract.Requires(process != null);
-
         memoryAddress = address;
 
         panel.DrawContext.Process = process;

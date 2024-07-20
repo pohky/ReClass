@@ -23,7 +23,6 @@ public partial class RtfBuilder {
 
     public RtfBuilder()
         : this(RtfFont.Calibri, 22.0f) {
-
     }
 
     public RtfBuilder(RtfFont defaultFont, float defaultFontSize) {

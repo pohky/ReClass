@@ -18,9 +18,6 @@ namespace ReClassNET
 
 		public ProcessMemoryViewer(RemoteProcess process, ClassNodeView classesView)
 		{
-			Contract.Requires(process != null);
-			Contract.Requires(classesView != null);
-
 			this.classesView = classesView;
 
 			InitializeComponent();

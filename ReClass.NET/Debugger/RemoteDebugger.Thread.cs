@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Debugger;
 
 public partial class RemoteDebugger {
@@ -13,8 +11,6 @@ public partial class RemoteDebugger {
     public bool IsAttached => isAttached;
 
     public bool StartDebuggerIfNeeded(Func<bool> queryAttach) {
-        Contract.Requires(queryAttach != null);
-
         if (!process.IsValid) {
             return false;
         }

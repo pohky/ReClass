@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Nodes;
 
 public abstract class BaseContainerNode : BaseNode {
@@ -50,9 +48,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="node">The node to search.</param>
     /// <returns>The found node index or -1 if the node was not found.</returns>
     public int FindNodeIndex(BaseNode node) {
-        Contract.Requires(node != null);
-        Contract.Ensures(Contract.Result<int>() >= -1 && Contract.Result<int>() < nodes.Count);
-
         return nodes.FindIndex(n => n == node);
     }
 
@@ -70,8 +65,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="predecessor">The predecessor of the given node.</param>
     /// <returns>True if a predecessor exists, otherwise false.</returns>
     public bool TryGetPredecessor(BaseNode node, out BaseNode predecessor) {
-        Contract.Requires(node != null);
-
         return TryGetNeighbour(node, -1, out predecessor);
     }
 
@@ -82,14 +75,10 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="successor">The successor of the given node.</param>
     /// <returns>True if a successor exists, otherwise false.</returns>
     public bool TryGetSuccessor(BaseNode node, out BaseNode successor) {
-        Contract.Requires(node != null);
-
         return TryGetNeighbour(node, 1, out successor);
     }
 
     private bool TryGetNeighbour(BaseNode node, int offset, out BaseNode neighbour) {
-        Contract.Requires(node != null);
-
         neighbour = null;
 
         var index = FindNodeIndex(node);
@@ -136,9 +125,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="oldNode">The old node to replacce.</param>
     /// <param name="newNode">The new node.</param>
     public void ReplaceChildNode(BaseNode oldNode, BaseNode newNode) {
-        Contract.Requires(oldNode != null);
-        Contract.Requires(newNode != null);
-
         List<BaseNode> dummy = null;
         ReplaceChildNode(oldNode, newNode, ref dummy);
     }
@@ -151,9 +137,6 @@ public abstract class BaseContainerNode : BaseNode {
     ///     <see cref="ShouldCompensateSizeChanges" />) or null if not needed.
     /// </param>
     public void ReplaceChildNode(BaseNode oldNode, BaseNode newNode, ref List<BaseNode> additionalCreatedNodes) {
-        Contract.Requires(oldNode != null);
-        Contract.Requires(newNode != null);
-
         CheckCanHandleChildNode(newNode);
 
         var index = FindNodeIndex(oldNode);
@@ -189,8 +172,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="size">The maximum size in bytes.</param>
     /// <returns>A new node or null if no node is available for this size.</returns>
     protected virtual BaseNode CreateDefaultNodeForSize(int size) {
-        Contract.Requires(size > 0);
-
         if (size >= 8) {
             return new Hex64Node();
         }
@@ -254,8 +235,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// </summary>
     /// <param name="nodes">The nodes to add.</param>
     public void AddNodes(IEnumerable<BaseNode> nodes) {
-        Contract.Requires(nodes != null);
-
         foreach (var node in nodes) {
             AddNode(node);
         }
@@ -266,8 +245,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// </summary>
     /// <param name="node">The node to add.</param>
     public void AddNode(BaseNode node) {
-        Contract.Requires(node != null);
-
         CheckCanHandleChildNode(node);
 
         node.ParentNode = this;
@@ -283,8 +260,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="position">The target node.</param>
     /// <param name="node">The node to insert.</param>
     public void InsertNode(BaseNode position, BaseNode node) {
-        Contract.Requires(node != null);
-
         CheckCanHandleChildNode(node);
 
         var index = FindNodeIndex(position);
@@ -303,8 +278,6 @@ public abstract class BaseContainerNode : BaseNode {
     /// <param name="node">The node to remove.</param>
     /// <returns>True if it succeeds, false if it fails.</returns>
     public bool RemoveNode(BaseNode node) {
-        Contract.Requires(node != null);
-
         var result = nodes.Remove(node);
         if (result) {
             OnNodesUpdated();

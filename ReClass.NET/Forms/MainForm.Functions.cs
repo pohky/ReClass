@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
 using ReClassNET.DataExchange.ReClass;
@@ -14,22 +13,14 @@ namespace ReClassNET.Forms;
 
 public partial class MainForm {
     public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses) {
-        Contract.Requires(partialClasses != null);
-
         ShowCodeGeneratorForm(partialClasses, [], new CppCodeGenerator(currentProject.TypeMapping));
     }
 
     public void ShowCodeGeneratorForm(ICodeGenerator generator) {
-        Contract.Requires(generator != null);
-
         ShowCodeGeneratorForm(currentProject.Classes, currentProject.Enums, generator);
     }
 
     public void ShowCodeGeneratorForm(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ICodeGenerator generator) {
-        Contract.Requires(classes != null);
-        Contract.Requires(generator != null);
-        Contract.Requires(enums != null);
-
         new CodeForm(generator, classes, enums, Program.Logger).Show();
     }
 
@@ -45,8 +36,6 @@ public partial class MainForm {
     }
 
     public void AttachToProcess(ProcessInfo info) {
-        Contract.Requires(info != null);
-
         Program.RemoteProcess.Close();
 
         Program.RemoteProcess.Open(info);
@@ -58,8 +47,6 @@ public partial class MainForm {
     /// <summary>Sets the current project.</summary>
     /// <param name="newProject">The new project.</param>
     public void SetProject(ReClassNetProject newProject) {
-        Contract.Requires(newProject != null);
-
         if (currentProject == newProject) {
             return;
         }
@@ -103,9 +90,6 @@ public partial class MainForm {
     /// <param name="title">The title of the input form.</param>
     /// <param name="callback">The function to call afterwards.</param>
     private void AskAddOrInsertBytes(string title, Action<int> callback) {
-        Contract.Requires(title != null);
-        Contract.Requires(callback != null);
-
         var classNode = CurrentClassNode;
         if (classNode == null) {
             return;
@@ -125,8 +109,6 @@ public partial class MainForm {
     /// </summary>
     /// <param name="bytes">Amount of bytes</param>
     public void AddBytesToClass(int bytes) {
-        Contract.Requires(bytes >= 0);
-
         var node = memoryViewControl.GetSelectedNodes().Select(h => h.Node).FirstOrDefault();
         if (node == null) {
             return;
@@ -142,8 +124,6 @@ public partial class MainForm {
     /// </summary>
     /// <param name="bytes">Amount of bytes</param>
     public void InsertBytesInClass(int bytes) {
-        Contract.Requires(bytes >= 0);
-
         var node = memoryViewControl.GetSelectedNodes().Select(h => h.Node).FirstOrDefault();
         if (node == null) {
             return;
@@ -182,8 +162,6 @@ public partial class MainForm {
     /// <summary>Loads the file as a new project.</summary>
     /// <param name="path">Full pathname of the file.</param>
     public void LoadProjectFromPath(string path) {
-        Contract.Requires(path != null);
-
         var project = new ReClassNetProject();
 
         LoadProjectFromPath(path, ref project);
@@ -200,10 +178,6 @@ public partial class MainForm {
     /// <param name="path">Full pathname of the file.</param>
     /// <param name="project">[in,out] The project.</param>
     private static void LoadProjectFromPath(string path, ref ReClassNetProject project) {
-        Contract.Requires(path != null);
-        Contract.Requires(project != null);
-        Contract.Ensures(Contract.ValueAtReturn(out project) != null);
-
         IReClassImport import;
         switch (Path.GetExtension(path)?.ToLower()) {
             case ReClassNetFile.FileExtension:
@@ -244,9 +218,6 @@ public partial class MainForm {
     }
 
     public void ReplaceSelectedNodesWithType(Type type) {
-        Contract.Requires(type != null);
-        Contract.Requires(type.IsSubclassOf(typeof(BaseNode)));
-
         var selectedNodes = memoryViewControl.GetSelectedNodes();
 
         var newSelected = new List<MemoryViewControl.SelectedNodeInfo>(selectedNodes.Count);

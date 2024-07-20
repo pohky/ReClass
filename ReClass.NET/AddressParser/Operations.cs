@@ -5,7 +5,6 @@ namespace ReClassNET.AddressParser
 {
 	public interface IOperation
 	{
-
 	}
 
 	public class OffsetOperation : IOperation
@@ -39,8 +38,6 @@ namespace ReClassNET.AddressParser
 	{
 		public ReadPointerOperation(IOperation argument)
 		{
-			Contract.Requires(argument != null);
-
 			Argument = argument;
 		}
 
@@ -51,9 +48,6 @@ namespace ReClassNET.AddressParser
 	{
 		public AdditionOperation(IOperation argument1, IOperation argument2)
 		{
-			Contract.Requires(argument1 != null);
-			Contract.Requires(argument2 != null);
-
 			Argument1 = argument1;
 			Argument2 = argument2;
 		}
@@ -66,9 +60,6 @@ namespace ReClassNET.AddressParser
 	{
 		public SubtractionOperation(IOperation argument1, IOperation argument2)
 		{
-			Contract.Requires(argument1 != null);
-			Contract.Requires(argument2 != null);
-
 			Argument1 = argument1;
 			Argument2 = argument2;
 		}
@@ -81,9 +72,6 @@ namespace ReClassNET.AddressParser
 	{
 		public DivisionOperation(IOperation dividend, IOperation divisor)
 		{
-			Contract.Requires(dividend != null);
-			Contract.Requires(divisor != null);
-
 			Dividend = dividend;
 			Divisor = divisor;
 		}
@@ -96,9 +84,6 @@ namespace ReClassNET.AddressParser
 	{
 		public MultiplicationOperation(IOperation argument1, IOperation argument2)
 		{
-			Contract.Requires(argument1 != null);
-			Contract.Requires(argument2 != null);
-
 			Argument1 = argument1;
 			Argument2 = argument2;
 		}
@@ -111,8 +96,6 @@ namespace ReClassNET.AddressParser
 	{
 		public ModuleOffsetOperation(string name)
 		{
-			Contract.Requires(name != null);
-
 			Name = name;
 		}
 

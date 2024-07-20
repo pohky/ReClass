@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 
 namespace ReClassNET.Debugger;
@@ -26,15 +25,12 @@ public enum HardwareBreakpointSize {
 }
 
 public sealed class HardwareBreakpoint : IBreakpoint {
-
     private readonly BreakpointHandler handler;
     public HardwareBreakpointRegister Register { get; }
     public HardwareBreakpointTrigger Trigger { get; }
     public HardwareBreakpointSize Size { get; }
 
     public HardwareBreakpoint(IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, BreakpointHandler handler) {
-        Contract.Requires(handler != null);
-
         if (register == HardwareBreakpointRegister.InvalidRegister) {
             throw new InvalidOperationException();
         }

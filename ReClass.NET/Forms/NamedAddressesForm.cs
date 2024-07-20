@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.UI;
@@ -9,8 +8,6 @@ public partial class NamedAddressesForm : IconForm {
     private readonly RemoteProcess process;
 
     public NamedAddressesForm(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         this.process = process;
 
         InitializeComponent();

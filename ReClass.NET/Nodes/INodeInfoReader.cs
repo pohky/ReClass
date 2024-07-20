@@ -20,10 +20,6 @@ public interface INodeInfoReader {
 [ContractClassFor(typeof(INodeInfoReader))]
 internal abstract class NodeInfoReaderContract : INodeInfoReader {
     public string ReadNodeInfo(BaseHexCommentNode node, IRemoteMemoryReader reader, MemoryBuffer memory, IntPtr nodeAddress, IntPtr nodeValue) {
-        Contract.Requires(node != null);
-        Contract.Requires(reader != null);
-        Contract.Requires(memory != null);
-
         throw new NotImplementedException();
     }
 }

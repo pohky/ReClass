@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Project;
 using ReClassNET.UI;
@@ -9,8 +8,6 @@ public partial class EnumEditorForm : IconForm {
     private readonly EnumDescription @enum;
 
     public EnumEditorForm(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         InitializeComponent();
 
         this.@enum = @enum;

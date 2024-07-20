@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
@@ -8,7 +7,6 @@ using ReClassNET.UI;
 namespace ReClassNET.Nodes;
 
 public class FunctionNode : BaseFunctionNode {
-
     private int memorySize = IntPtr.Size;
     public string Signature { get; set; } = "void function()";
 
@@ -27,8 +25,6 @@ public class FunctionNode : BaseFunctionNode {
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
-        Contract.Requires(context != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }
@@ -107,8 +103,6 @@ public class FunctionNode : BaseFunctionNode {
     }
 
     private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
-        Contract.Requires(process != null);
-
         if (Address != address) {
             Instructions.Clear();
 

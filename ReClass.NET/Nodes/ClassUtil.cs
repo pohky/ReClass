@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Util;
 
 namespace ReClassNET.Nodes;
@@ -12,11 +11,6 @@ public class ClassUtil {
     /// <param name="classes">An enumeration of all available classes.</param>
     /// <returns>True if a cycle is detected, false otherwise.</returns>
     public static bool IsCyclicIfClassIsAccessibleFromParent(ClassNode parent, ClassNode classToCheck, IEnumerable<ClassNode> classes) {
-        Contract.Requires(parent != null);
-        Contract.Requires(classToCheck != null);
-        Contract.Requires(classes != null);
-        Contract.Requires(Contract.ForAll(classes, c => c != null));
-
         var graph = new DirectedGraph<ClassNode>();
         graph.AddVertices(classes);
 

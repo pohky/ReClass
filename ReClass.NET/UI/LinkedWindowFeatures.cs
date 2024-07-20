@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Debugger;
 using ReClassNET.Forms;
 using ReClassNET.MemoryScanner;
@@ -9,8 +8,6 @@ namespace ReClassNET.UI;
 
 public class LinkedWindowFeatures {
     public static ClassNode CreateClassAtAddress(IntPtr address, bool addDefaultBytes) {
-        Contract.Ensures(Contract.Result<ClassNode>() != null);
-
         var classView = Program.MainForm.ProjectView;
 
         var node = ClassNode.Create();
@@ -25,8 +22,6 @@ public class LinkedWindowFeatures {
     }
 
     public static ClassNode CreateDefaultClass() {
-        Contract.Ensures(Contract.Result<ClassNode>() != null);
-
         var address = ClassNode.DefaultAddress;
 
         var mainModule = Program.RemoteProcess.GetModuleByName(Program.RemoteProcess.UnderlayingProcess?.Name);
@@ -61,8 +56,6 @@ public class LinkedWindowFeatures {
     }
 
     public static void StartMemoryScan(IScanComparer comparer) {
-        Contract.Requires(comparer != null);
-
         var sf = GlobalWindowManager.Windows.OfType<ScannerForm>().FirstOrDefault();
         if (sf != null) {
             if (MessageBox.Show("Open a new scanner window?", Constants.ApplicationName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes) {

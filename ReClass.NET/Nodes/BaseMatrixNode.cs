@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.UI;
@@ -14,9 +13,6 @@ public abstract class BaseMatrixNode : BaseNode {
     }
 
     protected Size DrawMatrixType(DrawContext context, int x, int y, string type, int rows, int columns) {
-        Contract.Requires(context != null);
-        Contract.Requires(type != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }
@@ -72,9 +68,6 @@ public abstract class BaseMatrixNode : BaseNode {
         return new Size(x - origX, y - origY + context.Font.Height);
     }
     protected Size DrawVectorType(DrawContext context, int x, int y, string type, int columns) {
-        Contract.Requires(context != null);
-        Contract.Requires(type != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }
@@ -136,8 +129,6 @@ public abstract class BaseMatrixNode : BaseNode {
     protected abstract int CalculateValuesHeight(DrawContext context);
 
     public void Update(HotSpot spot, int max) {
-        Contract.Requires(spot != null);
-
         base.Update(spot);
 
         if (spot.Id >= 0 && spot.Id < max) {

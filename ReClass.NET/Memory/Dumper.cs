@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Memory;
 
 public static class Dumper {
@@ -9,9 +7,6 @@ public static class Dumper {
     /// <param name="size">The size of the chunk.</param>
     /// <param name="stream">The stream to dump to.</param>
     public static void DumpRaw(IRemoteMemoryReader reader, IntPtr address, int size, Stream stream) {
-        Contract.Requires(size >= 0);
-        Contract.Requires(stream != null);
-
         var data = reader.ReadRemoteMemory(address, size);
 
         stream.Write(data, 0, data.Length);
@@ -22,9 +17,6 @@ public static class Dumper {
     /// <param name="section">The section to dump.</param>
     /// <param name="stream">The stream to dump to.</param>
     public static void DumpSection(IRemoteMemoryReader reader, Section section, Stream stream) {
-        Contract.Requires(section != null);
-        Contract.Requires(stream != null);
-
         DumpRaw(reader, section.Start, section.Size.ToInt32(), stream);
     }
 
@@ -33,9 +25,6 @@ public static class Dumper {
     /// <param name="module">The module to dump.</param>
     /// <param name="stream">The stream to dump to.</param>
     public static void DumpModule(IRemoteMemoryReader reader, Module module, Stream stream) {
-        Contract.Requires(module != null);
-        Contract.Requires(stream != null);
-
         var data = reader.ReadRemoteMemory(module.Start, module.Size.ToInt32());
 
         SimplePeHeader.FixSectionHeaders(data);

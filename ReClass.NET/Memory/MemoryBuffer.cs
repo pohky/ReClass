@@ -34,22 +34,15 @@ public class MemoryBuffer {
     public bool ContainsValidData { get; private set; }
 
     public MemoryBuffer() {
-        Contract.Ensures(data != null);
-        Contract.Ensures(historyData != null);
-
         data = [];
         historyData = [];
     }
 
     [ContractInvariantMethod]
     private void ObjectInvariants() {
-        Contract.Invariant(data != null);
-        Contract.Invariant(historyData != null);
     }
 
     public MemoryBuffer Clone() {
-        Contract.Ensures(Contract.Result<MemoryBuffer>() != null);
-
         return new MemoryBuffer {
             data = data,
             historyData = historyData,
@@ -85,9 +78,6 @@ public class MemoryBuffer {
     }
 
     public byte[] ReadBytes(int offset, int length) {
-        Contract.Requires(offset >= 0);
-        Contract.Requires(length >= 0);
-
         var buffer = new byte[length];
 
         ReadBytes(offset, buffer);
@@ -96,9 +86,6 @@ public class MemoryBuffer {
     }
 
     public void ReadBytes(int offset, byte[] buffer) {
-        Contract.Requires(offset >= 0);
-        Contract.Requires(buffer != null);
-
         offset = Offset + offset;
         if (offset + buffer.Length > data.Length) {
             return;
@@ -108,11 +95,6 @@ public class MemoryBuffer {
     }
 
     public string ReadString(Encoding encoding, int offset, int length) {
-        Contract.Requires(encoding != null);
-        Contract.Requires(offset >= 0);
-        Contract.Requires(length >= 0);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         if (Offset + offset + length > data.Length) {
             length = Math.Max(data.Length - Offset - offset, 0);
         }
@@ -156,8 +138,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="sbyte" /> or 0 if the offset is outside the data.</returns>
     public sbyte ReadInt8(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(sbyte) > data.Length) {
             return default;
@@ -170,8 +150,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="byte" /> or 0 if the offset is outside the data.</returns>
     public byte ReadUInt8(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(byte) > data.Length) {
             return default;
@@ -184,8 +162,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="short" /> or 0 if the offset is outside the data.</returns>
     public short ReadInt16(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(short) > data.Length) {
             return default;
@@ -198,8 +174,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="ushort" /> or 0 if the offset is outside the data.</returns>
     public ushort ReadUInt16(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(ushort) > data.Length) {
             return default;
@@ -212,8 +186,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="int" /> or 0 if the offset is outside the data.</returns>
     public int ReadInt32(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(int) > data.Length) {
             return default;
@@ -226,8 +198,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="uint" /> or 0 if the offset is outside the data.</returns>
     public uint ReadUInt32(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(uint) > data.Length) {
             return default;
@@ -240,8 +210,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="long" /> or 0 if the offset is outside the data.</returns>
     public long ReadInt64(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(long) > data.Length) {
             return default;
@@ -254,8 +222,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="ulong" /> or 0 if the offset is outside the data.</returns>
     public ulong ReadUInt64(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(ulong) > data.Length) {
             return default;
@@ -268,8 +234,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="float" /> or 0 if the offset is outside the data.</returns>
     public float ReadFloat(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(float) > data.Length) {
             return default;
@@ -282,8 +246,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="double" /> or 0 if the offset is outside the data.</returns>
     public double ReadDouble(int offset) {
-        Contract.Requires(offset >= 0);
-
         offset = Offset + offset;
         if (offset + sizeof(double) > data.Length) {
             return default;
@@ -296,8 +258,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="IntPtr" /> or 0 if the offset is outside the data.</returns>
     public IntPtr ReadIntPtr(int offset) {
-        Contract.Requires(offset >= 0);
-
         return (IntPtr)ReadInt64(offset);
     }
 
@@ -305,8 +265,6 @@ public class MemoryBuffer {
     /// <param name="offset">The offset into the data.</param>
     /// <returns>The data read as <see cref="UIntPtr" /> or 0 if the offset is outside the data.</returns>
     public UIntPtr ReadUIntPtr(int offset) {
-        Contract.Requires(offset >= 0);
-
         return (UIntPtr)ReadUInt64(offset);
     }
 

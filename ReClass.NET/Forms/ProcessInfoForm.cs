@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 using ReClassNET.Native;
 using ReClassNET.Properties;
@@ -15,8 +14,6 @@ public partial class ProcessInfoForm : IconForm {
     public ContextMenuStrip GridContextMenu => contextMenuStrip;
 
     public ProcessInfoForm(IProcessReader process) {
-        Contract.Requires(process != null);
-
         this.process = process;
 
         InitializeComponent();

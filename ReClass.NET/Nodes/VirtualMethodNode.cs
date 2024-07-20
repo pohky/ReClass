@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 
 namespace ReClassNET.Nodes;
@@ -7,8 +6,6 @@ public class VirtualMethodNode : BaseFunctionPtrNode {
     public string MethodName => string.IsNullOrEmpty(Name) ? $"Function{Offset / IntPtr.Size}" : Name;
 
     public VirtualMethodNode() {
-        Contract.Ensures(Name != null);
-
         Name = string.Empty;
     }
 

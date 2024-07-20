@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 namespace ReClassNET.MemoryScanner.Comparer;
 
 public class RegexStringMemoryComparer : IComplexScanComparer {
-
     public Regex Pattern { get; }
 
     public Encoding Encoding { get; }

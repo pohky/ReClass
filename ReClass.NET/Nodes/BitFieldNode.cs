@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
@@ -17,9 +16,6 @@ public class BitFieldNode : BaseNode {
     public int Bits {
         get => bits;
         set {
-            Contract.Ensures(bits > 0);
-            Contract.Ensures(size > 0);
-
             if (value >= 64) {
                 bits = 64;
             } else if (value >= 32) {
@@ -76,9 +72,6 @@ public class BitFieldNode : BaseNode {
     /// <param name="memory">The process memory.</param>
     /// <returns>The value converted to a bit string.</returns>
     private string ConvertValueToBitString(MemoryBuffer memory) {
-        Contract.Requires(memory != null);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         switch (bits) {
             case 64:
                 return BitString.ToString(memory.ReadInt64(Offset));

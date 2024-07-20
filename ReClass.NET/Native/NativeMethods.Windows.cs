@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -10,7 +9,6 @@ using ReClassNET.Util;
 namespace ReClassNET.Native;
 
 internal class NativeMethodsWindows : INativeMethods {
-
     IntPtr INativeMethods.LoadLibrary(string fileName) => LoadLibrary(fileName);
 
     IntPtr INativeMethods.GetProcAddress(IntPtr handle, string name) => GetProcAddress(handle, name);
@@ -119,8 +117,6 @@ internal class NativeMethodsWindows : INativeMethods {
     }
 
     public static void SetButtonShield(Button button, bool setShield) {
-        Contract.Requires(button != null);
-
         try {
             if (button.FlatStyle != FlatStyle.System) {
                 button.FlatStyle = FlatStyle.System;

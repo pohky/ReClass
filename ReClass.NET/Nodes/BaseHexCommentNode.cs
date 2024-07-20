@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -8,8 +7,6 @@ namespace ReClassNET.Nodes;
 
 public abstract class BaseHexCommentNode : BaseHexNode {
     protected int AddComment(DrawContext view, int x, int y, float fvalue, IntPtr ivalue, UIntPtr uvalue) {
-        Contract.Requires(view != null);
-
         if (view.Settings.ShowCommentFloat) {
             x = AddText(view, x, y, view.Settings.ValueColor, HotSpot.ReadOnlyId, fvalue > -999999.0f && fvalue < 999999.0f ? fvalue.ToString("0.000") : "#####") + view.Font.Width;
         }

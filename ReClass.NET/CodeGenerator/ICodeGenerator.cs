@@ -22,12 +22,6 @@ internal abstract class CodeGeneratorContract : ICodeGenerator {
     public Language Language => throw new NotImplementedException();
 
     public string GenerateCode(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger) {
-        Contract.Requires(classes != null);
-        Contract.Requires(Contract.ForAll(classes, c => c != null));
-        Contract.Requires(logger != null);
-
-        Contract.Ensures(Contract.Result<string>() != null);
-
         throw new NotImplementedException();
     }
 }

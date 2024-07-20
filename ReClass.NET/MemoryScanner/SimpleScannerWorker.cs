@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.MemoryScanner.Comparer;
 
 namespace ReClassNET.MemoryScanner;
@@ -8,16 +7,11 @@ internal class SimpleScannerWorker : IScannerWorker {
     private readonly ScanSettings settings;
 
     public SimpleScannerWorker(ScanSettings settings, ISimpleScanComparer comparer) {
-        Contract.Requires(settings != null);
-        Contract.Requires(comparer != null);
-
         this.settings = settings;
         this.comparer = comparer;
     }
 
     public IList<ScanResult> Search(byte[] data, int count, CancellationToken ct) {
-        Contract.Requires(data != null);
-
         var results = new List<ScanResult>();
 
         var endIndex = count - comparer.ValueSize;
@@ -38,9 +32,6 @@ internal class SimpleScannerWorker : IScannerWorker {
     }
 
     public IList<ScanResult> Search(byte[] data, int count, IEnumerable<ScanResult> previousResults, CancellationToken ct) {
-        Contract.Requires(data != null);
-        Contract.Requires(previousResults != null);
-
         var results = new List<ScanResult>();
 
         var endIndex = count - comparer.ValueSize;

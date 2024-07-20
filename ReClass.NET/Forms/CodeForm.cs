@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ColorCode;
 using ColorCode.Parsing;
@@ -14,10 +13,6 @@ namespace ReClassNET.Forms;
 
 public partial class CodeForm : IconForm {
     public CodeForm(ICodeGenerator generator, IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ILogger logger) {
-        Contract.Requires(generator != null);
-        Contract.Requires(classes != null);
-        Contract.Requires(enums != null);
-
         InitializeComponent();
 
         codeRichTextBox.SetInnerMargin(5, 5, 5, 5);
@@ -63,7 +58,6 @@ internal class RtfFormatter : IFormatter {
     }
 
     public void WriteHeader(IStyleSheet styleSheet, ILanguage language, TextWriter textWriter) {
-
     }
 
     public void WriteFooter(IStyleSheet styleSheet, ILanguage language, TextWriter textWriter) {

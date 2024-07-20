@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
@@ -10,7 +9,6 @@ namespace ReClassNET.Controls;
 public delegate void MemorySearchResultControlResultDoubleClickEventHandler(object sender, MemoryRecord record);
 
 public partial class MemoryRecordList : UserControl {
-
     private readonly BindingList<MemoryRecord> bindings;
     public bool ShowDescriptionColumn {
         get => descriptionColumn.Visible;
@@ -85,8 +83,6 @@ public partial class MemoryRecordList : UserControl {
     /// </summary>
     /// <param name="records">The records.</param>
     public void SetRecords(IEnumerable<MemoryRecord> records) {
-        Contract.Requires(records != null);
-
         bindings.Clear();
 
         bindings.RaiseListChangedEvents = false;
@@ -111,8 +107,6 @@ public partial class MemoryRecordList : UserControl {
     /// </summary>
     /// <param name="process">The process.</param>
     public void RefreshValues(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         foreach (var record in resultDataGridView.GetVisibleRows().Select(r => (MemoryRecord)r.DataBoundItem)) {
             record.RefreshValue(process);
         }

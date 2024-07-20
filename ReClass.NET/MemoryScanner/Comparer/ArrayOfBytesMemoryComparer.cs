@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 
 namespace ReClassNET.MemoryScanner.Comparer;
 
@@ -9,8 +8,6 @@ public class ArrayOfBytesMemoryComparer : ISimpleScanComparer {
     private readonly BytePattern bytePattern;
 
     public ArrayOfBytesMemoryComparer(BytePattern pattern) {
-        Contract.Requires(pattern != null);
-
         bytePattern = pattern;
 
         if (!bytePattern.HasWildcards) {
@@ -19,8 +16,6 @@ public class ArrayOfBytesMemoryComparer : ISimpleScanComparer {
     }
 
     public ArrayOfBytesMemoryComparer(byte[] pattern) {
-        Contract.Requires(pattern != null);
-
         byteArray = pattern;
     }
     public ScanCompareType CompareType => ScanCompareType.Equal;

@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Xml.Linq;
 using ReClassNET.Extensions;
@@ -7,10 +6,6 @@ namespace ReClassNET.Util;
 
 public static class XElementSerializer {
     public static bool TryRead(XContainer element, string name, Action<XElement> iff) {
-        Contract.Requires(element != null);
-        Contract.Requires(name != null);
-        Contract.Requires(iff != null);
-
         var target = element.Element(name);
         if (target != null) {
             iff(target);

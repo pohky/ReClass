@@ -1,5 +1,4 @@
 using System.CodeDom.Compiler;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
@@ -108,9 +107,6 @@ public class CSharpCodeGenerator : ICodeGenerator {
     /// <param name="writer">The writer to output to.</param>
     /// <param name="enum">The enum to output.</param>
     private static void WriteEnum(IndentedTextWriter writer, EnumDescription @enum) {
-        Contract.Requires(writer != null);
-        Contract.Requires(@enum != null);
-
         writer.Write($"enum {@enum.Name} : ");
         switch (@enum.Size) {
             case EnumDescription.UnderlyingTypeSize.OneByte:
@@ -150,10 +146,6 @@ public class CSharpCodeGenerator : ICodeGenerator {
     /// <param name="class">The class to output.</param>
     /// <param name="logger">The logger.</param>
     private static void WriteClass(IndentedTextWriter writer, ClassNode @class, ILogger logger) {
-        Contract.Requires(writer != null);
-        Contract.Requires(@class != null);
-        Contract.Requires(logger != null);
-
         writer.WriteLine("[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]");
         writer.Write("public struct ");
         writer.Write(@class.Name);
@@ -199,8 +191,6 @@ public class CSharpCodeGenerator : ICodeGenerator {
     /// <param name="node">The target node.</param>
     /// <returns>The type definition for the node or null as typename if the node is not expressible.</returns>
     private static (string typeName, string attribute) GetTypeDefinition(BaseNode node) {
-        Contract.Requires(node != null);
-
         if (node is BitFieldNode bitFieldNode) {
             var underlayingNode = bitFieldNode.GetUnderlayingNode();
             underlayingNode.CopyFromNode(node);

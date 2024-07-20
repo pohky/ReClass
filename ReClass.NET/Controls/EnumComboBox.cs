@@ -1,11 +1,9 @@
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 
 namespace ReClassNET.Controls;
 
 public class EnumComboBox<TEnum> : ComboBox where TEnum : struct {
-
     public EnumComboBox() {
         base.AutoCompleteMode = AutoCompleteMode.None;
         base.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -24,8 +22,6 @@ public class EnumComboBox<TEnum> : ComboBox where TEnum : struct {
     }
 
     public void SetAvailableValues(IEnumerable<TEnum> values) {
-        Contract.Requires(values != null);
-
         SetValues(EnumDescriptionDisplay<TEnum>.CreateExact(values));
     }
 
@@ -34,14 +30,10 @@ public class EnumComboBox<TEnum> : ComboBox where TEnum : struct {
     }
 
     public void SetAvailableValuesExclude(IEnumerable<TEnum> values) {
-        Contract.Requires(values != null);
-
         SetValues(EnumDescriptionDisplay<TEnum>.CreateExclude(values));
     }
 
     private void SetValues(List<EnumDescriptionDisplay<TEnum>> values) {
-        Contract.Requires(values != null);
-
         base.Items.Clear();
         base.Items.AddRange(values.ToArray());
     }

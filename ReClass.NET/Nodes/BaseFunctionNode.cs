@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Memory;
 using ReClassNET.UI;
@@ -11,8 +10,6 @@ public abstract class BaseFunctionNode : BaseNode {
     protected IntPtr Address = IntPtr.Zero;
 
     protected Size DrawInstructions(DrawContext view, int tx, int y) {
-        Contract.Requires(view != null);
-
         var origY = y;
 
         var minWidth = 26 * view.Font.Width;
@@ -42,8 +39,6 @@ public abstract class BaseFunctionNode : BaseNode {
     }
 
     protected void DisassembleRemoteCode(RemoteProcess process, IntPtr address, out int memorySize) {
-        Contract.Requires(process != null);
-
         memorySize = 0;
 
         var disassembler = new Disassembler(process.CoreFunctions);

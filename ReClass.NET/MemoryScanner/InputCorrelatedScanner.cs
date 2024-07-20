@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Input;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner.Comparer;
@@ -19,11 +18,6 @@ public class InputCorrelatedScanner : Scanner {
 
     public InputCorrelatedScanner(RemoteProcess process, KeyboardInput input, IEnumerable<KeyboardHotkey> hotkeys, ScanValueType valueType)
         : base(process, CreateScanSettings(valueType)) {
-        Contract.Requires(process != null);
-        Contract.Requires(input != null);
-        Contract.Requires(hotkeys != null);
-        Contract.Ensures(this.input != null);
-
         this.process = process;
         this.input = input;
         this.hotkeys = hotkeys.ToList();
@@ -35,8 +29,6 @@ public class InputCorrelatedScanner : Scanner {
     /// <param name="valueType">The <see cref="ScanValueType" /> to use.</param>
     /// <returns>The created <see cref="ScanSettings" />.</returns>
     private static ScanSettings CreateScanSettings(ScanValueType valueType) {
-        Contract.Ensures(Contract.Result<ScanSettings>() != null);
-
         var settings = ScanSettings.Default;
         settings.ValueType = valueType;
         return settings;
@@ -49,8 +41,6 @@ public class InputCorrelatedScanner : Scanner {
     /// <param name="compareType">The <see cref="ScanCompareType" /> to use.</param>
     /// <returns>The created <see cref="IScanComparer" />.</returns>
     private IScanComparer CreateScanComparer(ScanCompareType compareType) {
-        Contract.Ensures(Contract.Result<IScanComparer>() != null);
-
         return Settings.ValueType switch {
             ScanValueType.Byte => new ByteMemoryComparer(compareType, 0, 0),
             ScanValueType.Short => new ShortMemoryComparer(compareType, 0, 0, process.BitConverter),

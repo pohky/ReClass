@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Extensions;
@@ -94,8 +93,6 @@ public class ReClassFile : IReClassImport {
     private readonly ReClassNetProject project;
 
     public ReClassFile(ReClassNetProject project) {
-        Contract.Requires(project != null);
-
         this.project = project;
     }
 
@@ -157,8 +154,6 @@ public class ReClassFile : IReClassImport {
     /// <param name="address">The address string.</param>
     /// <returns>A string.</returns>
     private static string TransformAddressString(string address) {
-        Contract.Requires(address != null);
-
         var parts = address.Split('+')
             .Select(s => s.Trim().ToLower().Replace("\"", string.Empty))
             .Where(s => s != string.Empty)
@@ -189,12 +184,6 @@ public class ReClassFile : IReClassImport {
     }
 
     private IEnumerable<BaseNode> ReadNodeElements(IEnumerable<XElement> elements, ClassNode parent, IReadOnlyDictionary<string, ClassNode> classes, Type[] typeMap, ILogger logger) {
-        Contract.Requires(elements != null);
-        Contract.Requires(parent != null);
-        Contract.Requires(classes != null);
-        Contract.Requires(typeMap != null);
-        Contract.Requires(logger != null);
-
         foreach (var element in elements) {
             Type nodeType = null;
 
@@ -290,15 +279,15 @@ public class ReClassFile : IReClassImport {
                         .ForEach(vtableNode.AddNode);
                     break;
                 case BaseTextNode textNode: {
-                    TryGetAttributeValue(element, "Size", out var length, logger);
-                    textNode.Length = textNode is Utf16TextNode ? length / 2 : length;
-                    break;
-                }
+                        TryGetAttributeValue(element, "Size", out var length, logger);
+                        textNode.Length = textNode is Utf16TextNode ? length / 2 : length;
+                        break;
+                    }
                 case BitFieldNode bitFieldNode: {
-                    TryGetAttributeValue(element, "Size", out var bits, logger);
-                    bitFieldNode.Bits = bits * 8;
-                    break;
-                }
+                        TryGetAttributeValue(element, "Size", out var bits, logger);
+                        bitFieldNode.Bits = bits * 8;
+                        break;
+                    }
             }
 
             yield return node;

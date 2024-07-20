@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
@@ -21,15 +20,11 @@ public abstract class BaseHexNode : BaseNode {
     private readonly byte[] buffer;
 
     protected BaseHexNode() {
-        Contract.Ensures(buffer != null);
-
         buffer = new byte[MemorySize];
     }
     private static Color GetRandomHighlightColor() => highlightColors[highlightRandom.Next(highlightColors.Length)];
 
     protected Size Draw(DrawContext context, int x, int y, string text, int length) {
-        Contract.Requires(context != null);
-
         if (IsHidden && !IsWrapped) {
             return DrawHidden(context, x, y);
         }
@@ -89,8 +84,6 @@ public abstract class BaseHexNode : BaseNode {
     /// <param name="spot">The spot.</param>
     /// <param name="maxId">The highest spot id.</param>
     public void Update(HotSpot spot, int maxId) {
-        Contract.Requires(spot != null);
-
         base.Update(spot);
 
         if (spot.Id >= 0 && spot.Id < maxId) {

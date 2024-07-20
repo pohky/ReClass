@@ -32,8 +32,6 @@ namespace ReClassNET.Nodes
 
 		public override int Draw(ViewInfo view, int x, int y)
 		{
-			Contract.Requires(view != null);
-
 			if (IsHidden)
 			{
 				return DrawHidden(view, x, y);
@@ -147,8 +145,6 @@ namespace ReClassNET.Nodes
 
 		private void DisassembleRemoteCode(MemoryBuffer memory, IntPtr address)
 		{
-			Contract.Requires(memory != null);
-
 			if (this.address != address)
 			{
 				instructions.Clear();
@@ -194,8 +190,6 @@ namespace ReClassNET.Nodes
 
 		public Token(TokenType type, string value)
 		{
-			Contract.Requires(value != null);
-
 			TokenType = type;
 			Value = value;
 		}
@@ -210,8 +204,6 @@ namespace ReClassNET.Nodes
 	{
 		public List<Token> Read(string instruction)
 		{
-			Contract.Requires(instruction != null);
-
 			var tokens = new List<Token>();
 
 			var characters = instruction.ToCharArray();

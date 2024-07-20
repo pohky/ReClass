@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Reflection;
 
 
@@ -86,8 +85,6 @@ namespace ReClassNET.Util
         /// <returns>The path part of the URL.</returns>
         public static string FileUrlToPath(string url)
         {
-            Contract.Requires(url != null);
-
             if (url.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
             {
                 url = url.Substring(8);
@@ -182,8 +179,6 @@ namespace ReClassNET.Util;
         /// <returns>The path part of the URL.</returns>
         public static string FileUrlToPath(string url)
         {
-            Contract.Requires(url != null);
-
             if (url.StartsWith("file:///", StringComparison.OrdinalIgnoreCase))
             {
                 url = url.Substring(8);
@@ -262,8 +257,6 @@ public class PathUtil {
     /// <param name="url">URL of the file.</param>
     /// <returns>The path part of the URL.</returns>
     public static string FileUrlToPath(string url) {
-        Contract.Requires(url != null);
-
         if (url.StartsWith("file:///", StringComparison.OrdinalIgnoreCase)) {
             url = url.Substring(8);
         }

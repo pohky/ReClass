@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Xml.Linq;
 using ReClassNET.DataExchange.ReClass.Legacy;
 using ReClassNET.Extensions;
@@ -40,8 +39,6 @@ public class ReClassQtFile : IReClassImport {
     ];
 
     public ReClassQtFile(ReClassNetProject project) {
-        Contract.Requires(project != null);
-
         this.project = project;
     }
 
@@ -82,8 +79,6 @@ public class ReClassQtFile : IReClassImport {
     /// <param name="element">The class element.</param>
     /// <returns>A string with an address formula.</returns>
     private static string ParseAddressString(XElement element) {
-        Contract.Requires(element != null);
-
         var address = element.Attribute("Address")?.Value;
         if (string.IsNullOrEmpty(address)) {
             return string.Empty;
@@ -97,11 +92,6 @@ public class ReClassQtFile : IReClassImport {
     }
 
     private IEnumerable<BaseNode> ReadNodeElements(IEnumerable<XElement> elements, ClassNode parent, IReadOnlyDictionary<string, ClassNode> classes, ILogger logger) {
-        Contract.Requires(elements != null);
-        Contract.Requires(Contract.ForAll(elements, e => e != null));
-        Contract.Requires(parent != null);
-        Contract.Requires(logger != null);
-
         foreach (var element in elements) {
             Type nodeType = null;
 

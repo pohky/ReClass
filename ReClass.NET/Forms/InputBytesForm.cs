@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.UI;
 
 namespace ReClassNET.Forms;
@@ -32,8 +31,6 @@ public partial class InputBytesForm : IconForm {
     }
 
     private void FormatLabelText(Label label, int size) {
-        Contract.Requires(label != null);
-
         label.Text = $"0x{size:X} / {size}";
     }
 

@@ -12,8 +12,5 @@ public interface IScannerExport {
 [ContractClassFor(typeof(IScannerExport))]
 internal abstract class ScannerExportContract : IScannerExport {
     public void Save(IEnumerable<MemoryRecord> records, string filePath, ILogger logger) {
-        Contract.Requires(records != null);
-        Contract.Requires(filePath != null);
-        Contract.Requires(logger != null);
     }
 }

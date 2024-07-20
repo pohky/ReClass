@@ -24,14 +24,10 @@ internal abstract class BreakpointContract : IBreakpoint {
     }
 
     public void Remove(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         throw new NotImplementedException();
     }
 
     public bool Set(RemoteProcess process) {
-        Contract.Requires(process != null);
-
         throw new NotImplementedException();
     }
 }

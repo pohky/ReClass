@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using ReClassNET.Native;
@@ -63,10 +62,6 @@ public static class DpiUtil {
     }
 
     private static Image ScaleImage(Image sourceImage, int width, int height) {
-        Contract.Requires(sourceImage != null);
-        Contract.Requires(width >= 0);
-        Contract.Requires(height >= 0);
-
         var scaledImage = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
         using var g = Graphics.FromImage(scaledImage);

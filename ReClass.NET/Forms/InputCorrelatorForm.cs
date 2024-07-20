@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Input;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
@@ -19,9 +18,6 @@ public partial class InputCorrelatorForm : IconForm {
     private InputCorrelatedScanner scanner;
 
     public InputCorrelatorForm(ScannerForm scannerForm, RemoteProcess process) {
-        Contract.Requires(scannerForm != null);
-        Contract.Requires(process != null);
-
         this.scannerForm = scannerForm;
         this.process = process;
 

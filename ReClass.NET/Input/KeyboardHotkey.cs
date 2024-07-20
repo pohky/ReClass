@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Input;
 
 public class KeyboardHotkey {
@@ -14,8 +12,6 @@ public class KeyboardHotkey {
     public bool AddKey(Keys key) => keys.Add(key);
 
     public bool Matches(Keys[] pressedKeys) {
-        Contract.Requires(pressedKeys != null);
-
         if (keys.Count == 0 || keys.Count > pressedKeys.Length) {
             return false;
         }

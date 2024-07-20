@@ -1,7 +1,6 @@
 namespace ReClassNET.Project;
 
 public class EnumDescription {
-
     public static EnumDescription Default => new() { Name = "DummyEnum" };
 
     public string Name { get; set; } = string.Empty;

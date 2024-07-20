@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Memory;
 using ReClassNET.MemoryScanner;
@@ -71,10 +70,6 @@ public static class IRemoteMemoryReaderExtension {
     }
 
     public static string ReadRemoteString(this IRemoteMemoryReader reader, IntPtr address, Encoding encoding, int length) {
-        Contract.Requires(encoding != null);
-        Contract.Requires(length >= 0);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         var data = reader.ReadRemoteMemory(address, length * encoding.GuessByteCountPerChar());
 
         try {
@@ -95,10 +90,6 @@ public static class IRemoteMemoryReaderExtension {
     }
 
     public static string ReadRemoteStringUntilFirstNullCharacter(this IRemoteMemoryReader reader, IntPtr address, Encoding encoding, int length) {
-        Contract.Requires(encoding != null);
-        Contract.Requires(length >= 0);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         var data = reader.ReadRemoteMemory(address, length * encoding.GuessByteCountPerChar());
 
         // TODO We should cache the pattern per encoding.

@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
@@ -16,9 +15,6 @@ public partial class SettingsForm : IconForm {
     public TabControl SettingsTabControl { get; private set; }
 
     public SettingsForm(Settings settings, CppTypeMapping typeMapping) {
-        Contract.Requires(settings != null);
-        Contract.Requires(typeMapping != null);
-
         this.settings = settings;
         this.typeMapping = typeMapping;
 
@@ -68,11 +64,6 @@ public partial class SettingsForm : IconForm {
     }
 
     private static void SetBinding(IBindableComponent control, string propertyName, object dataSource, string dataMember) {
-        Contract.Requires(control != null);
-        Contract.Requires(propertyName != null);
-        Contract.Requires(dataSource != null);
-        Contract.Requires(dataMember != null);
-
         control.DataBindings.Add(propertyName, dataSource, dataMember, true, DataSourceUpdateMode.OnPropertyChanged);
     }
 

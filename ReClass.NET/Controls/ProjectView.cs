@@ -1,6 +1,5 @@
 using System.Collections;
 using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
@@ -9,7 +8,6 @@ using ReClassNET.Properties;
 namespace ReClassNET.Controls;
 
 public partial class ProjectView : UserControl {
-
     public delegate void SelectionChangedEvent(object sender, ClassNode node);
 
     private readonly TreeNode classesRootNode;
@@ -80,9 +78,6 @@ public partial class ProjectView : UserControl {
     public ContextMenuStrip EnumContextMenuStrip { get; set; }
 
     public ProjectView() {
-        Contract.Ensures(classesRootNode != null);
-        Contract.Ensures(enumsRootNode != null);
-
         InitializeComponent();
 
         DoubleBuffered = true;
@@ -149,8 +144,6 @@ public partial class ProjectView : UserControl {
     /// <summary>Adds the class to the view.</summary>
     /// <param name="class">The class to add.</param>
     public void AddClass(ClassNode @class) {
-        Contract.Requires(@class != null);
-
         AddClasses([@class]);
     }
 
@@ -159,8 +152,6 @@ public partial class ProjectView : UserControl {
     /// </summary>
     /// <param name="classes">The classes to add.</param>
     public void AddClasses(IEnumerable<ClassNode> classes) {
-        Contract.Requires(classes != null);
-
         projectTreeView.BeginUpdate();
 
         foreach (var @class in classes) {
@@ -177,8 +168,6 @@ public partial class ProjectView : UserControl {
     /// <summary>Removes the class from the view.</summary>
     /// <param name="node">The class to remove.</param>
     public void RemoveClass(ClassNode node) {
-        Contract.Requires(node != null);
-
         foreach (var tn in FindClassTreeNodes(node)) {
             tn.Remove();
         }
@@ -196,8 +185,6 @@ public partial class ProjectView : UserControl {
     /// <param name="node">The class to search.</param>
     /// <returns>The found class tree node.</returns>
     private ClassTreeNode FindMainClassTreeNode(ClassNode node) {
-        Contract.Requires(node != null);
-
         return classesRootNode.Nodes
             .Cast<ClassTreeNode>()
             .FirstOrDefault(t => t.ClassNode == node);
@@ -207,8 +194,6 @@ public partial class ProjectView : UserControl {
     /// <param name="node">The class to search.</param>
     /// <returns>The found class tree node.</returns>
     private IEnumerable<ClassTreeNode> FindClassTreeNodes(ClassNode node) {
-        Contract.Requires(node != null);
-
         return classesRootNode.Nodes
             .Cast<ClassTreeNode>()
             .Traverse(t => t.Nodes.Cast<ClassTreeNode>())
@@ -220,8 +205,6 @@ public partial class ProjectView : UserControl {
     /// </summary>
     /// <param name="class">The class to update.</param>
     public void UpdateClassNode(ClassNode @class) {
-        Contract.Requires(@class != null);
-
         projectTreeView.BeginUpdate();
 
         foreach (var tn in FindClassTreeNodes(@class)) {
@@ -236,16 +219,12 @@ public partial class ProjectView : UserControl {
     /// <summary>Adds the enum to the view.</summary>
     /// <param name="enum">The enum to add.</param>
     public void AddEnum(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         AddEnums([@enum]);
     }
 
     /// <summary>Adds the enums to the view.</summary>
     /// <param name="enums">The enums to add.</param>
     public void AddEnums(IEnumerable<EnumDescription> enums) {
-        Contract.Requires(enums != null);
-
         projectTreeView.BeginUpdate();
 
         foreach (var @enum in enums) {
@@ -264,8 +243,6 @@ public partial class ProjectView : UserControl {
     /// </summary>
     /// <param name="enum">The enum to update.</param>
     public void UpdateEnumNode(EnumDescription @enum) {
-        Contract.Requires(@enum != null);
-
         projectTreeView.BeginUpdate();
 
         var node = enumsRootNode.Nodes
@@ -294,14 +271,9 @@ public partial class ProjectView : UserControl {
         /// <param name="control">The <see cref="ProjectView" /> instance this node should belong to.</param>
         public ClassTreeNode(ClassNode node, ProjectView control)
             : this(node, control, null) {
-            Contract.Requires(node != null);
-            Contract.Requires(control != null);
         }
 
         private ClassTreeNode(ClassNode node, ProjectView control, HashSet<ClassNode> seen) {
-            Contract.Requires(node != null);
-            Contract.Requires(control != null);
-
             ClassNode = node;
 
             this.control = control;
@@ -323,8 +295,6 @@ public partial class ProjectView : UserControl {
         /// <summary>Rebuilds the class hierarchy.</summary>
         /// <param name="seen">The already seen classes.</param>
         private void RebuildClassHierarchy(HashSet<ClassNode> seen) {
-            Contract.Requires(seen != null);
-
             if (!control.EnableClassHierarchyView) {
                 return;
             }
@@ -359,8 +329,6 @@ public partial class ProjectView : UserControl {
         public EnumDescription Enum { get; }
 
         public EnumTreeNode(EnumDescription @enum) {
-            Contract.Requires(@enum != null);
-
             Enum = @enum;
 
             ImageIndex = 3;

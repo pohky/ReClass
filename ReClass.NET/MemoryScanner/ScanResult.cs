@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Extensions;
 
@@ -142,8 +141,6 @@ public class ArrayOfBytesScanResult : ScanResult, IEquatable<ArrayOfBytesScanRes
     public byte[] Value { get; }
 
     public ArrayOfBytesScanResult(byte[] value) {
-        Contract.Requires(value != null);
-
         Value = value;
     }
 
@@ -166,9 +163,6 @@ public class StringScanResult : ScanResult, IEquatable<StringScanResult> {
     public Encoding Encoding { get; }
 
     public StringScanResult(string value, Encoding encoding) {
-        Contract.Requires(value != null);
-        Contract.Requires(encoding != null);
-
         Value = value;
         Encoding = encoding;
     }
@@ -187,7 +181,6 @@ public class RegexStringScanResult : StringScanResult {
 
     public RegexStringScanResult(string value, Encoding encoding)
         : base(value, encoding) {
-
     }
 
     public override ScanResult Clone() => new RegexStringScanResult(Value, Encoding) { Address = Address };

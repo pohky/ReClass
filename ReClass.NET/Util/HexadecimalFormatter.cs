@@ -1,5 +1,3 @@
-using System.Diagnostics.Contracts;
-
 namespace ReClassNET.Util;
 
 public static class HexadecimalFormatter {
@@ -15,8 +13,6 @@ public static class HexadecimalFormatter {
     }
 
     public static string ToString(byte[] data) {
-        Contract.Requires(data != null);
-
         if (data.Length == 0) {
             return string.Empty;
         }

@@ -5,7 +5,6 @@ using ReClassNET.Util.Conversion;
 namespace ReClassNET.MemoryScanner.Comparer;
 
 public class DoubleMemoryComparer : ISimpleScanComparer {
-
     private readonly EndianBitConverter bitConverter;
     private readonly double maxValue;
     private readonly double minValue;

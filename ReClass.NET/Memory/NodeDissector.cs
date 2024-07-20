@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 using ReClassNET.Nodes;
 
@@ -6,10 +5,6 @@ namespace ReClassNET.Memory;
 
 public class NodeDissector {
     public static void DissectNodes(IEnumerable<BaseHexNode> nodes, IProcessReader reader, MemoryBuffer memory) {
-        Contract.Requires(nodes != null);
-        Contract.Requires(Contract.ForAll(nodes, n => n != null));
-        Contract.Requires(memory != null);
-
         foreach (var node in nodes) {
             if (GuessNode(node, reader, memory, out var guessedNode)) {
                 node.GetParentContainer()?.ReplaceChildNode(node, guessedNode);
@@ -18,9 +13,6 @@ public class NodeDissector {
     }
 
     public static bool GuessNode(BaseHexNode node, IProcessReader reader, MemoryBuffer memory, out BaseNode guessedNode) {
-        Contract.Requires(node != null);
-        Contract.Requires(memory != null);
-
         guessedNode = null;
 
         var offset = node.Offset;
@@ -90,8 +82,6 @@ public class NodeDissector {
     }
 
     private static bool GuessPointerNode(IntPtr address, IProcessReader process, out BaseNode node) {
-        Contract.Requires(process != null);
-
         node = null;
 
         if (address.IsNull()) {

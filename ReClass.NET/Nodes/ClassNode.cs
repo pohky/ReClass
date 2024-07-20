@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.UI;
 
@@ -23,8 +22,6 @@ public class ClassNode : BaseContainerNode {
     public event NodeEventHandler NodesChanged;
 
     internal ClassNode(bool notifyClassCreated) {
-        Contract.Ensures(AddressFormula != null);
-
         LevelsOpen.DefaultValue = true;
 
         Uuid = Guid.NewGuid();
@@ -35,8 +32,6 @@ public class ClassNode : BaseContainerNode {
     }
 
     public static ClassNode Create() {
-        Contract.Ensures(Contract.Result<ClassNode>() != null);
-
         return new ClassNode(true);
     }
 

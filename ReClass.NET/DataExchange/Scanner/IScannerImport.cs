@@ -12,10 +12,6 @@ public interface IScannerImport {
 [ContractClassFor(typeof(IScannerImport))]
 internal abstract class ScannerImportContract : IScannerImport {
     public IEnumerable<MemoryRecord> Load(string filePath, ILogger logger) {
-        Contract.Requires(filePath != null);
-        Contract.Requires(logger != null);
-        Contract.Ensures(Contract.Result<IEnumerable<MemoryRecord>>() != null);
-
         throw new NotImplementedException();
     }
 }

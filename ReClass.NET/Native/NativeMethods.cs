@@ -1,7 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-
-/* Unmerged change from project 'ReClass.NET'
+﻿/* Unmerged change from project 'ReClass.NET'
 Before:
 namespace ReClassNET.Native
 {
@@ -53,15 +50,11 @@ namespace ReClassNET.Native
 
         public static IntPtr LoadLibrary(string name)
         {
-            Contract.Requires(name != null);
-
             return nativeMethods.LoadLibrary(name);
         }
 
         public static IntPtr GetProcAddress(IntPtr handle, string name)
         {
-            Contract.Requires(name != null);
-
             return nativeMethods.GetProcAddress(handle, name);
         }
 
@@ -72,8 +65,6 @@ namespace ReClassNET.Native
 
         public static Icon GetIconForFile(string path)
         {
-            Contract.Requires(path != null);
-
             return nativeMethods.GetIconForFile(path);
         }
 
@@ -84,9 +75,6 @@ namespace ReClassNET.Native
 
         public static string UndecorateSymbolName(string name)
         {
-            Contract.Requires(name != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return nativeMethods.UndecorateSymbolName(name);
         }
 
@@ -97,19 +85,11 @@ namespace ReClassNET.Native
 
         public static bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-            Contract.Requires(applicationPath != null);
-            Contract.Requires(applicationName != null);
-
             return nativeMethods.RegisterExtension(fileExtension, extensionId, applicationPath, applicationName);
         }
 
         public static void UnregisterExtension(string fileExtension, string extensionId)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
             nativeMethods.UnregisterExtension(fileExtension, extensionId);
         }
     }
@@ -165,15 +145,11 @@ namespace ReClassNET.Native;
 
         public static IntPtr LoadLibrary(string name)
         {
-            Contract.Requires(name != null);
-
             return nativeMethods.LoadLibrary(name);
         }
 
         public static IntPtr GetProcAddress(IntPtr handle, string name)
         {
-            Contract.Requires(name != null);
-
             return nativeMethods.GetProcAddress(handle, name);
         }
 
@@ -184,8 +160,6 @@ namespace ReClassNET.Native;
 
         public static Icon GetIconForFile(string path)
         {
-            Contract.Requires(path != null);
-
             return nativeMethods.GetIconForFile(path);
         }
 
@@ -196,9 +170,6 @@ namespace ReClassNET.Native;
 
         public static string UndecorateSymbolName(string name)
         {
-            Contract.Requires(name != null);
-            Contract.Ensures(Contract.Result<string>() != null);
-
             return nativeMethods.UndecorateSymbolName(name);
         }
 
@@ -209,19 +180,11 @@ namespace ReClassNET.Native;
 
         public static bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-            Contract.Requires(applicationPath != null);
-            Contract.Requires(applicationName != null);
-
             return nativeMethods.RegisterExtension(fileExtension, extensionId, applicationPath, applicationName);
         }
 
         public static void UnregisterExtension(string fileExtension, string extensionId)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-            Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
             nativeMethods.UnregisterExtension(fileExtension, extensionId);
         }
     }
@@ -266,14 +229,10 @@ public static class NativeMethods {
     }
 
     public static IntPtr LoadLibrary(string name) {
-        Contract.Requires(name != null);
-
         return nativeMethods.LoadLibrary(name);
     }
 
     public static IntPtr GetProcAddress(IntPtr handle, string name) {
-        Contract.Requires(name != null);
-
         return nativeMethods.GetProcAddress(handle, name);
     }
 
@@ -282,8 +241,6 @@ public static class NativeMethods {
     }
 
     public static Icon GetIconForFile(string path) {
-        Contract.Requires(path != null);
-
         return nativeMethods.GetIconForFile(path);
     }
 
@@ -292,9 +249,6 @@ public static class NativeMethods {
     }
 
     public static string UndecorateSymbolName(string name) {
-        Contract.Requires(name != null);
-        Contract.Ensures(Contract.Result<string>() != null);
-
         return nativeMethods.UndecorateSymbolName(name);
     }
 
@@ -303,18 +257,10 @@ public static class NativeMethods {
     }
 
     public static bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) {
-        Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-        Contract.Requires(!string.IsNullOrEmpty(extensionId));
-        Contract.Requires(applicationPath != null);
-        Contract.Requires(applicationName != null);
-
         return nativeMethods.RegisterExtension(fileExtension, extensionId, applicationPath, applicationName);
     }
 
     public static void UnregisterExtension(string fileExtension, string extensionId) {
-        Contract.Requires(!string.IsNullOrEmpty(fileExtension));
-        Contract.Requires(!string.IsNullOrEmpty(extensionId));
-
         nativeMethods.UnregisterExtension(fileExtension, extensionId);
     }
 }

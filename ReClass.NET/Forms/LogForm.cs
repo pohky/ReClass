@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Logger;
 using ReClassNET.Properties;
 using ReClassNET.UI;
@@ -6,7 +5,6 @@ using ReClassNET.UI;
 namespace ReClassNET.Forms;
 
 public partial class LogForm : IconForm {
-
     private readonly List<LogItem> items = [];
 
     public LogForm() {
@@ -40,8 +38,6 @@ public partial class LogForm : IconForm {
     }
 
     public void Add(LogLevel level, string message, Exception ex) {
-        Contract.Requires(message != null);
-
         Image icon;
         switch (level) {
             case LogLevel.Error:

@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Extensions;
 
 namespace ReClassNET.MemoryScanner;
@@ -10,8 +9,6 @@ internal class ScanResultBlock {
     public IReadOnlyList<ScanResult> Results { get; }
 
     public ScanResultBlock(IntPtr start, IntPtr end, IReadOnlyList<ScanResult> results) {
-        Contract.Requires(results != null);
-
         Start = start;
         End = end;
         Results = results;

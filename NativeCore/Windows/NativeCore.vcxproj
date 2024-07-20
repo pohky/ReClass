@@ -72,28 +72,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
     <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
     <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
     <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutDir>
+    <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
     <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>

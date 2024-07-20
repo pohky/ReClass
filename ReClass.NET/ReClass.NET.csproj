@@ -16,7 +16,7 @@
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\$(PlatformTarget)\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
 
     <RootNamespace>ReClassNET</RootNamespace>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>

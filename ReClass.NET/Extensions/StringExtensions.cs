@@ -1,12 +1,10 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Text.RegularExpressions;
 
 namespace ReClassNET.Extensions;
 
 public static class StringExtension {
     private static readonly Regex hexadecimalValueRegex = new("^(0x|h)?([0-9A-F]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    [Pure]
     [DebuggerStepThrough]
     public static bool IsPrintable(this char c) => ((' ' <= c && c <= '~') || ('\xA1' <= c && c <= '\xFF')) && c != '\xFFFD' /* Unicode REPLACEMENT CHARACTER � */;
 
@@ -58,7 +56,6 @@ public static class StringExtension {
         return countValid / (float)countAll;
     }
 
-    [Pure]
     [DebuggerStepThrough]
     public static string LimitLength(this string s, int length) {
         if (s.Length <= length) {

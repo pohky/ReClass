@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 
 namespace ReClassNET.Extensions;
 
@@ -16,7 +15,6 @@ public static class ListExtension {
     ///     complement of the index of the next element that is larger or, if there is no larger element, the bitwise
     ///     complement of <see cref="IList{T}.Count" />.
     /// </returns>
-    [Pure]
     [DebuggerStepThrough]
     public static int BinarySearch<T>(this IList<T> source, Func<T, int> comparer) {
         var lo = 0;

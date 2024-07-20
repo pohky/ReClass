@@ -1,9 +1,7 @@
-using System.Diagnostics.Contracts;
 using ReClassNET.Memory;
 
 namespace ReClassNET.Nodes;
 
-[ContractClass(typeof(NodeInfoReaderContract))]
 public interface INodeInfoReader {
     /// <summary>
     ///     Used to print custom informations about a node.
@@ -15,11 +13,4 @@ public interface INodeInfoReader {
     /// <param name="nodeValue">The memory value of the node as <see cref="IntPtr" />.</param>
     /// <returns>Custom informations about the node or null.</returns>
     string ReadNodeInfo(BaseHexCommentNode node, IRemoteMemoryReader reader, MemoryBuffer memory, IntPtr nodeAddress, IntPtr nodeValue);
-}
-
-[ContractClassFor(typeof(INodeInfoReader))]
-internal abstract class NodeInfoReaderContract : INodeInfoReader {
-    public string ReadNodeInfo(BaseHexCommentNode node, IRemoteMemoryReader reader, MemoryBuffer memory, IntPtr nodeAddress, IntPtr nodeValue) {
-        throw new NotImplementedException();
-    }
 }

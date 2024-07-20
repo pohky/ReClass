@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using ReClassNET.Controls;
 using ReClassNET.Extensions;
 using ReClassNET.Properties;
@@ -11,7 +10,6 @@ namespace ReClassNET.Nodes;
 public delegate void NodeEventHandler(BaseNode sender);
 
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-[ContractClass(typeof(BaseNodeContract))]
 public abstract class BaseNode {
     internal static readonly List<INodeInfoReader> NodeInfoReader = [];
 
@@ -75,10 +73,6 @@ public abstract class BaseNode {
 
     public event NodeEventHandler NameChanged;
     public event NodeEventHandler CommentChanged;
-
-    [ContractInvariantMethod]
-    private void ObjectInvariants() {
-    }
 
     /// <summary>
     ///     Creates an instance of the specific node type.
@@ -432,22 +426,5 @@ public abstract class BaseNode {
         if (!context.Memory.ContainsValidData) {
             AddIcon(context, 0, y, Resources.B16x16_Error, HotSpot.NoneId, HotSpotType.None);
         }
-    }
-}
-
-[ContractClassFor(typeof(BaseNode))]
-internal abstract class BaseNodeContract : BaseNode {
-    public override int MemorySize {
-        get {
-            throw new NotImplementedException();
-        }
-    }
-
-    public override Size Draw(DrawContext context, int x, int y) {
-        throw new NotImplementedException();
-    }
-
-    public override int CalculateDrawnHeight(DrawContext context) {
-        throw new NotImplementedException();
     }
 }

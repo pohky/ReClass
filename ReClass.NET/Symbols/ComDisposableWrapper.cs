@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
 
 namespace ReClassNET.Symbols;
@@ -14,10 +13,6 @@ internal class DisposableWrapper : IDisposable {
         Dispose(true);
 
         GC.SuppressFinalize(this);
-    }
-
-    [ContractInvariantMethod]
-    private void ObjectInvariants() {
     }
 
     protected virtual void Dispose(bool disposing) {

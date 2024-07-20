@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 
 namespace ReClassNET.Extensions;
 
@@ -11,7 +10,6 @@ public static class PointExtension {
     /// <param name="offsetX">The offset in x direction.</param>
     /// <param name="offsetY">The offset in y direction.</param>
     /// <returns>The relocated point.</returns>
-    [Pure]
     [DebuggerStepThrough]
     public static Point Relocate(this Point point, int offsetX, int offsetY) => new(point.X + offsetX, point.Y + offsetY);
 }

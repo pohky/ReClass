@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Xml.Linq;
 using ReClassNET.Logger;
 using ReClassNET.Nodes;
@@ -9,7 +8,6 @@ public delegate BaseNode CreateNodeFromElementHandler(XElement element, BaseNode
 
 public delegate XElement CreateElementFromNodeHandler(BaseNode node, ILogger logger);
 
-[ContractClass(typeof(CustomNodeSerializerContract))]
 public interface ICustomNodeSerializer {
     /// <summary>Determine if the instance can handle the xml element.</summary>
     /// <param name="element">The xml element to check.</param>
@@ -48,25 +46,6 @@ public interface ICustomNodeSerializer {
     /// </param>
     /// <returns>The xml element for the node.</returns>
     XElement CreateElementFromNode(BaseNode node, ILogger logger, CreateElementFromNodeHandler defaultHandler);
-}
-
-[ContractClassFor(typeof(ICustomNodeSerializer))]
-internal abstract class CustomNodeSerializerContract : ICustomNodeSerializer {
-    public bool CanHandleElement(XElement element) {
-        throw new NotImplementedException();
-    }
-
-    public bool CanHandleNode(BaseNode node) {
-        throw new NotImplementedException();
-    }
-
-    public BaseNode CreateNodeFromElement(XElement element, BaseNode parent, IEnumerable<ClassNode> classes, ILogger logger, CreateNodeFromElementHandler defaultHandler) {
-        throw new NotImplementedException();
-    }
-
-    public XElement CreateElementFromNode(BaseNode node, ILogger logger, CreateElementFromNodeHandler defaultHandler) {
-        throw new NotImplementedException();
-    }
 }
 
 internal class CustomNodeSerializer {

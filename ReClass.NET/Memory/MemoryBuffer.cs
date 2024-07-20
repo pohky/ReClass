@@ -1,4 +1,3 @@
-using System.Diagnostics.Contracts;
 using System.Text;
 using ReClassNET.Extensions;
 using ReClassNET.Util.Conversion;
@@ -36,10 +35,6 @@ public class MemoryBuffer {
     public MemoryBuffer() {
         data = [];
         historyData = [];
-    }
-
-    [ContractInvariantMethod]
-    private void ObjectInvariants() {
     }
 
     public MemoryBuffer Clone() {

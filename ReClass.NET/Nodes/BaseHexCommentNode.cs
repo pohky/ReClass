@@ -27,13 +27,6 @@ public abstract class BaseHexCommentNode : BaseHexNode {
                     x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.ReadOnlyId, namedAddress) + view.Font.Width;
                 }
 
-                if (view.Settings.ShowCommentRtti) {
-                    var rtti = view.Process.ReadRemoteRuntimeTypeInformation(ivalue);
-                    if (!string.IsNullOrEmpty(rtti)) {
-                        x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.ReadOnlyId, rtti) + view.Font.Width;
-                    }
-                }
-
                 if (view.Settings.ShowCommentString) {
                     var data = view.Process.ReadRemoteMemory(ivalue, 64);
 

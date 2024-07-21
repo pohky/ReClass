@@ -500,10 +500,6 @@ public partial class MainForm : IconForm {
         new ProcessInfoForm(Program.RemoteProcess).Show();
     }
 
-    private void memorySearcherToolStripMenuItem_Click(object sender, EventArgs e) {
-        new ScannerForm(Program.RemoteProcess).Show();
-    }
-
     private void namedAddressesToolStripMenuItem_Click(object sender, EventArgs e) {
         new NamedAddressesForm(Program.RemoteProcess).Show();
     }

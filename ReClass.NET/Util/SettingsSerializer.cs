@@ -40,7 +40,6 @@ internal sealed class SettingsSerializer {
                 XElementSerializer.TryRead(display, nameof(settings.ShowCommentFloat), e => settings.ShowCommentFloat = XElementSerializer.ToBool(e));
                 XElementSerializer.TryRead(display, nameof(settings.ShowCommentInteger), e => settings.ShowCommentInteger = XElementSerializer.ToBool(e));
                 XElementSerializer.TryRead(display, nameof(settings.ShowCommentPointer), e => settings.ShowCommentPointer = XElementSerializer.ToBool(e));
-                XElementSerializer.TryRead(display, nameof(settings.ShowCommentRtti), e => settings.ShowCommentRtti = XElementSerializer.ToBool(e));
                 XElementSerializer.TryRead(display, nameof(settings.ShowCommentString), e => settings.ShowCommentString = XElementSerializer.ToBool(e));
                 XElementSerializer.TryRead(display, nameof(settings.ShowCommentPluginInfo), e => settings.ShowCommentPluginInfo = XElementSerializer.ToBool(e));
             }
@@ -103,7 +102,6 @@ internal sealed class SettingsSerializer {
                     XElementSerializer.ToXml(nameof(settings.ShowCommentFloat), settings.ShowCommentFloat),
                     XElementSerializer.ToXml(nameof(settings.ShowCommentInteger), settings.ShowCommentInteger),
                     XElementSerializer.ToXml(nameof(settings.ShowCommentPointer), settings.ShowCommentPointer),
-                    XElementSerializer.ToXml(nameof(settings.ShowCommentRtti), settings.ShowCommentRtti),
                     XElementSerializer.ToXml(nameof(settings.ShowCommentString), settings.ShowCommentString),
                     XElementSerializer.ToXml(nameof(settings.ShowCommentPluginInfo), settings.ShowCommentPluginInfo)
                 ),

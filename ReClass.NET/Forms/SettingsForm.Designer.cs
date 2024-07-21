@@ -38,7 +38,6 @@ namespace ReClassNET.Forms {
             this.commentsGroupBox = new System.Windows.Forms.GroupBox();
             this.showPluginInfoCheckBox = new System.Windows.Forms.CheckBox();
             this.showStringCheckBox = new System.Windows.Forms.CheckBox();
-            this.showRttiCheckBox = new System.Windows.Forms.CheckBox();
             this.showPointerCheckBox = new System.Windows.Forms.CheckBox();
             this.showIntegerCheckBox = new System.Windows.Forms.CheckBox();
             this.showFloatCheckBox = new System.Windows.Forms.CheckBox();
@@ -212,7 +211,6 @@ namespace ReClassNET.Forms {
             // 
             this.commentsGroupBox.Controls.Add(this.showPluginInfoCheckBox);
             this.commentsGroupBox.Controls.Add(this.showStringCheckBox);
-            this.commentsGroupBox.Controls.Add(this.showRttiCheckBox);
             this.commentsGroupBox.Controls.Add(this.showPointerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showIntegerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showFloatCheckBox);
@@ -226,7 +224,7 @@ namespace ReClassNET.Forms {
             // showPluginInfoCheckBox
             // 
             this.showPluginInfoCheckBox.AutoSize = true;
-            this.showPluginInfoCheckBox.Location = new System.Drawing.Point(6, 134);
+            this.showPluginInfoCheckBox.Location = new System.Drawing.Point(6, 111);
             this.showPluginInfoCheckBox.Name = "showPluginInfoCheckBox";
             this.showPluginInfoCheckBox.Size = new System.Drawing.Size(111, 17);
             this.showPluginInfoCheckBox.TabIndex = 6;
@@ -236,22 +234,12 @@ namespace ReClassNET.Forms {
             // showStringCheckBox
             // 
             this.showStringCheckBox.AutoSize = true;
-            this.showStringCheckBox.Location = new System.Drawing.Point(6, 111);
+            this.showStringCheckBox.Location = new System.Drawing.Point(6, 88);
             this.showStringCheckBox.Name = "showStringCheckBox";
             this.showStringCheckBox.Size = new System.Drawing.Size(88, 17);
             this.showStringCheckBox.TabIndex = 5;
             this.showStringCheckBox.Text = "Show Strings";
             this.showStringCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // showRttiCheckBox
-            // 
-            this.showRttiCheckBox.AutoSize = true;
-            this.showRttiCheckBox.Location = new System.Drawing.Point(6, 88);
-            this.showRttiCheckBox.Name = "showRttiCheckBox";
-            this.showRttiCheckBox.Size = new System.Drawing.Size(81, 17);
-            this.showRttiCheckBox.TabIndex = 3;
-            this.showRttiCheckBox.Text = "Show RTTI";
-            this.showRttiCheckBox.UseVisualStyleBackColor = true;
             // 
             // showPointerCheckBox
             // 
@@ -1144,7 +1132,6 @@ namespace ReClassNET.Forms {
 		private System.Windows.Forms.CheckBox showNodeOffsetCheckBox;
 		private System.Windows.Forms.CheckBox highlightChangedValuesCheckBox;
 		private System.Windows.Forms.GroupBox commentsGroupBox;
-		private System.Windows.Forms.CheckBox showRttiCheckBox;
 		private System.Windows.Forms.CheckBox showPointerCheckBox;
 		private System.Windows.Forms.CheckBox showIntegerCheckBox;
 		private System.Windows.Forms.CheckBox showFloatCheckBox;

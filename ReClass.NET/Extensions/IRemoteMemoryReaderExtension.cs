@@ -1,6 +1,5 @@
 using System.Text;
 using ReClassNET.Memory;
-using ReClassNET.MemoryScanner;
 
 namespace ReClassNET.Extensions;
 
@@ -84,22 +83,6 @@ public static class IRemoteMemoryReaderExtension {
                 }
             }
             return sb.ToString();
-        } catch {
-            return string.Empty;
-        }
-    }
-
-    public static string ReadRemoteStringUntilFirstNullCharacter(this IRemoteMemoryReader reader, IntPtr address, Encoding encoding, int length) {
-        var data = reader.ReadRemoteMemory(address, length * encoding.GuessByteCountPerChar());
-
-        // TODO We should cache the pattern per encoding.
-        var index = PatternScanner.FindPattern(BytePattern.From(new byte[encoding.GuessByteCountPerChar()]), data);
-        if (index == -1) {
-            index = data.Length;
-        }
-
-        try {
-            return encoding.GetString(data, 0, Math.Min(index, data.Length));
         } catch {
             return string.Empty;
         }

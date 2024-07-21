@@ -77,9 +77,6 @@
     <Compile Update="Controls\MemoryPreviewPopUp.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Controls\MemoryRecordList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="Controls\PlaceholderTextBox.cs">
       <SubType>Component</SubType>
     </Compile>

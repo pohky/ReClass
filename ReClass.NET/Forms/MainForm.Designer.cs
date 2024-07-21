@@ -141,7 +141,6 @@ namespace ReClassNET.Forms {
 			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.processInformationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.memorySearcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.namedAddressesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.isLittleEndianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1142,7 +1141,6 @@ namespace ReClassNET.Forms {
 			// 
 			this.processToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.processInformationsToolStripMenuItem,
-            this.memorySearcherToolStripMenuItem,
             this.namedAddressesToolStripMenuItem,
             this.toolStripSeparator23,
             this.isLittleEndianToolStripMenuItem,
@@ -1161,14 +1159,6 @@ namespace ReClassNET.Forms {
 			this.processInformationsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
 			this.processInformationsToolStripMenuItem.Text = "Process Informations...";
 			this.processInformationsToolStripMenuItem.Click += new System.EventHandler(this.memoryViewerToolStripMenuItem_Click);
-			// 
-			// memorySearcherToolStripMenuItem
-			// 
-			this.memorySearcherToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Eye;
-			this.memorySearcherToolStripMenuItem.Name = "memorySearcherToolStripMenuItem";
-			this.memorySearcherToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-			this.memorySearcherToolStripMenuItem.Text = "Memory Searcher...";
-			this.memorySearcherToolStripMenuItem.Click += new System.EventHandler(this.memorySearcherToolStripMenuItem_Click);
 			// 
 			// namedAddressesToolStripMenuItem
 			// 
@@ -1395,7 +1385,6 @@ namespace ReClassNET.Forms {
 		private System.Windows.Forms.ToolStripStatusLabel infoToolStripStatusLabel;
 		private System.Windows.Forms.ToolStripMenuItem mergeWithProjectToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem detachToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem memorySearcherToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem reattachToProcessToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSplitButton attachToProcessToolStripSplitButton;
 		private System.Windows.Forms.ToolStripMenuItem namedAddressesToolStripMenuItem;

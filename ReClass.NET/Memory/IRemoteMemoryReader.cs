@@ -28,9 +28,4 @@ public interface IRemoteMemoryReader {
     /// <param name="size">The size in bytes to read.</param>
     /// <returns>An array of bytes.</returns>
     byte[] ReadRemoteMemory(IntPtr address, int size);
-
-    /// <summary>Reads remote runtime type information for the given address from the remote process.</summary>
-    /// <param name="address">The address.</param>
-    /// <returns>A string containing the runtime type information or null if no information could get found.</returns>
-    string ReadRemoteRuntimeTypeInformation(IntPtr address);
 }

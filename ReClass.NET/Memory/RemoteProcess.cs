@@ -1,8 +1,6 @@
-using System.Text;
 using ReClassNET.AddressParser;
 using ReClassNET.Core;
 using ReClassNET.Extensions;
-using ReClassNET.Native;
 using ReClassNET.Util.Conversion;
 
 namespace ReClassNET.Memory;
@@ -259,119 +257,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         var data = new byte[size];
         ReadRemoteMemoryIntoBuffer(address, ref data);
         return data;
-    }
-
-    public string ReadRemoteRuntimeTypeInformation(IntPtr address) {
-        if (address.MayBeValid()) {
-            if (!rttiCache.TryGetValue(address, out var rtti)) {
-                var objectLocatorPtr = this.ReadRemoteIntPtr(address - IntPtr.Size);
-                if (objectLocatorPtr.MayBeValid()) {
-                    rtti = ReadRemoteRuntimeTypeInformation64(objectLocatorPtr);
-
-                    rttiCache[address] = rtti;
-                }
-            }
-            return rtti;
-        }
-
-        return null;
-    }
-
-    private string ReadRemoteRuntimeTypeInformation32(IntPtr address) {
-        var classHierarchyDescriptorPtr = this.ReadRemoteIntPtr(address + 0x10);
-        if (classHierarchyDescriptorPtr.MayBeValid()) {
-            var baseClassCount = this.ReadRemoteInt32(classHierarchyDescriptorPtr + 8);
-            if (baseClassCount > 0 && baseClassCount < 25) {
-                var baseClassArrayPtr = this.ReadRemoteIntPtr(classHierarchyDescriptorPtr + 0xC);
-                if (baseClassArrayPtr.MayBeValid()) {
-                    var sb = new StringBuilder();
-                    for (var i = 0; i < baseClassCount; ++i) {
-                        var baseClassDescriptorPtr = this.ReadRemoteIntPtr(baseClassArrayPtr + 4 * i);
-                        if (baseClassDescriptorPtr.MayBeValid()) {
-                            var typeDescriptorPtr = this.ReadRemoteIntPtr(baseClassDescriptorPtr);
-                            if (typeDescriptorPtr.MayBeValid()) {
-                                var name = this.ReadRemoteStringUntilFirstNullCharacter(typeDescriptorPtr + 0x0C, Encoding.UTF8, 60);
-                                if (name.EndsWith("@@")) {
-                                    name = NativeMethods.UndecorateSymbolName("?" + name);
-                                }
-
-                                sb.Append(name);
-                                sb.Append(" : ");
-
-                                continue;
-                            }
-                        }
-
-                        break;
-                    }
-
-                    if (sb.Length != 0) {
-                        sb.Length -= 3;
-
-                        return sb.ToString();
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private string ReadRemoteRuntimeTypeInformation64(IntPtr address) {
-        var baseOffset = this.ReadRemoteInt32(address + 0x14);
-        if (baseOffset != 0) {
-            var baseAddress = address - baseOffset;
-
-            var classHierarchyDescriptorOffset = this.ReadRemoteInt32(address + 0x10);
-            if (classHierarchyDescriptorOffset != 0) {
-                var classHierarchyDescriptorPtr = baseAddress + classHierarchyDescriptorOffset;
-
-                var baseClassCount = this.ReadRemoteInt32(classHierarchyDescriptorPtr + 0x08);
-                if (baseClassCount > 0 && baseClassCount < 25) {
-                    var baseClassArrayOffset = this.ReadRemoteInt32(classHierarchyDescriptorPtr + 0x0C);
-                    if (baseClassArrayOffset != 0) {
-                        var baseClassArrayPtr = baseAddress + baseClassArrayOffset;
-
-                        var sb = new StringBuilder();
-                        for (var i = 0; i < baseClassCount; ++i) {
-                            var baseClassDescriptorOffset = this.ReadRemoteInt32(baseClassArrayPtr + 4 * i);
-                            if (baseClassDescriptorOffset != 0) {
-                                var baseClassDescriptorPtr = baseAddress + baseClassDescriptorOffset;
-
-                                var typeDescriptorOffset = this.ReadRemoteInt32(baseClassDescriptorPtr);
-                                if (typeDescriptorOffset != 0) {
-                                    var typeDescriptorPtr = baseAddress + typeDescriptorOffset;
-
-                                    var name = this.ReadRemoteStringUntilFirstNullCharacter(typeDescriptorPtr + 0x14, Encoding.UTF8, 60);
-                                    if (string.IsNullOrEmpty(name)) {
-                                        break;
-                                    }
-
-                                    if (name.EndsWith("@@")) {
-                                        name = NativeMethods.UndecorateSymbolName("?" + name);
-                                    }
-
-                                    sb.Append(name);
-                                    sb.Append(" : ");
-
-                                    continue;
-                                }
-                            }
-
-                            break;
-                        }
-
-                        if (sb.Length != 0) {
-                            sb.Length -= 3;
-
-                            return sb.ToString();
-                        }
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     #endregion

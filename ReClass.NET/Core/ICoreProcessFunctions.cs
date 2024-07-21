@@ -1,5 +1,3 @@
-using ReClassNET.Debugger;
-
 namespace ReClassNET.Core;
 
 public delegate void EnumerateProcessCallback(ref EnumerateProcessData data);
@@ -28,10 +26,4 @@ public interface ICoreProcessFunctions {
     bool AttachDebuggerToProcess(IntPtr id);
 
     void DetachDebuggerFromProcess(IntPtr id);
-
-    bool AwaitDebugEvent(ref DebugEvent evt, int timeoutInMilliseconds);
-
-    void HandleDebugEvent(ref DebugEvent evt);
-
-    bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set);
 }

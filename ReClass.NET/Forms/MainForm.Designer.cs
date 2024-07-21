@@ -1,8 +1,7 @@
 using ReClassNET.Controls;
 
-namespace ReClassNET.Forms
-{
-	partial class MainForm
+namespace ReClassNET.Forms {
+    partial class MainForm
 	{
 		/// <summary>
 		/// Erforderliche Designervariable.
@@ -79,11 +78,6 @@ namespace ReClassNET.Forms
 			this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
 			this.dissectNodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-			this.searchForEqualValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
-			this.findOutWhatAccessesThisAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.findOutWhatWritesToThisAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
 			this.copyNodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pasteNodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -384,11 +378,6 @@ namespace ReClassNET.Forms
             this.toolStripSeparator13,
             this.dissectNodesToolStripMenuItem,
             this.toolStripSeparator9,
-            this.searchForEqualValuesToolStripMenuItem,
-            this.toolStripSeparator15,
-            this.findOutWhatAccessesThisAddressToolStripMenuItem,
-            this.findOutWhatWritesToThisAddressToolStripMenuItem,
-            this.toolStripSeparator14,
             this.copyNodeToolStripMenuItem,
             this.pasteNodesToolStripMenuItem,
             this.toolStripSeparator10,
@@ -616,40 +605,6 @@ namespace ReClassNET.Forms
 			// 
 			this.toolStripSeparator9.Name = "toolStripSeparator9";
 			this.toolStripSeparator9.Size = new System.Drawing.Size(266, 6);
-			// 
-			// searchForEqualValuesToolStripMenuItem
-			// 
-			this.searchForEqualValuesToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Eye;
-			this.searchForEqualValuesToolStripMenuItem.Name = "searchForEqualValuesToolStripMenuItem";
-			this.searchForEqualValuesToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-			this.searchForEqualValuesToolStripMenuItem.Text = "Search for equal values...";
-			this.searchForEqualValuesToolStripMenuItem.Click += new System.EventHandler(this.searchForEqualValuesToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator15
-			// 
-			this.toolStripSeparator15.Name = "toolStripSeparator15";
-			this.toolStripSeparator15.Size = new System.Drawing.Size(266, 6);
-			// 
-			// findOutWhatAccessesThisAddressToolStripMenuItem
-			// 
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Find_Access;
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Name = "findOutWhatAccessesThisAddressToolStripMenuItem";
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Text = "Find out what accesses this address...";
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Click += new System.EventHandler(this.findOutWhatAccessesThisAddressToolStripMenuItem_Click);
-			// 
-			// findOutWhatWritesToThisAddressToolStripMenuItem
-			// 
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Find_Write;
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Name = "findOutWhatWritesToThisAddressToolStripMenuItem";
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Text = "Find out what writes to this address...";
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Click += new System.EventHandler(this.findOutWhatWritesToThisAddressToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator14
-			// 
-			this.toolStripSeparator14.Name = "toolStripSeparator14";
-			this.toolStripSeparator14.Size = new System.Drawing.Size(266, 6);
 			// 
 			// copyNodeToolStripMenuItem
 			// 
@@ -1497,11 +1452,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator13;
 		private System.Windows.Forms.ToolStripMenuItem dissectNodesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-		private System.Windows.Forms.ToolStripMenuItem searchForEqualValuesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
-		private System.Windows.Forms.ToolStripMenuItem findOutWhatAccessesThisAddressToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem findOutWhatWritesToThisAddressToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
 		private System.Windows.Forms.ToolStripMenuItem copyNodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem pasteNodesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;

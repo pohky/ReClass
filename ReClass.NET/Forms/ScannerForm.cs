@@ -431,43 +431,6 @@ public partial class ScannerForm : IconForm {
         throw new InvalidOperationException();
     }
 
-    /// <summary>
-    ///     Attaches the debugger to find what interacts with the selected record.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown when one or more arguments are outside the required range.</exception>
-    /// <param name="record">The record.</param>
-    /// <param name="writeOnly">True to search only for write access.</param>
-    private static void FindWhatInteractsWithSelectedRecord(MemoryRecord record, bool writeOnly) {
-        int size;
-        switch (record.ValueType) {
-            case ScanValueType.Byte:
-                size = 1;
-                break;
-            case ScanValueType.Short:
-                size = 2;
-                break;
-            case ScanValueType.Integer:
-            case ScanValueType.Float:
-                size = 4;
-                break;
-            case ScanValueType.Long:
-            case ScanValueType.Double:
-                size = 8;
-                break;
-            case ScanValueType.ArrayOfBytes:
-                size = record.ValueLength;
-                break;
-            case ScanValueType.String:
-            case ScanValueType.Regex:
-                size = record.ValueLength;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-
-        LinkedWindowFeatures.FindWhatInteractsWithAddress(record.RealAddress, size, writeOnly);
-    }
-
     // The designer can't handle generic controls...
     internal class ScanCompareTypeComboBox : EnumComboBox<ScanCompareType> {
     }
@@ -708,20 +671,6 @@ public partial class ScannerForm : IconForm {
 
     private void createClassAtAddressToolStripMenuItem_Click(object sender, EventArgs e) {
         LinkedWindowFeatures.CreateClassAtAddress(GetMemoryRecordListFromMenuItem(sender).SelectedRecord.RealAddress, true);
-    }
-
-    private void findOutWhatAccessesThisAddressToolStripMenuItem_Click(object sender, EventArgs e) {
-        FindWhatInteractsWithSelectedRecord(
-            GetMemoryRecordListFromMenuItem(sender).SelectedRecord,
-            false
-        );
-    }
-
-    private void findOutWhatWritesToThisAddressToolStripMenuItem_Click(object sender, EventArgs e) {
-        FindWhatInteractsWithSelectedRecord(
-            GetMemoryRecordListFromMenuItem(sender).SelectedRecord,
-            true
-        );
     }
 
     private void copyAddressToolStripMenuItem_Click(object sender, EventArgs e) {

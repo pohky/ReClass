@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 
@@ -21,9 +20,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
         controlRemoteProcessDelegate = GetFunctionDelegate<ControlRemoteProcessDelegate>(handle, "ControlRemoteProcess");
         attachDebuggerToProcessDelegate = GetFunctionDelegate<AttachDebuggerToProcessDelegate>(handle, "AttachDebuggerToProcess");
         detachDebuggerFromProcessDelegate = GetFunctionDelegate<DetachDebuggerFromProcessDelegate>(handle, "DetachDebuggerFromProcess");
-        awaitDebugEventDelegate = GetFunctionDelegate<AwaitDebugEventDelegate>(handle, "AwaitDebugEvent");
-        handleDebugEventDelegate = GetFunctionDelegate<HandleDebugEventDelegate>(handle, "HandleDebugEvent");
-        setHardwareBreakpointDelegate = GetFunctionDelegate<SetHardwareBreakpointDelegate>(handle, "SetHardwareBreakpoint");
     }
 
     public void EnumerateProcesses(EnumerateProcessCallback callbackProcess) {
@@ -55,14 +51,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
     public void DetachDebuggerFromProcess(IntPtr id) {
         detachDebuggerFromProcessDelegate(id);
     }
-
-    public bool AwaitDebugEvent(ref DebugEvent evt, int timeoutInMilliseconds) => awaitDebugEventDelegate(ref evt, timeoutInMilliseconds);
-
-    public void HandleDebugEvent(ref DebugEvent evt) {
-        handleDebugEventDelegate(ref evt);
-    }
-
-    public bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set) => setHardwareBreakpointDelegate(id, address, register, trigger, size, set);
 
     protected static TDelegate GetFunctionDelegate<TDelegate>(IntPtr handle, string function) {
         var address = NativeMethods.GetProcAddress(handle, function);
@@ -98,14 +86,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
 
     private delegate void DetachDebuggerFromProcessDelegate(IntPtr id);
 
-    [return: MarshalAs(UnmanagedType.I1)]
-    private delegate bool AwaitDebugEventDelegate([In][Out] ref DebugEvent evt, int timeoutInMilliseconds);
-
-    private delegate void HandleDebugEventDelegate([In][Out] ref DebugEvent evt);
-
-    [return: MarshalAs(UnmanagedType.I1)]
-    private delegate bool SetHardwareBreakpointDelegate(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, [param: MarshalAs(UnmanagedType.I1)] bool set);
-
     private readonly EnumerateProcessesDelegate enumerateProcessesDelegate;
     private readonly EnumerateRemoteSectionsAndModulesDelegate enumerateRemoteSectionsAndModulesDelegate;
     private readonly OpenRemoteProcessDelegate openRemoteProcessDelegate;
@@ -116,9 +96,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
     private readonly ControlRemoteProcessDelegate controlRemoteProcessDelegate;
     private readonly AttachDebuggerToProcessDelegate attachDebuggerToProcessDelegate;
     private readonly DetachDebuggerFromProcessDelegate detachDebuggerFromProcessDelegate;
-    private readonly AwaitDebugEventDelegate awaitDebugEventDelegate;
-    private readonly HandleDebugEventDelegate handleDebugEventDelegate;
-    private readonly SetHardwareBreakpointDelegate setHardwareBreakpointDelegate;
 
     #endregion
 

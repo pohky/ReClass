@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Text;
 using ReClassNET.AddressParser;
 using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
@@ -7,8 +6,6 @@ using ReClassNET.Core;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
-using ReClassNET.MemoryScanner;
-using ReClassNET.MemoryScanner.Comparer;
 using ReClassNET.Nodes;
 using ReClassNET.Plugins;
 using ReClassNET.Project;
@@ -650,7 +647,6 @@ public partial class MainForm : IconForm {
 
         createClassFromNodesToolStripMenuItem.Enabled = count > 0 && !nodeIsClass;
         dissectNodesToolStripMenuItem.Enabled = count > 0 && !nodeIsClass;
-        searchForEqualValuesToolStripMenuItem.Enabled = count == 1 && nodeIsSearchableValueNode;
 
         pasteNodesToolStripMenuItem.Enabled = count == 1 && ReClassClipboard.ContainsNodes;
         removeToolStripMenuItem.Enabled = !nodeIsClass;
@@ -722,83 +718,6 @@ public partial class MainForm : IconForm {
         }
 
         ClearSelection();
-    }
-
-    private void searchForEqualValuesToolStripMenuItem_Click(object sender, EventArgs e) {
-        var selectedNode = memoryViewControl.GetSelectedNodes().FirstOrDefault();
-        if (selectedNode == null) {
-            return;
-        }
-
-        var bitConverter = Program.RemoteProcess.BitConverter;
-
-        IScanComparer comparer;
-        switch (selectedNode.Node) {
-            case BaseHexNode node:
-                comparer = new ArrayOfBytesMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory));
-                break;
-            case FloatNode node:
-                comparer = new FloatMemoryComparer(ScanCompareType.Equal, ScanRoundMode.Normal, 2, node.ReadValueFromMemory(selectedNode.Memory), 0.0f, bitConverter);
-                break;
-            case DoubleNode node:
-                comparer = new DoubleMemoryComparer(ScanCompareType.Equal, ScanRoundMode.Normal, 2, node.ReadValueFromMemory(selectedNode.Memory), 0.0, bitConverter);
-                break;
-            case Int8Node node:
-                comparer = new ByteMemoryComparer(ScanCompareType.Equal, (byte)node.ReadValueFromMemory(selectedNode.Memory), 0);
-                break;
-            case UInt8Node node:
-                comparer = new ByteMemoryComparer(ScanCompareType.Equal, node.ReadValueFromMemory(selectedNode.Memory), 0);
-                break;
-            case Int16Node node:
-                comparer = new ShortMemoryComparer(ScanCompareType.Equal, node.ReadValueFromMemory(selectedNode.Memory), 0, bitConverter);
-                break;
-            case UInt16Node node:
-                comparer = new ShortMemoryComparer(ScanCompareType.Equal, (short)node.ReadValueFromMemory(selectedNode.Memory), 0, bitConverter);
-                break;
-            case Int32Node node:
-                comparer = new IntegerMemoryComparer(ScanCompareType.Equal, node.ReadValueFromMemory(selectedNode.Memory), 0, bitConverter);
-                break;
-            case UInt32Node node:
-                comparer = new IntegerMemoryComparer(ScanCompareType.Equal, (int)node.ReadValueFromMemory(selectedNode.Memory), 0, bitConverter);
-                break;
-            case Int64Node node:
-                comparer = new LongMemoryComparer(ScanCompareType.Equal, node.ReadValueFromMemory(selectedNode.Memory), 0L, bitConverter);
-                break;
-            case UInt64Node node:
-                comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)node.ReadValueFromMemory(selectedNode.Memory), 0L, bitConverter);
-                break;
-            case NIntNode node: {
-                    var value = node.ReadValueFromMemory(selectedNode.Memory);
-                    comparer = new LongMemoryComparer(ScanCompareType.Equal, value.ToInt64(), 0L, bitConverter);
-                    break;
-                }
-            case NUIntNode node: {
-                    var value = node.ReadValueFromMemory(selectedNode.Memory);
-                    comparer = new LongMemoryComparer(ScanCompareType.Equal, (long)value.ToUInt64(), 0L, bitConverter);
-                    break;
-                }
-            case Utf8TextNode node:
-                comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.UTF8, true);
-                break;
-            case Utf16TextNode node:
-                comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.Unicode, true);
-                break;
-            case Utf32TextNode node:
-                comparer = new StringMemoryComparer(node.ReadValueFromMemory(selectedNode.Memory), Encoding.UTF32, true);
-                break;
-            default:
-                return;
-        }
-
-        LinkedWindowFeatures.StartMemoryScan(comparer);
-    }
-
-    private void findOutWhatAccessesThisAddressToolStripMenuItem_Click(object sender, EventArgs e) {
-        FindWhatInteractsWithSelectedNode(false);
-    }
-
-    private void findOutWhatWritesToThisAddressToolStripMenuItem_Click(object sender, EventArgs e) {
-        FindWhatInteractsWithSelectedNode(true);
     }
 
     private void copyNodeToolStripMenuItem_Click(object sender, EventArgs e) {

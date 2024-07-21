@@ -251,15 +251,6 @@ public partial class MainForm {
         }
     }
 
-    private void FindWhatInteractsWithSelectedNode(bool writeOnly) {
-        var selectedNode = memoryViewControl.GetSelectedNodes().FirstOrDefault();
-        if (selectedNode == null) {
-            return;
-        }
-
-        LinkedWindowFeatures.FindWhatInteractsWithAddress(selectedNode.Address, selectedNode.Node.MemorySize, writeOnly);
-    }
-
     private void CopySelectedNodesToClipboard() {
         var selectedNodes = memoryViewControl.GetSelectedNodes();
         if (selectedNodes.Count > 0) {

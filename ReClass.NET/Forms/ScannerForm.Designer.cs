@@ -1,8 +1,7 @@
 using ReClassNET.Controls;
 
-namespace ReClassNET.Forms
-{
-	partial class ScannerForm
+namespace ReClassNET.Forms {
+    partial class ScannerForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -80,8 +79,6 @@ namespace ReClassNET.Forms
 			this.setCurrentClassAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createClassAtAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.findOutWhatAccessesThisAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.findOutWhatWritesToThisAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.copyAddressToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addressListMemoryRecordList = new ReClassNET.Controls.MemoryRecordList();
@@ -527,8 +524,6 @@ namespace ReClassNET.Forms
             this.setCurrentClassAddressToolStripMenuItem,
             this.createClassAtAddressToolStripMenuItem,
             this.toolStripSeparator3,
-            this.findOutWhatAccessesThisAddressToolStripMenuItem,
-            this.findOutWhatWritesToThisAddressToolStripMenuItem,
             this.toolStripSeparator4,
             this.copyAddressToolStripMenuItem});
 			this.resultListContextMenuStrip.Name = "resultListContextMenuStrip";
@@ -613,22 +608,6 @@ namespace ReClassNET.Forms
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
 			this.toolStripSeparator3.Size = new System.Drawing.Size(266, 6);
-			// 
-			// findOutWhatAccessesThisAddressToolStripMenuItem
-			// 
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Find_Access;
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Name = "findOutWhatAccessesThisAddressToolStripMenuItem";
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Text = "Find out what accesses this address...";
-			this.findOutWhatAccessesThisAddressToolStripMenuItem.Click += new System.EventHandler(this.findOutWhatAccessesThisAddressToolStripMenuItem_Click);
-			// 
-			// findOutWhatWritesToThisAddressToolStripMenuItem
-			// 
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Find_Write;
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Name = "findOutWhatWritesToThisAddressToolStripMenuItem";
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Size = new System.Drawing.Size(269, 22);
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Text = "Find out what writes to this address...";
-			this.findOutWhatWritesToThisAddressToolStripMenuItem.Click += new System.EventHandler(this.findOutWhatWritesToThisAddressToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator4
 			// 
@@ -866,8 +845,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.ToolStripMenuItem setCurrentClassAddressToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem createClassAtAddressToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem findOutWhatAccessesThisAddressToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem findOutWhatWritesToThisAddressToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem removeSelectedRecordsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem changeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem descriptionToolStripMenuItem;

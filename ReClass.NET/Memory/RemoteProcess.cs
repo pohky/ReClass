@@ -1,7 +1,6 @@
 using System.Text;
 using ReClassNET.AddressParser;
 using ReClassNET.Core;
-using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
 using ReClassNET.Symbols;
@@ -24,8 +23,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     private IntPtr handle;
 
     public CoreFunctionsManager CoreFunctions { get; }
-
-    public RemoteDebugger Debugger { get; }
 
     public ProcessInfo? UnderlayingProcess { get; private set; }
 
@@ -56,8 +53,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
     public RemoteProcess(CoreFunctionsManager coreFunctions) {
         this.CoreFunctions = coreFunctions;
-
-        Debugger = new RemoteDebugger(this);
     }
 
     public void Dispose() {
@@ -148,8 +143,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             ProcessClosing?.Invoke(this);
 
             lock (processSync) {
-                Debugger.Terminate();
-
                 CoreFunctions.CloseRemoteProcess(handle);
 
                 handle = IntPtr.Zero;

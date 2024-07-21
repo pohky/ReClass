@@ -1,4 +1,3 @@
-using ReClassNET.Debugger;
 using ReClassNET.Extensions;
 using ReClassNET.Memory;
 
@@ -120,14 +119,6 @@ public class CoreFunctionsManager : IDisposable {
     public void DetachDebuggerFromProcess(IntPtr id) {
         CurrentFunctions.DetachDebuggerFromProcess(id);
     }
-
-    public void HandleDebugEvent(ref DebugEvent evt) {
-        CurrentFunctions.HandleDebugEvent(ref evt);
-    }
-
-    public bool AwaitDebugEvent(ref DebugEvent evt, int timeoutInMilliseconds) => CurrentFunctions.AwaitDebugEvent(ref evt, timeoutInMilliseconds);
-
-    public bool SetHardwareBreakpoint(IntPtr id, IntPtr address, HardwareBreakpointRegister register, HardwareBreakpointTrigger trigger, HardwareBreakpointSize size, bool set) => CurrentFunctions.SetHardwareBreakpoint(id, address, register, trigger, size, set);
 
     #endregion
 

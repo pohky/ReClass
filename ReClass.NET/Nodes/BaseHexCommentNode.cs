@@ -34,17 +34,6 @@ public abstract class BaseHexCommentNode : BaseHexNode {
                     }
                 }
 
-                if (view.Settings.ShowCommentSymbol) {
-                    var module = view.Process.GetModuleToPointer(ivalue);
-                    if (module != null) {
-                        var symbols = view.Process.Symbols.GetSymbolsForModule(module);
-                        var symbol = symbols?.GetSymbolString(ivalue, module);
-                        if (!string.IsNullOrEmpty(symbol)) {
-                            x = AddText(view, x, y, view.Settings.OffsetColor, HotSpot.ReadOnlyId, symbol) + view.Font.Width;
-                        }
-                    }
-                }
-
                 if (view.Settings.ShowCommentString) {
                     var data = view.Process.ReadRemoteMemory(ivalue, 64);
 

@@ -24,8 +24,6 @@ public partial class MainForm : IconForm {
     private ClassNode? currentClassNode;
 
     private ReClassNetProject currentProject;
-    private Task? loadSymbolsTask;
-    private CancellationTokenSource? loadSymbolsTaskToken;
 
     private Task? updateProcessInformationTask;
     public ReClassNetProject CurrentProject => currentProject;
@@ -122,23 +120,10 @@ public partial class MainForm : IconForm {
         processUpdateTimer.Stop();
 
         // and cancel all running tasks.
-        if (loadSymbolsTask != null || updateProcessInformationTask != null) {
+        if (updateProcessInformationTask != null) {
             e.Cancel = true;
 
             Hide();
-
-            if (loadSymbolsTask != null) {
-                if (loadSymbolsTaskToken != null)
-                    await loadSymbolsTaskToken.CancelAsync();
-
-                try {
-                    await loadSymbolsTask;
-                } catch {
-                    // ignored
-                }
-
-                loadSymbolsTask = null;
-            }
 
             if (updateProcessInformationTask != null) {
                 try {
@@ -527,25 +512,6 @@ public partial class MainForm : IconForm {
         Program.RemoteProcess.BitConverter = isLittleEndianToolStripMenuItem.Checked ? EndianBitConverter.Little : EndianBitConverter.Big;
     }
 
-    private void loadSymbolToolStripMenuItem_Click(object sender, EventArgs e) {
-        using var ofd = new OpenFileDialog {
-            Filter = "Program Debug Database (*.pdb)|*.pdb|All Files (*.*)|*.*"
-        };
-
-
-        if (ofd.ShowDialog() == DialogResult.OK) {
-            try {
-                Program.RemoteProcess.Symbols.LoadSymbolsFromPDB(ofd.FileName);
-            } catch (Exception ex) {
-                Program.Logger.Log(ex);
-            }
-        }
-    }
-
-    private void loadSymbolsToolStripMenuItem_Click(object sender, EventArgs e) {
-        LoadAllSymbolsForCurrentProcess();
-    }
-
     private void ControlRemoteProcessToolStripMenuItem_Click(object sender, EventArgs e) {
         if (!Program.RemoteProcess.IsValid) {
             return;
@@ -586,14 +552,8 @@ public partial class MainForm : IconForm {
     private void attachToProcessToolStripSplitButton_ButtonClick(object sender, EventArgs e) {
         using var pb = new ProcessBrowserForm(Program.Settings.LastProcess);
 
-        if (pb.ShowDialog() == DialogResult.OK) {
-            if (pb.SelectedProcess != null) {
-                AttachToProcess(pb.SelectedProcess);
-
-                if (pb.LoadSymbols) {
-                    LoadAllSymbolsForCurrentProcess();
-                }
-            }
+        if (pb.ShowDialog() == DialogResult.OK && pb.SelectedProcess != null) {
+            AttachToProcess(pb.SelectedProcess);
         }
     }
 

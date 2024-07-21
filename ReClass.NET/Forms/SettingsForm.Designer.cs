@@ -1,8 +1,7 @@
 using ReClassNET.Controls;
 
-namespace ReClassNET.Forms
-{
-	partial class SettingsForm
+namespace ReClassNET.Forms {
+    partial class SettingsForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -39,7 +38,6 @@ namespace ReClassNET.Forms
             this.commentsGroupBox = new System.Windows.Forms.GroupBox();
             this.showPluginInfoCheckBox = new System.Windows.Forms.CheckBox();
             this.showStringCheckBox = new System.Windows.Forms.CheckBox();
-            this.showSymbolsCheckBox = new System.Windows.Forms.CheckBox();
             this.showRttiCheckBox = new System.Windows.Forms.CheckBox();
             this.showPointerCheckBox = new System.Windows.Forms.CheckBox();
             this.showIntegerCheckBox = new System.Windows.Forms.CheckBox();
@@ -172,7 +170,7 @@ namespace ReClassNET.Forms
             this.fileAssociationGroupBox.Controls.Add(this.removeAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.createAssociationButton);
             this.fileAssociationGroupBox.Controls.Add(this.associationInfoLabel);
-            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 231);
+            this.fileAssociationGroupBox.Location = new System.Drawing.Point(6, 205);
             this.fileAssociationGroupBox.Name = "fileAssociationGroupBox";
             this.fileAssociationGroupBox.Size = new System.Drawing.Size(542, 85);
             this.fileAssociationGroupBox.TabIndex = 4;
@@ -214,14 +212,13 @@ namespace ReClassNET.Forms
             // 
             this.commentsGroupBox.Controls.Add(this.showPluginInfoCheckBox);
             this.commentsGroupBox.Controls.Add(this.showStringCheckBox);
-            this.commentsGroupBox.Controls.Add(this.showSymbolsCheckBox);
             this.commentsGroupBox.Controls.Add(this.showRttiCheckBox);
             this.commentsGroupBox.Controls.Add(this.showPointerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showIntegerCheckBox);
             this.commentsGroupBox.Controls.Add(this.showFloatCheckBox);
             this.commentsGroupBox.Location = new System.Drawing.Point(6, 39);
             this.commentsGroupBox.Name = "commentsGroupBox";
-            this.commentsGroupBox.Size = new System.Drawing.Size(265, 186);
+            this.commentsGroupBox.Size = new System.Drawing.Size(265, 160);
             this.commentsGroupBox.TabIndex = 3;
             this.commentsGroupBox.TabStop = false;
             this.commentsGroupBox.Text = "Node Comments";
@@ -229,7 +226,7 @@ namespace ReClassNET.Forms
             // showPluginInfoCheckBox
             // 
             this.showPluginInfoCheckBox.AutoSize = true;
-            this.showPluginInfoCheckBox.Location = new System.Drawing.Point(6, 157);
+            this.showPluginInfoCheckBox.Location = new System.Drawing.Point(6, 134);
             this.showPluginInfoCheckBox.Name = "showPluginInfoCheckBox";
             this.showPluginInfoCheckBox.Size = new System.Drawing.Size(111, 17);
             this.showPluginInfoCheckBox.TabIndex = 6;
@@ -239,22 +236,12 @@ namespace ReClassNET.Forms
             // showStringCheckBox
             // 
             this.showStringCheckBox.AutoSize = true;
-            this.showStringCheckBox.Location = new System.Drawing.Point(6, 134);
+            this.showStringCheckBox.Location = new System.Drawing.Point(6, 111);
             this.showStringCheckBox.Name = "showStringCheckBox";
             this.showStringCheckBox.Size = new System.Drawing.Size(88, 17);
             this.showStringCheckBox.TabIndex = 5;
             this.showStringCheckBox.Text = "Show Strings";
             this.showStringCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // showSymbolsCheckBox
-            // 
-            this.showSymbolsCheckBox.AutoSize = true;
-            this.showSymbolsCheckBox.Location = new System.Drawing.Point(6, 111);
-            this.showSymbolsCheckBox.Name = "showSymbolsCheckBox";
-            this.showSymbolsCheckBox.Size = new System.Drawing.Size(130, 17);
-            this.showSymbolsCheckBox.TabIndex = 4;
-            this.showSymbolsCheckBox.Text = "Show Debug Symbols";
-            this.showSymbolsCheckBox.UseVisualStyleBackColor = true;
             // 
             // showRttiCheckBox
             // 
@@ -1163,7 +1150,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.CheckBox showFloatCheckBox;
 		private System.Windows.Forms.CheckBox showPluginInfoCheckBox;
 		private System.Windows.Forms.CheckBox showStringCheckBox;
-		private System.Windows.Forms.CheckBox showSymbolsCheckBox;
 		private ColorBox backgroundColorBox;
 		private System.Windows.Forms.Label nodeSelectedLabel;
 		private ColorBox nodeSelectedColorBox;

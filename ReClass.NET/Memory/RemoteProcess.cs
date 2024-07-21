@@ -3,7 +3,6 @@ using ReClassNET.AddressParser;
 using ReClassNET.Core;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
-using ReClassNET.Symbols;
 using ReClassNET.Util.Conversion;
 
 namespace ReClassNET.Memory;
@@ -25,8 +24,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     public CoreFunctionsManager CoreFunctions { get; }
 
     public ProcessInfo? UnderlayingProcess { get; private set; }
-
-    public SymbolStore Symbols { get; } = new();
 
     /// <summary>Gets a copy of the current modules list. This list may change if the remote process (un)loads a module.</summary>
     public IEnumerable<Module> Modules {
@@ -230,49 +227,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         }
 
         return func(this);
-    }
-
-    /// <summary>Loads all symbols asynchronous.</summary>
-    /// <param name="progress">The progress reporter is called for every module. Can be null.</param>
-    /// <param name="token">The token used to cancel the task.</param>
-    /// <returns>The task.</returns>
-    public Task LoadAllSymbolsAsync(IProgress<Tuple<Module, IReadOnlyList<Module>>> progress, CancellationToken token) {
-        List<Module> copy;
-        lock (modules) {
-            copy = modules.ToList();
-        }
-
-        // Try to resolve all symbols in a background thread. This can take a long time because symbols are downloaded from the internet.
-        // The COM objects can only be used in the thread they were created so we can't use them.
-        // Thats why an other task loads the real symbols afterwards in the UI thread context.
-        return Task.Run(
-                () => {
-                    foreach (var module in copy) {
-                        token.ThrowIfCancellationRequested();
-
-                        progress?.Report(Tuple.Create<Module, IReadOnlyList<Module>>(module, copy));
-
-                        Symbols.TryResolveSymbolsForModule(module);
-                    }
-                },
-                token
-            )
-            .ContinueWith(
-                _ => {
-                    foreach (var module in copy) {
-                        token.ThrowIfCancellationRequested();
-
-                        try {
-                            Symbols.LoadSymbolsForModule(module);
-                        } catch {
-                            //ignore
-                        }
-                    }
-                },
-                token,
-                TaskContinuationOptions.None,
-                TaskScheduler.FromCurrentSynchronizationContext()
-            );
     }
 
     public void ControlRemoteProcess(ControlRemoteProcessAction action) {

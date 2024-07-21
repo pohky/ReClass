@@ -36,8 +36,6 @@ public class Settings {
 
     public bool ShowCommentRtti { get; set; } = true;
 
-    public bool ShowCommentSymbol { get; set; } = true;
-
     public bool ShowCommentString { get; set; } = true;
 
     public bool ShowCommentPluginInfo { get; set; } = true;

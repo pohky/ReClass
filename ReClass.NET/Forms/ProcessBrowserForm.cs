@@ -18,9 +18,6 @@ public partial class ProcessBrowserForm : IconForm {
         ?.Row
         ?.Field<ProcessInfo>("info");
 
-    /// <summary>Gets if symbols should get loaded.</summary>
-    public bool LoadSymbols => loadSymbolsCheckBox.Checked;
-
     public ProcessBrowserForm(string previousProcess) {
         InitializeComponent();
 

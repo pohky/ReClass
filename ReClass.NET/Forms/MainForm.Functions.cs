@@ -178,27 +178,6 @@ public partial class MainForm {
         import.Load(path, Program.Logger);
     }
 
-    /// <summary>Loads all symbols for the current process and displays the progress status.</summary>
-    private void LoadAllSymbolsForCurrentProcess() {
-        if (loadSymbolsTask is { IsCompleted: false }) {
-            return;
-        }
-
-        infoToolStripStatusLabel.Visible = true;
-
-        var index = 0;
-
-        var progress = new Progress<Tuple<Module, IReadOnlyList<Module>>>(
-            report => { infoToolStripStatusLabel.Text = $"[{++index}/{report.Item2.Count}] Loading symbols for module: {report.Item1.Name}"; }
-        );
-
-        loadSymbolsTaskToken = new CancellationTokenSource();
-
-        loadSymbolsTask = Program.RemoteProcess
-            .LoadAllSymbolsAsync(progress, loadSymbolsTaskToken.Token)
-            .ContinueWith(_ => infoToolStripStatusLabel.Visible = false, TaskScheduler.FromCurrentSynchronizationContext());
-    }
-
     public void ReplaceSelectedNodesWithType(Type type) {
         var selectedNodes = memoryViewControl.GetSelectedNodes();
 

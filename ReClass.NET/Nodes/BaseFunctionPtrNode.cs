@@ -42,19 +42,6 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
 
         x = AddComment(context, x, y);
 
-        if (context.Settings.ShowCommentSymbol) {
-            var value = context.Memory.ReadIntPtr(Offset);
-
-            var module = context.Process.GetModuleToPointer(value);
-            if (module != null) {
-                var symbols = context.Process.Symbols.GetSymbolsForModule(module);
-                var symbol = symbols?.GetSymbolString(value, module);
-                if (!string.IsNullOrEmpty(symbol)) {
-                    x = AddText(context, x, y, context.Settings.OffsetColor, HotSpot.ReadOnlyId, symbol);
-                }
-            }
-        }
-
         DrawInvalidMemoryIndicatorIcon(context, y);
         AddContextDropDownIcon(context, y);
         AddDeleteIcon(context, y);

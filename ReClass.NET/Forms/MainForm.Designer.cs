@@ -145,9 +145,6 @@ namespace ReClassNET.Forms {
 			this.namedAddressesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.isLittleEndianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
-			this.loadSymbolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.loadSymbolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.resumeProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.suspendProcessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1149,9 +1146,6 @@ namespace ReClassNET.Forms {
             this.namedAddressesToolStripMenuItem,
             this.toolStripSeparator23,
             this.isLittleEndianToolStripMenuItem,
-            this.toolStripSeparator17,
-            this.loadSymbolToolStripMenuItem,
-            this.loadSymbolsToolStripMenuItem,
             this.toolStripSeparator4,
             this.resumeProcessToolStripMenuItem,
             this.suspendProcessToolStripMenuItem,
@@ -1196,27 +1190,6 @@ namespace ReClassNET.Forms {
 			this.isLittleEndianToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
 			this.isLittleEndianToolStripMenuItem.Text = "Is Little Endian";
 			this.isLittleEndianToolStripMenuItem.Click += new System.EventHandler(this.isLittleEndianToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator17
-			// 
-			this.toolStripSeparator17.Name = "toolStripSeparator17";
-			this.toolStripSeparator17.Size = new System.Drawing.Size(191, 6);
-			// 
-			// loadSymbolToolStripMenuItem
-			// 
-			this.loadSymbolToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Pdb;
-			this.loadSymbolToolStripMenuItem.Name = "loadSymbolToolStripMenuItem";
-			this.loadSymbolToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-			this.loadSymbolToolStripMenuItem.Text = "Load Symbol...";
-			this.loadSymbolToolStripMenuItem.Click += new System.EventHandler(this.loadSymbolToolStripMenuItem_Click);
-			// 
-			// loadSymbolsToolStripMenuItem
-			// 
-			this.loadSymbolsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("loadSymbolsToolStripMenuItem.Image")));
-			this.loadSymbolsToolStripMenuItem.Name = "loadSymbolsToolStripMenuItem";
-			this.loadSymbolsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-			this.loadSymbolsToolStripMenuItem.Text = "Load all Symbols";
-			this.loadSymbolsToolStripMenuItem.Click += new System.EventHandler(this.loadSymbolsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator4
 			// 
@@ -1384,7 +1357,6 @@ namespace ReClassNET.Forms {
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-		private System.Windows.Forms.ToolStripMenuItem loadSymbolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStrip;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
@@ -1419,8 +1391,6 @@ namespace ReClassNET.Forms {
 		private System.Windows.Forms.ToolStripMenuItem generateCppCodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem generateCSharpCodeToolStripMenuItem;
 		private System.Windows.Forms.Timer processUpdateTimer;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
-		private System.Windows.Forms.ToolStripMenuItem loadSymbolToolStripMenuItem;
 		private System.Windows.Forms.ToolStripButton openProjectToolStripButton;
 		private System.Windows.Forms.ToolStripStatusLabel infoToolStripStatusLabel;
 		private System.Windows.Forms.ToolStripMenuItem mergeWithProjectToolStripMenuItem;

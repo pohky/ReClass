@@ -80,7 +80,6 @@ public partial class SettingsForm : IconForm {
         SetBinding(showIntegerCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentInteger));
         SetBinding(showPointerCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentPointer));
         SetBinding(showRttiCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentRtti));
-        SetBinding(showSymbolsCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentSymbol));
         SetBinding(showStringCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentString));
         SetBinding(showPluginInfoCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.ShowCommentPluginInfo));
         SetBinding(runAsAdminCheckBox, nameof(CheckBox.Checked), settings, nameof(Settings.RunAsAdmin));

@@ -1,8 +1,7 @@
 using ReClassNET.Controls;
 
-namespace ReClassNET.Forms
-{
-	partial class ProcessBrowserForm
+namespace ReClassNET.Forms {
+    partial class ProcessBrowserForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -33,7 +32,6 @@ namespace ReClassNET.Forms
             filterCheckBox = new CheckBox();
             refreshButton = new Button();
             attachToProcessButton = new Button();
-            loadSymbolsCheckBox = new CheckBox();
             filterGroupBox = new GroupBox();
             previousProcessLinkLabel = new LinkLabel();
             label2 = new Label();
@@ -113,18 +111,6 @@ namespace ReClassNET.Forms
             attachToProcessButton.TextAlign = ContentAlignment.MiddleRight;
             attachToProcessButton.TextImageRelation = TextImageRelation.ImageBeforeText;
             attachToProcessButton.UseVisualStyleBackColor = true;
-            // 
-            // loadSymbolsCheckBox
-            // 
-            loadSymbolsCheckBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            loadSymbolsCheckBox.AutoSize = true;
-            loadSymbolsCheckBox.Location = new Point(14, 573);
-            loadSymbolsCheckBox.Margin = new Padding(4, 3, 4, 3);
-            loadSymbolsCheckBox.Name = "loadSymbolsCheckBox";
-            loadSymbolsCheckBox.Size = new Size(100, 19);
-            loadSymbolsCheckBox.TabIndex = 4;
-            loadSymbolsCheckBox.Text = "Load Symbols";
-            loadSymbolsCheckBox.UseVisualStyleBackColor = true;
             // 
             // filterGroupBox
             // 
@@ -243,7 +229,6 @@ namespace ReClassNET.Forms
             ClientSize = new Size(668, 639);
             Controls.Add(bannerBox);
             Controls.Add(filterGroupBox);
-            Controls.Add(loadSymbolsCheckBox);
             Controls.Add(attachToProcessButton);
             Controls.Add(processDataGridView);
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -268,7 +253,6 @@ namespace ReClassNET.Forms
 		private System.Windows.Forms.CheckBox filterCheckBox;
 		private System.Windows.Forms.Button refreshButton;
 		private System.Windows.Forms.Button attachToProcessButton;
-		private System.Windows.Forms.CheckBox loadSymbolsCheckBox;
 		private System.Windows.Forms.GroupBox filterGroupBox;
 		private System.Windows.Forms.LinkLabel previousProcessLinkLabel;
 		private System.Windows.Forms.Label label2;

@@ -38,8 +38,8 @@ public partial class SettingsForm : IconForm {
             fileAssociationGroupBox.Enabled = false;
             runAsAdminCheckBox.Enabled = false;
         } else {
-            NativeMethodsWindows.SetButtonShield(createAssociationButton, true);
-            NativeMethodsWindows.SetButtonShield(removeAssociationButton, true);
+            NativeMethods.SetButtonShield(createAssociationButton, true);
+            NativeMethods.SetButtonShield(removeAssociationButton, true);
         }
     }
 
@@ -56,11 +56,11 @@ public partial class SettingsForm : IconForm {
     }
 
     private void createAssociationButton_Click(object sender, EventArgs e) {
-        WinUtil.RunElevated(PathUtil.LauncherExecutablePath, $"-{Constants.CommandLineOptions.FileExtRegister}");
+        WinUtil.RunElevated(PathUtil.ExecutablePath, $"-{Constants.CommandLineOptions.FileExtRegister}");
     }
 
     private void removeAssociationButton_Click(object sender, EventArgs e) {
-        WinUtil.RunElevated(PathUtil.LauncherExecutablePath, $"-{Constants.CommandLineOptions.FileExtUnregister}");
+        WinUtil.RunElevated(PathUtil.ExecutablePath, $"-{Constants.CommandLineOptions.FileExtUnregister}");
     }
 
     private static void SetBinding(IBindableComponent control, string propertyName, object dataSource, string dataMember) {

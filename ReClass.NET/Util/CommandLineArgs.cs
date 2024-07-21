@@ -7,7 +7,7 @@ public class CommandLineArgs {
     /// <summary>
     ///     Get the primary file name.
     /// </summary>
-    public string FileName => fileNames.Count < 1 ? null : fileNames[0];
+    public string? FileName => fileNames.Count < 1 ? null : fileNames[0];
 
     /// <summary>
     ///     Gets all file names.
@@ -25,17 +25,9 @@ public class CommandLineArgs {
     /// <returns>
     ///     Returns <c>null</c> if no parameter with the specified key exists.
     /// </returns>
-    public string this[string strKey] {
-        get {
-            if (parms.TryGetValue(strKey.ToLower(), out var strValue)) {
-                return strValue;
-            }
+    public string? this[string strKey] => parms.GetValueOrDefault(strKey.ToLower());
 
-            return null;
-        }
-    }
-
-    public CommandLineArgs(string[] args) {
+    public CommandLineArgs(string[]? args) {
         if (args == null) {
             return;
         }

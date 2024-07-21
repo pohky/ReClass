@@ -1,33 +1,28 @@
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using ReClassNET.Native;
 
 namespace ReClassNET.UI;
 
 public static class DpiUtil {
     public const int DefalutDpi = 96;
 
-    private static int dpiX = DefalutDpi;
-    private static int dpiY = DefalutDpi;
+    private static int _dpiX = DefalutDpi;
+    private static int _dpiY = DefalutDpi;
 
-    private static double scaleX = 1.0;
-    private static double scaleY = 1.0;
-
-    public static void ConfigureProcess() {
-        NativeMethods.SetProcessDpiAwareness();
-    }
-
+    private static double _scaleX = 1.0;
+    private static double _scaleY = 1.0;
+    
     public static void SetDpi(int x, int y) {
-        dpiX = x;
-        dpiY = y;
+        _dpiX = x;
+        _dpiY = y;
 
-        if (dpiX <= 0 || dpiY <= 0) {
-            dpiX = DefalutDpi;
-            dpiY = DefalutDpi;
+        if (_dpiX <= 0 || _dpiY <= 0) {
+            _dpiX = DefalutDpi;
+            _dpiY = DefalutDpi;
         }
 
-        scaleX = dpiX / (double)DefalutDpi;
-        scaleY = dpiY / (double)DefalutDpi;
+        _scaleX = _dpiX / (double)DefalutDpi;
+        _scaleY = _dpiY / (double)DefalutDpi;
     }
 
     public static void TrySetDpiFromCurrentDesktop() {
@@ -40,15 +35,11 @@ public static class DpiUtil {
         }
     }
 
-    public static int ScaleIntX(int i) => (int)Math.Round(i * scaleX);
+    public static int ScaleIntX(int i) => (int)Math.Round(i * _scaleX);
 
-    public static int ScaleIntY(int i) => (int)Math.Round(i * scaleY);
+    public static int ScaleIntY(int i) => (int)Math.Round(i * _scaleY);
 
     public static Image ScaleImage(Image sourceImage) {
-        if (sourceImage == null) {
-            return null;
-        }
-
         var width = sourceImage.Width;
         var height = sourceImage.Height;
         var scaledWidth = ScaleIntX(width);

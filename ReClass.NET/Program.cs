@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Globalization;
 using Microsoft.SqlServer.MessageBox;
 using ReClassNET.Core;
+using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Forms;
 using ReClassNET.Logger;
 using ReClassNET.Memory;
@@ -33,11 +34,23 @@ public static class Program {
     [STAThread]
     private static void Main(string[] args) {
         DesignMode = false; // The designer doesn't call Main()
-
         CommandLineArgs = new CommandLineArgs(args);
 
+        if (CommandLineArgs[Constants.CommandLineOptions.FileExtRegister] != null) {
+            NativeMethods.RegisterExtension(ReClassNetFile.FileExtension, ReClassNetFile.FileExtensionId, PathUtil.ExecutablePath, Constants.ApplicationName);
+            return;
+        }
+
+        if (CommandLineArgs[Constants.CommandLineOptions.FileExtUnregister] != null) {
+            NativeMethods.UnregisterExtension(ReClassNetFile.FileExtension, ReClassNetFile.FileExtensionId);
+            return;
+        }
+
+        // To customize application configuration such as set high DPI settings or default font,
+        // see https://aka.ms/applicationconfiguration.
+        ApplicationConfiguration.Initialize();
+
         try {
-            DpiUtil.ConfigureProcess();
             DpiUtil.TrySetDpiFromCurrentDesktop();
         } catch {
             // ignored
@@ -49,18 +62,13 @@ public static class Program {
             Height = DpiUtil.ScaleIntY(16)
         };
 
-        NativeMethods.EnableDebugPrivileges();
-
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-
         CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
         Settings = SettingsSerializer.Load();
         Logger = new GuiLogger();
 
         if (!NativeMethods.IsUnix() && Settings.RunAsAdmin && !WinUtil.IsAdministrator) {
-            WinUtil.RunElevated(Process.GetCurrentProcess().MainModule?.FileName, args.Length > 0 ? string.Join(" ", args) : null);
+            WinUtil.RunElevated(Process.GetCurrentProcess().MainModule!.FileName, args.Length > 0 ? string.Join(" ", args) : string.Empty);
             return;
         }
 

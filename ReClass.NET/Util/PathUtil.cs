@@ -40,12 +40,7 @@ public class PathUtil {
 
         return Path.Combine(localApplicationData, Constants.ApplicationName);
     });
-
-    private static readonly Lazy<string> launcherExecutablePath = new(() => {
-        var path = Path.Combine(Directory.GetParent(ExecutableFolderPath).FullName, Constants.LauncherExecutableName);
-        return !File.Exists(path) ? null : path;
-    });
-
+    
     /// <summary>Gets the full pathname of the executable file.</summary>
     public static string ExecutablePath => executablePath.Value;
 
@@ -59,9 +54,6 @@ public class PathUtil {
     /// <summary>Gets the full pathname of the settings folder.</summary>
     /// <remarks>%localappdata%\ReClass.NET\</remarks>
     public static string SettingsFolderPath => settingsFolderPath.Value;
-
-    /// <summary>Gets the full pathname of the launcher executable.</summary>
-    public static string LauncherExecutablePath => launcherExecutablePath.Value;
 
     /// <summary>Converts a file url to a normal path.</summary>
     /// <param name="url">URL of the file.</param>

@@ -1,75 +1,91 @@
+using System.Text;
+using Microsoft.Win32;
+using ReClassNET.Native.Imports;
+
 namespace ReClassNET.Native;
 
 public static class NativeMethods {
-    private static readonly INativeMethods nativeMethods;
-
-    private static bool? isUnix;
-
-    private static PlatformID? plattformId;
-
-    static NativeMethods() {
-        if (IsUnix()) {
-            nativeMethods = new NativeMethodsUnix();
-        } else {
-            nativeMethods = new NativeMethodsWindows();
-        }
-    }
     public static bool IsUnix() {
-        if (isUnix.HasValue) {
-            return isUnix.Value;
-        }
-
-        var p = GetPlatformId();
-
-        isUnix = p == PlatformID.Unix || p == PlatformID.MacOSX || (int)p == 128;
-
-        return isUnix.Value;
-    }
-    public static PlatformID GetPlatformId() {
-        if (plattformId.HasValue) {
-            return plattformId.Value;
-        }
-
-        plattformId = Environment.OSVersion.Platform;
-
-        // TODO: Mono returns PlatformID.Unix on Mac OS X
-
-        return plattformId.Value;
+        return !OperatingSystem.IsWindows();
     }
 
-    public static IntPtr LoadLibrary(string name) {
-        return nativeMethods.LoadLibrary(name);
+    public static nint LoadLibrary(string name) {
+        return Kernel32.LoadLibrary(name);
     }
 
-    public static IntPtr GetProcAddress(IntPtr handle, string name) {
-        return nativeMethods.GetProcAddress(handle, name);
+    public static nint GetProcAddress(nint handle, string name) {
+        return Kernel32.GetProcAddress(handle, name);
     }
 
-    public static void FreeLibrary(IntPtr handle) {
-        nativeMethods.FreeLibrary(handle);
+    public static void FreeLibrary(nint handle) {
+        Kernel32.FreeLibrary(handle);
     }
 
-    public static Icon GetIconForFile(string path) {
-        return nativeMethods.GetIconForFile(path);
+    public static Icon? GetIconForFile(string path) {
+        return Icon.ExtractAssociatedIcon(path);
     }
-
-    public static void EnableDebugPrivileges() {
-        nativeMethods.EnableDebugPrivileges();
-    }
-
+    
     public static string UndecorateSymbolName(string name) {
-        return nativeMethods.UndecorateSymbolName(name);
+        var sb = new StringBuilder(255);
+        if (DbgHelp.UnDecorateSymbolName(name, sb, sb.Capacity, DbgHelp.UNDNAME_NAME_ONLY) != 0)
+            return sb.ToString();
+        return name;
     }
 
-    public static void SetProcessDpiAwareness() {
-        nativeMethods.SetProcessDpiAwareness();
+    public static void SetButtonShield(Button button, bool setShield) {
+        try {
+            if (button.FlatStyle != FlatStyle.System)
+                button.FlatStyle = FlatStyle.System;
+
+            var h = button.Handle;
+            if (h == 0) return;
+
+            User32.SendMessage(h, User32.BCM_SETSHIELD, 0, setShield ? 1 : 0);
+        } catch {
+            // ignored
+        }
     }
 
     public static bool RegisterExtension(string fileExtension, string extensionId, string applicationPath, string applicationName) {
-        return nativeMethods.RegisterExtension(fileExtension, extensionId, applicationPath, applicationName);
+        try {
+            using (var fileExtensionKey = Registry.ClassesRoot.CreateSubKey(fileExtension)) {
+                fileExtensionKey.SetValue(string.Empty, extensionId, RegistryValueKind.String);
+            }
+
+            using (var extensionInfoKey = Registry.ClassesRoot.CreateSubKey(extensionId)) {
+                extensionInfoKey.SetValue(string.Empty, applicationName, RegistryValueKind.String);
+
+                using (var icon = extensionInfoKey.CreateSubKey("DefaultIcon")) {
+                    icon.SetValue(string.Empty, "\"" + applicationPath + "\",0", RegistryValueKind.String);
+                }
+
+                using (var shellKey = extensionInfoKey.CreateSubKey("shell")) {
+                    using (var openKey = shellKey.CreateSubKey("open")) {
+                        openKey.SetValue(string.Empty, $"&Open with {applicationName}", RegistryValueKind.String);
+
+                        using (var commandKey = openKey.CreateSubKey("command")) {
+                            commandKey.SetValue(string.Empty, $"\"{applicationPath}\" \"%1\"", RegistryValueKind.String);
+                        }
+                    }
+                }
+            }
+
+            Shell32.SHChangeNotify(Shell32.SHCNE_ASSOCCHANGED, Shell32.SHCNF_IDLIST, 0, 0);
+
+            return true;
+        } catch (Exception) {
+            return false;
+        }
     }
 
     public static void UnregisterExtension(string fileExtension, string extensionId) {
-        nativeMethods.UnregisterExtension(fileExtension, extensionId);
+        try {
+            Registry.ClassesRoot.DeleteSubKeyTree(fileExtension);
+            Registry.ClassesRoot.DeleteSubKeyTree(extensionId);
+
+            Shell32.SHChangeNotify(Shell32.SHCNE_ASSOCCHANGED, Shell32.SHCNF_IDLIST, 0, 0);
+        } catch {
+            // ignored
+        }
     }
 }

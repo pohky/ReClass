@@ -5,10 +5,6 @@ using ReClassNET.Native.Imports;
 namespace ReClassNET.Native;
 
 public static class NativeMethods {
-    public static bool IsUnix() {
-        return !OperatingSystem.IsWindows();
-    }
-
     public static nint LoadLibrary(string name) {
         return Kernel32.LoadLibrary(name);
     }

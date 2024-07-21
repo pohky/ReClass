@@ -9,7 +9,6 @@ public delegate bool EnumerateInstructionCallback(ref InstructionData data);
 
 internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions, IDisposable {
     private const string CoreFunctionsModuleWindows = "NativeCore.dll";
-    private const string CoreFunctionsModuleUnix = "NativeCore.so";
 
     private static readonly Keys[] empty = [];
 
@@ -52,7 +51,7 @@ internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions
     }
 
     public static InternalCoreFunctions Create() {
-        var libraryName = NativeMethods.IsUnix() ? CoreFunctionsModuleUnix : CoreFunctionsModuleWindows;
+        var libraryName = CoreFunctionsModuleWindows;
         var libraryPath = Path.Combine(PathUtil.ExecutableFolderPath, libraryName);
 
         var handle = NativeMethods.LoadLibrary(libraryPath);

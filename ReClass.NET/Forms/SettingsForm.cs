@@ -34,13 +34,8 @@ public partial class SettingsForm : IconForm {
         SetColorBindings();
         SetTypeDefinitionBindings();
 
-        if (NativeMethods.IsUnix()) {
-            fileAssociationGroupBox.Enabled = false;
-            runAsAdminCheckBox.Enabled = false;
-        } else {
-            NativeMethods.SetButtonShield(createAssociationButton, true);
-            NativeMethods.SetButtonShield(removeAssociationButton, true);
-        }
+        NativeMethods.SetButtonShield(createAssociationButton, true);
+        NativeMethods.SetButtonShield(removeAssociationButton, true);
     }
 
     protected override void OnLoad(EventArgs e) {

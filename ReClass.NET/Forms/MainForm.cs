@@ -496,10 +496,6 @@ public partial class MainForm : IconForm {
         Close();
     }
 
-    private void memoryViewerToolStripMenuItem_Click(object sender, EventArgs e) {
-        new ProcessInfoForm(Program.RemoteProcess).Show();
-    }
-
     private void namedAddressesToolStripMenuItem_Click(object sender, EventArgs e) {
         new NamedAddressesForm(Program.RemoteProcess).Show();
     }

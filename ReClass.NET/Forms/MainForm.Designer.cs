@@ -140,7 +140,6 @@ namespace ReClassNET.Forms {
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.processToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.processInformationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.namedAddressesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
 			this.isLittleEndianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1140,7 +1139,6 @@ namespace ReClassNET.Forms {
 			// processToolStripMenuItem
 			// 
 			this.processToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.processInformationsToolStripMenuItem,
             this.namedAddressesToolStripMenuItem,
             this.toolStripSeparator23,
             this.isLittleEndianToolStripMenuItem,
@@ -1151,14 +1149,6 @@ namespace ReClassNET.Forms {
 			this.processToolStripMenuItem.Name = "processToolStripMenuItem";
 			this.processToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
 			this.processToolStripMenuItem.Text = "Process";
-			// 
-			// processInformationsToolStripMenuItem
-			// 
-			this.processInformationsToolStripMenuItem.Image = global::ReClassNET.Properties.Resources.B16x16_Category;
-			this.processInformationsToolStripMenuItem.Name = "processInformationsToolStripMenuItem";
-			this.processInformationsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-			this.processInformationsToolStripMenuItem.Text = "Process Informations...";
-			this.processInformationsToolStripMenuItem.Click += new System.EventHandler(this.memoryViewerToolStripMenuItem_Click);
 			// 
 			// namedAddressesToolStripMenuItem
 			// 
@@ -1339,7 +1329,6 @@ namespace ReClassNET.Forms {
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem processToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem processInformationsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.ToolStripMenuItem resumeProcessToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem suspendProcessToolStripMenuItem;

@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using ReClass.AddressParser;
 using ReClass.Extensions;
 using ReClass.Util.Conversion;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.System.Diagnostics.ToolHelp;
 using Windows.Win32.System.Threading;
 
 namespace ReClass.Memory;
@@ -177,11 +179,44 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     }
 
     public void ControlRemoteProcess(ControlRemoteProcessAction action) {
-        if (!IsValid) {
+        if (!IsValid || UnderlayingProcess == null) {
             return;
         }
 
-        // CoreFunctions.ControlRemoteProcess(Handle, action);
+        if (action == ControlRemoteProcessAction.Terminate) {
+            PInvoke.TerminateProcess(Handle, 0);
+            Close();
+            return;
+        }
+
+        var snapshotHandle = PInvoke.CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS.TH32CS_SNAPTHREAD, 0);
+        if (snapshotHandle.IsNull)
+            return;
+
+        var te32 = new THREADENTRY32();
+        te32.dwSize = (uint)Marshal.SizeOf(te32);
+
+        if (PInvoke.Thread32First(snapshotHandle, ref te32)) {
+            do {
+                if (te32.th32OwnerProcessID == UnderlayingProcess.Id) {
+                    var threadHandle = PInvoke.OpenThread(THREAD_ACCESS_RIGHTS.THREAD_SUSPEND_RESUME, false, te32.th32ThreadID);
+                    if (!threadHandle.IsNull) {
+                        switch (action) {
+                            case ControlRemoteProcessAction.Suspend:
+                                PInvoke.SuspendThread(threadHandle);
+                                break;
+                            case ControlRemoteProcessAction.Resume:
+                                PInvoke.ResumeThread(threadHandle);
+                                break;
+                        }
+
+                        PInvoke.CloseHandle(threadHandle);
+                    }
+                }
+            } while (PInvoke.Thread32Next(snapshotHandle, ref te32));
+        }
+
+        PInvoke.CloseHandle(snapshotHandle);
     }
 
     #region ReadMemory

@@ -10,6 +10,13 @@ ReadProcessMemory
 WriteProcessMemory
 VirtualProtectEx
 WaitForSingleObject
+CreateToolhelp32Snapshot
+SuspendThread
+ResumeThread
+TerminateProcess
+Thread32First
+Thread32Next
+OpenThread
 
 // shell32
 

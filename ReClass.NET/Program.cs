@@ -6,6 +6,7 @@ using ReClassNET.Forms;
 using ReClassNET.Logger;
 using ReClassNET.Memory;
 using ReClassNET.Native;
+using ReClassNET.Project;
 using ReClassNET.UI;
 using ReClassNET.Util;
 
@@ -109,13 +110,17 @@ public static class Program {
     public static void ShowException(Exception ex) {
         var closebutton = new TaskDialogButton("Close");
 
+        var text = ex switch {
+            ClassReferencedException classReferencedException => ex.Message + "\n\n" + string.Join("\n", classReferencedException.References.Select(node => node.Name)),
+            _ => ex.Message + "\n" + ex.StackTrace ?? ""
+        };
+
         TaskDialog.ShowDialog(new() {
             Caption = "ReClass Exception",
             SizeToContent = true,
             DefaultButton = closebutton,
             Heading = ex.GetType().Name,
-            Text = ex.Message + "\n" + ex.StackTrace ?? "",
-            //Icon = TaskDialogIcon.Information, -- will invoke a beep
+            Text = text,
             Buttons = [closebutton]
         });
     }

@@ -1,11 +1,11 @@
+using System.Diagnostics;
+
 namespace ReClass.Memory;
 
 public interface IProcessReader : IRemoteMemoryReader {
     Section? GetSectionToPointer(IntPtr address);
 
-    Module? GetModuleToPointer(IntPtr address);
+    ProcessModule? GetModuleToPointer(IntPtr address);
 
-    Module? GetModuleByName(string name);
-
-    bool EnumerateRemoteSectionsAndModules(out List<Section> sections, out List<Module> modules);
+    ProcessModule? GetModuleByName(string name);
 }

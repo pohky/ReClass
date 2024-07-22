@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using ReClass.CodeGenerator;
-using ReClass.Core;
 using ReClass.DataExchange.ReClass;
-using ReClass.Extensions;
 using ReClass.Logger;
-using ReClass.Native;
 using ReClass.Nodes;
 using ReClass.UI;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace ReClass.Plugins;
 
@@ -21,35 +20,18 @@ internal sealed class PluginManager {
     }
 
     public void LoadAllPlugins(string path, ILogger logger) {
-        try {
-            if (!Directory.Exists(path)) {
-                return;
-            }
-
-            var directory = new DirectoryInfo(path);
-
-            LoadPlugins(directory.GetFiles("*.dll", SearchOption.AllDirectories), logger, true);
-
-            LoadPlugins(directory.GetFiles("*.exe", SearchOption.AllDirectories), logger, true);
-
-            LoadPlugins(directory.GetFiles("*.so", SearchOption.AllDirectories), logger, false);
-        } catch (Exception ex) {
-            logger.Log(ex);
+        if (!Directory.Exists(path)) {
+            return;
         }
-    }
 
-    private void LoadPlugins(IEnumerable<FileInfo> files, ILogger logger, bool checkProductName) {
-        // TODO: How to include plugin infos for unix files as they don't have embedded version info.
+        var directory = new DirectoryInfo(path);
 
-
-
-
-        foreach (var fi in files) {
+        foreach (var fi in directory.GetFiles("*.dll", SearchOption.AllDirectories)) {
             FileVersionInfo fvi;
             try {
                 fvi = FileVersionInfo.GetVersionInfo(fi.FullName);
 
-                if (checkProductName && fvi.ProductName != PluginInfo.PluginName && fvi.ProductName != PluginInfo.PluginNativeName) {
+                if (fvi.ProductName != PluginInfo.PluginName && fvi.ProductName != PluginInfo.PluginNativeName) {
                     continue;
                 }
             } catch {
@@ -70,10 +52,13 @@ internal sealed class PluginManager {
                 } else {
                     pi.NativeHandle = CreateNativePluginInstance(pi.FilePath);
 
+                    // TODO: reimplement? what's this for?
+                    /*
                     Program.CoreFunctions.RegisterFunctions(
                         pi.Name,
                         new NativeCoreWrapper(pi.NativeHandle)
                     );
+                    */
                 }
 
                 plugins.Add(pi);
@@ -101,17 +86,17 @@ internal sealed class PluginManager {
         var type = Path.GetFileNameWithoutExtension(filePath);
         type = type + "." + type + "Ext";
 
-        var handle = Activator.CreateInstanceFrom(filePath, type);
-
-        if (!(handle.Unwrap() is Plugin plugin)) {
+        var handle = (object?)Activator.CreateInstanceFrom(filePath, type);
+        if (handle is not Plugin plugin) {
             throw new FileLoadException();
         }
+
         return plugin;
     }
 
-    private static IntPtr CreateNativePluginInstance(string filePath) {
-        var handle = NativeMethods.LoadLibrary(filePath);
-        if (handle.IsNull()) {
+    private static HMODULE CreateNativePluginInstance(string filePath) {
+        var handle = PInvoke.LoadLibrary(filePath);
+        if (handle.IsNull) {
             throw new FileLoadException($"Failed to load native plugin: {Path.GetFileName(filePath)}");
         }
         return handle;

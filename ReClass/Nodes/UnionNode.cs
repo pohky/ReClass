@@ -14,7 +14,7 @@ public class UnionNode : BaseContainerNode {
         icon = Resources.B16x16_Button_Union;
     }
 
-    public override bool CanHandleChildNode(BaseNode node) {
+    public override bool CanHandleChildNode(BaseNode? node) {
         switch (node) {
             case null:
             case ClassNode _:

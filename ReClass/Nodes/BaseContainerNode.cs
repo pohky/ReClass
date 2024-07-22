@@ -19,9 +19,9 @@ public abstract class BaseContainerNode : BaseNode {
     /// </summary>
     /// <param name="node">The new child node.</param>
     /// <returns>True if the container can handle the child node or false otherwise.</returns>
-    public abstract bool CanHandleChildNode(BaseNode node);
+    public abstract bool CanHandleChildNode(BaseNode? node);
 
-    private void CheckCanHandleChildNode(BaseNode node) {
+    private void CheckCanHandleChildNode(BaseNode? node) {
         if (!CanHandleChildNode(node)) {
             throw new ArgumentException();
         }
@@ -124,7 +124,7 @@ public abstract class BaseContainerNode : BaseNode {
     /// <summary>Replaces the old node with the new node.</summary>
     /// <param name="oldNode">The old node to replacce.</param>
     /// <param name="newNode">The new node.</param>
-    public void ReplaceChildNode(BaseNode oldNode, BaseNode newNode) {
+    public void ReplaceChildNode(BaseNode oldNode, BaseNode? newNode) {
         List<BaseNode> dummy = null;
         ReplaceChildNode(oldNode, newNode, ref dummy);
     }
@@ -136,7 +136,7 @@ public abstract class BaseContainerNode : BaseNode {
     ///     [out] A list for additional created nodes (see
     ///     <see cref="ShouldCompensateSizeChanges" />) or null if not needed.
     /// </param>
-    public void ReplaceChildNode(BaseNode oldNode, BaseNode newNode, ref List<BaseNode> additionalCreatedNodes) {
+    public void ReplaceChildNode(BaseNode oldNode, BaseNode? newNode, ref List<BaseNode> additionalCreatedNodes) {
         CheckCanHandleChildNode(newNode);
 
         var index = FindNodeIndex(oldNode);

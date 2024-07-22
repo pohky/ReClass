@@ -31,7 +31,6 @@ namespace ReClass.Forms {
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			this.processUpdateTimer = new System.Windows.Forms.Timer(this.components);
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.ProjectView = new ReClass.Controls.ProjectView();
 			this.projectClassContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -169,12 +168,6 @@ namespace ReClass.Forms {
 			this.statusStrip.SuspendLayout();
 			this.mainMenuStrip.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// processUpdateTimer
-			// 
-			this.processUpdateTimer.Enabled = true;
-			this.processUpdateTimer.Interval = 5000;
-			this.processUpdateTimer.Tick += new System.EventHandler(this.processUpdateTimer_Tick);
 			// 
 			// splitContainer
 			// 
@@ -1289,7 +1282,6 @@ namespace ReClass.Forms {
 			this.MinimumSize = new System.Drawing.Size(200, 100);
 			this.Name = "MainForm";
 			this.Text = "ReClass.NET";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
 			this.splitContainer.Panel1.ResumeLayout(false);
@@ -1369,7 +1361,6 @@ namespace ReClass.Forms {
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
 		private System.Windows.Forms.ToolStripMenuItem generateCppCodeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem generateCSharpCodeToolStripMenuItem;
-		private System.Windows.Forms.Timer processUpdateTimer;
 		private System.Windows.Forms.ToolStripButton openProjectToolStripButton;
 		private System.Windows.Forms.ToolStripStatusLabel infoToolStripStatusLabel;
 		private System.Windows.Forms.ToolStripMenuItem mergeWithProjectToolStripMenuItem;

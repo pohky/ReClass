@@ -1,6 +1,6 @@
 using System.Data;
-using ReClass.Memory;
-using ReClass.Native;
+using System.Diagnostics;
+using ReClass.Extensions;
 using ReClass.UI;
 
 namespace ReClass.Forms;
@@ -14,9 +14,9 @@ public partial class ProcessBrowserForm : IconForm {
     ];
 
     /// <summary>Gets the selected process.</summary>
-    public ProcessInfo SelectedProcess => (processDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView)
+    public Process SelectedProcess => (processDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView)
         ?.Row
-        ?.Field<ProcessInfo>("info");
+        ?.Field<Process>("process");
 
     public ProcessBrowserForm(string previousProcess) {
         InitializeComponent();
@@ -52,20 +52,28 @@ public partial class ProcessBrowserForm : IconForm {
         var dt = new DataTable();
         dt.Columns.Add("icon", typeof(Image));
         dt.Columns.Add("name", typeof(string));
-        dt.Columns.Add("id", typeof(IntPtr));
+        dt.Columns.Add("id", typeof(int));
         dt.Columns.Add("path", typeof(string));
-        dt.Columns.Add("info", typeof(ProcessInfo));
+        dt.Columns.Add("process", typeof(Process));
 
         var shouldFilter = filterCheckBox.Checked;
 
-        foreach (var p in Program.CoreFunctions.EnumerateProcesses().Where(p => !shouldFilter || !commonProcesses.Contains(p.Name.ToLower()))) {
-            var row = dt.NewRow();
-            row["icon"] = p.Icon;
-            row["name"] = p.Name;
-            row["id"] = p.Id;
-            row["path"] = p.Path;
-            row["info"] = p;
-            dt.Rows.Add(row);
+        foreach (var p in Process.GetProcesses()) {
+            try {
+                if (shouldFilter && commonProcesses.Contains(p.ProcessName.ToLower()))
+                    continue;
+
+                var row = dt.NewRow();
+                row["icon"] = p.GetIcon();
+                row["name"] = p.ProcessName;
+                row["id"] = p.Id;
+                row["path"] = p.MainModule!.FileName;
+                row["process"] = p;
+                dt.Rows.Add(row);
+            }
+            catch {
+                // might get access denied for system processes
+            }
         }
 
         dt.DefaultView.Sort = "name ASC";

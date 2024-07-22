@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using ReClass.Extensions;
-using ReClass.Native;
 using ReClass.Nodes;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace ReClass.Plugins;
 
@@ -23,7 +23,7 @@ internal class PluginInfo : IDisposable {
 
     public Plugin Interface { get; set; }
 
-    public IntPtr NativeHandle { get; set; }
+    public HMODULE NativeHandle { get; set; }
 
     public IReadOnlyList<INodeInfoReader> NodeInfoReaders { get; set; }
 
@@ -63,10 +63,9 @@ internal class PluginInfo : IDisposable {
     }
 
     private void ReleaseUnmanagedResources() {
-        if (!NativeHandle.IsNull()) {
-            NativeMethods.FreeLibrary(NativeHandle);
-
-            NativeHandle = IntPtr.Zero;
+        if (!NativeHandle.IsNull) {
+            PInvoke.FreeLibrary(NativeHandle);
+            NativeHandle = HMODULE.Null;
         }
     }
 }

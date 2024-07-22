@@ -1,55 +1,42 @@
+using System.Diagnostics;
+using System.Reflection.Metadata;
 using ReClass.AddressParser;
-using ReClass.Core;
 using ReClass.Extensions;
-using ReClass.Native.Imports;
 using ReClass.Util.Conversion;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.System.Threading;
 
 namespace ReClass.Memory;
 
 public delegate void RemoteProcessEvent(RemoteProcess sender);
 
+public enum ControlRemoteProcessAction {
+    Suspend,
+    Resume,
+    Terminate
+}
+
 public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWriter, IProcessReader {
     private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = [];
 
-    private readonly List<Module> modules = [];
-    private readonly object processSync = new();
-
-    private readonly Dictionary<IntPtr, string> rttiCache = [];
-
-    private readonly List<Section> sections = [];
-
-    private IntPtr handle;
-
-    public CoreFunctionsManager CoreFunctions { get; }
-
-    public ProcessInfo? UnderlayingProcess { get; private set; }
-
-    /// <summary>Gets a copy of the current modules list. This list may change if the remote process (un)loads a module.</summary>
-    public IEnumerable<Module> Modules {
-        get {
-            lock (modules) {
-                return new List<Module>(modules);
-            }
-        }
-    }
-
-    /// <summary>Gets a copy of the current sections list. This list may change if the remote process (un)loads a section.</summary>
-    public IEnumerable<Section> Sections {
-        get {
-            lock (sections) {
-                return new List<Section>(sections);
-            }
-        }
-    }
+    public Process? UnderlayingProcess { get; private set; }
+    public HANDLE Handle { get; private set; } = HANDLE.Null;
 
     /// <summary>A map of named addresses.</summary>
     public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
 
-    public bool IsValid => UnderlayingProcess != null && CoreFunctions.IsProcessValid(handle);
-    public bool Is64Bit => UnderlayingProcess != null && Kernel32.IsWow64Process(handle, out var wow64Process) && !wow64Process;
+    public bool IsValid {
+        get {
+            if (Handle.IsNull)
+                return false;
 
-    public RemoteProcess(CoreFunctionsManager coreFunctions) {
-        this.CoreFunctions = coreFunctions;
+            var result = PInvoke.WaitForSingleObject(Handle, 0);
+            if (result == WAIT_EVENT.WAIT_FAILED)
+                return false;
+
+            return result == WAIT_EVENT.WAIT_TIMEOUT;
+        }
     }
 
     public void Dispose() {
@@ -57,52 +44,54 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     }
 
     public Section? GetSectionToPointer(IntPtr address) {
+        // TODO: reimplement
+        return null;
+
+        /*
         lock (sections) {
             var index = sections.BinarySearch(s => address.CompareToRange(s.Start, s.End));
             return index < 0 ? null : sections[index];
         }
+        */
     }
 
-    public Module? GetModuleToPointer(IntPtr address) {
-        lock (modules) {
-            var index = modules.BinarySearch(m => address.CompareToRange(m.Start, m.End));
-            return index < 0 ? null : modules[index];
+    public ProcessModule? GetModuleToPointer(nint address) {
+        if (UnderlayingProcess != null) {
+            var en = UnderlayingProcess.Modules.GetEnumerator();
+            while (en.MoveNext()) {
+                var module = (ProcessModule)en.Current;
+                if (address >= module.BaseAddress && address < module.BaseAddress + module.ModuleMemorySize) 
+                    return module;
+            }
         }
+
+        return null;
     }
 
-    public Module? GetModuleByName(string name) {
-        lock (modules) {
-            return modules
-                .FirstOrDefault(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-        }
-    }
-
-    public bool EnumerateRemoteSectionsAndModules(out List<Section> _sections, out List<Module> _modules) {
-        if (!IsValid) {
-            _sections = null;
-            _modules = null;
-
-            return false;
+    public ProcessModule? GetModuleByName(string name) {
+        if (UnderlayingProcess != null) {
+            var en = UnderlayingProcess.Modules.GetEnumerator();
+            while (en.MoveNext()) {
+                var module = (ProcessModule)en.Current;
+                if (module.ModuleName == name)
+                    return module;
+            }
         }
 
-        _sections = [];
-        _modules = [];
-
-        CoreFunctions.EnumerateRemoteSectionsAndModules(handle, _sections.Add, _modules.Add);
-
-        return true;
+        return null;
     }
 
     public EndianBitConverter BitConverter { get; set; } = EndianBitConverter.System;
 
     #region WriteMemory
 
-    public bool WriteRemoteMemory(IntPtr address, byte[] data) {
+    public unsafe bool WriteRemoteMemory(nint address, byte[] data) {
         if (!IsValid) {
             return false;
         }
 
-        return CoreFunctions.WriteRemoteMemory(handle, address, ref data, 0, data.Length);
+        fixed (byte* dataPtr = data)
+            return PInvoke.WriteProcessMemory(Handle, (void*)address, dataPtr, 0);
     }
 
     #endregion
@@ -118,20 +107,17 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
     /// <summary>Opens the given process to gather informations from.</summary>
     /// <param name="info">The process information.</param>
-    public void Open(ProcessInfo info) {
-        if (UnderlayingProcess != info) {
-            lock (processSync) {
-                Close();
-
-                rttiCache.Clear();
-
-                UnderlayingProcess = info;
-
-                handle = CoreFunctions.OpenRemoteProcess(UnderlayingProcess.Id, ProcessAccess.Full);
-            }
-
-            ProcessAttached?.Invoke(this);
+    public void Open(Process process) {
+        if (UnderlayingProcess == process) {
+            return;
         }
+
+        Close();
+
+        UnderlayingProcess = process;
+        Handle = PInvoke.OpenProcess(PROCESS_ACCESS_RIGHTS.PROCESS_ALL_ACCESS, false, (uint)process.Id);
+
+        ProcessAttached?.Invoke(this);
     }
 
     /// <summary>Closes the underlaying process. If the debugger is attached, it will automaticly detached.</summary>
@@ -139,13 +125,9 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         if (UnderlayingProcess != null) {
             ProcessClosing?.Invoke(this);
 
-            lock (processSync) {
-                CoreFunctions.CloseRemoteProcess(handle);
-
-                handle = IntPtr.Zero;
-
-                UnderlayingProcess = null;
-            }
+            PInvoke.CloseHandle(Handle);
+            UnderlayingProcess = null;
+            Handle = HANDLE.Null;
 
             ProcessClosed?.Invoke(this);
         }
@@ -159,6 +141,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             return namedAddress;
         }
 
+        /*
         var section = GetSectionToPointer(address);
         if (section != null) {
             if (section.Category == SectionCategory.CODE || section.Category == SectionCategory.DATA) {
@@ -169,49 +152,13 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
                 return $"<HEAP>{address:X}";
             }
         }
+        */
+
         var module = GetModuleToPointer(address);
         if (module != null) {
-            return $"{module.Name}.{address:X}";
+            return $"{module.ModuleName}.{address:X}";
         }
         return null;
-    }
-
-    /// <summary>Updates the process informations.</summary>
-    public void UpdateProcessInformations() {
-        UpdateProcessInformationsAsync().Wait();
-    }
-
-    /// <summary>Updates the process informations asynchronous.</summary>
-    /// <returns>The Task.</returns>
-    public Task UpdateProcessInformationsAsync() {
-        if (!IsValid) {
-            lock (modules) {
-                modules.Clear();
-            }
-            lock (sections) {
-                sections.Clear();
-            }
-
-            // TODO: Mono doesn't support Task.CompletedTask at the moment.
-            //return Task.CompletedTask;
-            return Task.FromResult(true);
-        }
-
-        return Task.Run(() => {
-            EnumerateRemoteSectionsAndModules(out var newSections, out var newModules);
-
-            newModules.Sort((m1, m2) => m1.Start.CompareTo(m2.Start));
-            newSections.Sort((s1, s2) => s1.Start.CompareTo(s2.Start));
-
-            lock (modules) {
-                modules.Clear();
-                modules.AddRange(newModules);
-            }
-            lock (sections) {
-                sections.Clear();
-                sections.AddRange(newSections);
-            }
-        });
     }
 
     /// <summary>Parse the address formula.</summary>
@@ -234,7 +181,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             return;
         }
 
-        CoreFunctions.ControlRemoteProcess(handle, action);
+        // CoreFunctions.ControlRemoteProcess(Handle, action);
     }
 
     #region ReadMemory
@@ -243,16 +190,27 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         return ReadRemoteMemoryIntoBuffer(address, ref buffer, 0, buffer.Length);
     }
 
-    public bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer, int offset, int length) {
+    public unsafe bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer, int offset, int length) {
+        buffer.FillWithZero();
+
         if (!IsValid) {
             Close();
-
-            buffer.FillWithZero();
-
             return false;
         }
 
-        return CoreFunctions.ReadRemoteMemory(handle, address, ref buffer, offset, length);
+        if (offset + length > buffer.Length) {
+            return false;
+        }
+
+        var size = (nuint)length;
+        nuint numberOfBytesRead;
+        fixed (byte* bufferPtr = buffer) {
+            if (PInvoke.ReadProcessMemory(Handle, (void*)address, bufferPtr + offset, size, &numberOfBytesRead) && size == numberOfBytesRead) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public byte[] ReadRemoteMemory(IntPtr address, int size) {

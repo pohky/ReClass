@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using ReClass.Extensions;
 using ReClass.Nodes;
 
@@ -12,7 +13,7 @@ public class NodeDissector {
         }
     }
 
-    public static bool GuessNode(BaseHexNode node, IProcessReader reader, MemoryBuffer memory, out BaseNode guessedNode) {
+    public static bool GuessNode(BaseHexNode node, IProcessReader reader, MemoryBuffer memory, out BaseNode? guessedNode) {
         guessedNode = null;
 
         var offset = node.Offset;
@@ -36,12 +37,10 @@ public class NodeDissector {
         var raw = memory.ReadBytes(offset, node.MemorySize);
         if (raw.InterpretAsSingleByteCharacter().IsLikelyPrintableData()) {
             guessedNode = new Utf8TextNode();
-
             return true;
         }
         if (raw.InterpretAsDoubleByteCharacter().IsLikelyPrintableData()) {
             guessedNode = new Utf16TextNode();
-
             return true;
         }
 
@@ -56,13 +55,11 @@ public class NodeDissector {
             // If the data represents a reasonable range, it could be a float.
             if (-999999.0f <= data32.FloatValue && data32.FloatValue <= 999999.0f && !data32.FloatValue.IsNearlyEqual(0.0f, 0.001f)) {
                 guessedNode = new FloatNode();
-
                 return true;
             }
 
             if (-999999 <= data32.IntValue && data32.IntValue <= 999999) {
                 guessedNode = new Int32Node();
-
                 return true;
             }
         }
@@ -72,7 +69,6 @@ public class NodeDissector {
                 // If the data represents a reasonable range, it could be a double.
                 if (-999999.0 <= data64.DoubleValue && data64.DoubleValue <= 999999.0 && !data64.DoubleValue.IsNearlyEqual(0.0, 0.001)) {
                     guessedNode = new DoubleNode();
-
                     return true;
                 }
             }
@@ -81,32 +77,32 @@ public class NodeDissector {
         return false;
     }
 
-    private static bool GuessPointerNode(IntPtr address, IProcessReader process, out BaseNode node) {
+    private static bool GuessPointerNode(IntPtr address, IProcessReader process, [NotNullWhen(returnValue: true)] out BaseNode? node) {
         node = null;
 
         if (address.IsNull()) {
             return false;
         }
 
+        /*
         var section = process.GetSectionToPointer(address);
         if (section == null) {
             return false;
         }
 
-        if (section.Category == SectionCategory.CODE) // If the section contains code, it should be a function pointer.
-        {
+        // If the section contains code, it should be a function pointer.
+        if (section.Category == SectionCategory.CODE) {
             node = new FunctionPtrNode();
-
             return true;
         }
-        if (section.Category == SectionCategory.DATA || section.Category == SectionCategory.HEAP) // If the section contains data, it is at least a pointer to a class or something.
-        {
+
+        // If the section contains data, it is at least a pointer to a class or something.
+        if (section.Category == SectionCategory.DATA || section.Category == SectionCategory.HEAP) {
             // Check if it is a vtable. Check if the first 3 values are pointers to a code section.
             if (process.GetSectionToPointer(process.ReadRemoteIntPtr(address))?.Category == SectionCategory.CODE
                 && process.GetSectionToPointer(process.ReadRemoteIntPtr(address + IntPtr.Size))?.Category == SectionCategory.CODE
                 && process.GetSectionToPointer(process.ReadRemoteIntPtr(address + 2 * IntPtr.Size))?.Category == SectionCategory.CODE) {
                 node = new VirtualMethodTableNode();
-
                 return true;
             }
 
@@ -114,20 +110,19 @@ public class NodeDissector {
             var data = process.ReadRemoteMemory(address, IntPtr.Size * 2);
             if (data.Take(IntPtr.Size).InterpretAsSingleByteCharacter().IsLikelyPrintableData()) {
                 node = new Utf8TextPtrNode();
-
                 return true;
             }
+
             if (data.InterpretAsDoubleByteCharacter().IsLikelyPrintableData()) {
                 node = new Utf16TextPtrNode();
-
                 return true;
             }
 
             // Now it could be a pointer to something else but we can't tell. :(
             node = new PointerNode();
-
             return true;
         }
+        */
 
         return false;
     }

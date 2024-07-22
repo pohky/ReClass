@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Globalization;
-using ReClass.Core;
 using ReClass.DataExchange.ReClass;
 using ReClass.Forms;
 using ReClass.Logger;
@@ -22,8 +21,6 @@ public static class Program {
     public static Random GlobalRandom { get; } = new();
 
     public static RemoteProcess RemoteProcess { get; private set; }
-
-    public static CoreFunctionsManager CoreFunctions => RemoteProcess.CoreFunctions;
 
     public static MainForm MainForm { get; private set; }
 
@@ -75,24 +72,20 @@ public static class Program {
         }
 
 #if !DEBUG
-            try
-            {
+        try {
 #endif
-        using (var coreFunctions = new CoreFunctionsManager()) {
-            RemoteProcess = new RemoteProcess(coreFunctions);
+            RemoteProcess = new RemoteProcess();
 
             MainForm = new MainForm();
 
             Application.Run(MainForm);
 
             RemoteProcess.Dispose();
-        }
 #if !DEBUG
-            }
-            catch (Exception ex)
-            {
-                ShowException(ex);
-            }
+        }
+        catch (Exception ex) {
+            ShowException(ex);
+        }
 #endif
 
         SettingsSerializer.Save(Settings);

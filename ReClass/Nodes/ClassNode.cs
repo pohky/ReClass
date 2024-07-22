@@ -39,7 +39,7 @@ public class ClassNode : BaseContainerNode {
         throw new InvalidOperationException($"The '{nameof(ClassNode)}' node should not be accessible from the ui.");
     }
 
-    public override bool CanHandleChildNode(BaseNode node) {
+    public override bool CanHandleChildNode(BaseNode? node) {
         switch (node) {
             case null:
             case ClassNode _:

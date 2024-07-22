@@ -1,30 +1,17 @@
 using System.Text;
 using Microsoft.Win32;
-using ReClass.Native.Imports;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Shell;
 
 namespace ReClass.Native;
 
 public static class NativeMethods {
-    public static nint LoadLibrary(string name) {
-        return Kernel32.LoadLibrary(name);
-    }
-
-    public static nint GetProcAddress(nint handle, string name) {
-        return Kernel32.GetProcAddress(handle, name);
-    }
-
-    public static void FreeLibrary(nint handle) {
-        Kernel32.FreeLibrary(handle);
-    }
-
-    public static Icon? GetIconForFile(string path) {
-        return Icon.ExtractAssociatedIcon(path);
-    }
-    
-    public static string UndecorateSymbolName(string name) {
-        var sb = new StringBuilder(255);
-        if (DbgHelp.UnDecorateSymbolName(name, sb, sb.Capacity, DbgHelp.UNDNAME_NAME_ONLY) != 0)
-            return sb.ToString();
+    public unsafe static string UndecorateSymbolName(string name) {
+        const int capacity = 255;
+        var buffer = stackalloc byte[capacity];
+        if (PInvoke.UnDecorateSymbolName(name, buffer, capacity, PInvoke.UNDNAME_NAME_ONLY) != 0)
+            return Encoding.UTF8.GetString(buffer, capacity);
         return name;
     }
 
@@ -36,7 +23,7 @@ public static class NativeMethods {
             var h = button.Handle;
             if (h == 0) return;
 
-            User32.SendMessage(h, User32.BCM_SETSHIELD, 0, setShield ? 1 : 0);
+            PInvoke.SendMessage((HWND)h, PInvoke.BCM_SETSHIELD, 0, setShield ? 1 : 0);
         } catch {
             // ignored
         }
@@ -66,7 +53,7 @@ public static class NativeMethods {
                 }
             }
 
-            Shell32.SHChangeNotify(Shell32.SHCNE_ASSOCCHANGED, Shell32.SHCNF_IDLIST, 0, 0);
+            FireAssocChanged();
 
             return true;
         } catch (Exception) {
@@ -79,9 +66,13 @@ public static class NativeMethods {
             Registry.ClassesRoot.DeleteSubKeyTree(fileExtension);
             Registry.ClassesRoot.DeleteSubKeyTree(extensionId);
 
-            Shell32.SHChangeNotify(Shell32.SHCNE_ASSOCCHANGED, Shell32.SHCNF_IDLIST, 0, 0);
+            FireAssocChanged();
         } catch {
             // ignored
         }
+    }
+
+    private static unsafe void FireAssocChanged() {
+        PInvoke.SHChangeNotify(SHCNE_ID.SHCNE_ASSOCCHANGED, SHCNF_FLAGS.SHCNF_IDLIST);
     }
 }

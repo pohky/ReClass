@@ -6,8 +6,6 @@ namespace ReClass.Controls;
 
 [Designer(typeof(HotkeyBoxDesigner))]
 public partial class HotkeyBox : UserControl {
-    public KeyboardInput Input { get; set; }
-
     public KeyboardHotkey Hotkey { get; } = new();
 
     public HotkeyBox() {
@@ -29,6 +27,9 @@ public partial class HotkeyBox : UserControl {
     }
 
     private void timer_Tick(object sender, EventArgs e) {
+        // TODO: reimplement with PreProcessMessage override
+
+        /*
         if (Input == null) {
             return;
         }
@@ -40,6 +41,7 @@ public partial class HotkeyBox : UserControl {
             }
             DisplayHotkey();
         }
+        */
     }
 
     private void clearButton_Click(object sender, EventArgs e) {

@@ -17,7 +17,7 @@ public class VirtualMethodTableNode : BaseContainerNode {
         icon = Resources.B16x16_Button_VTable;
     }
 
-    public override bool CanHandleChildNode(BaseNode node) => node is VirtualMethodNode;
+    public override bool CanHandleChildNode(BaseNode? node) => node is VirtualMethodNode;
 
     public override void Initialize() {
         for (var i = 0; i < 10; ++i) {

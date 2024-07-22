@@ -18,9 +18,11 @@ public partial class PluginForm : IconForm {
 
         // Native Methods Tab
 
+        /*
         var providers = Program.CoreFunctions.FunctionProviders.ToArray();
         functionsProvidersComboBox.Items.AddRange(providers);
         functionsProvidersComboBox.SelectedIndex = Array.IndexOf(providers, Program.CoreFunctions.CurrentFunctionsProvider);
+        */
     }
 
     protected override void OnLoad(EventArgs e) {
@@ -75,7 +77,7 @@ public partial class PluginForm : IconForm {
             return;
         }
 
-        Program.CoreFunctions.SetActiveFunctionsProvider(provider);
+        // Program.CoreFunctions.SetActiveFunctionsProvider(provider);
     }
 
     private void getMoreLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {

@@ -1,0 +1,26 @@
+// kernel32
+
+OpenProcess
+CloseHandle
+GetProcessId
+LoadLibrary
+GetProcAddress
+FreeLibrary
+ReadProcessMemory
+WriteProcessMemory
+VirtualProtectEx
+WaitForSingleObject
+
+// shell32
+
+SHChangeNotify
+
+// user32
+
+SendMessage
+BCM_SETSHIELD
+
+// dbghelp
+
+UnDecorateSymbolName
+UNDNAME_NAME_ONLY

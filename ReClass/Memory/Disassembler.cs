@@ -15,7 +15,7 @@ public class Disassembler {
     /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
     public IReadOnlyList<DisassembledInstruction> RemoteDisassembleFunction(IRemoteMemoryReader process, nint address, int maxLength) {
         var buffer = process.ReadRemoteMemory(address, maxLength);
-        return DisassembleFunction(process.Is64Bit ? 64 : 32, buffer, address);
+        return DisassembleFunction(buffer, address);
     }
 
     /// <summary>Disassembles the code in the given data.</summary>
@@ -25,8 +25,8 @@ public class Disassembler {
     ///     memory even if they are not at their original place.
     /// </param>
     /// <returns>A list of <see cref="DisassembledInstruction" /> which belong to the function.</returns>
-    public IReadOnlyList<DisassembledInstruction> DisassembleFunction(int bitness, byte[] data, nint virtualAddress) {
-        var decoder = Decoder.Create(bitness, data);
+    public IReadOnlyList<DisassembledInstruction> DisassembleFunction(byte[] data, nint virtualAddress) {
+        var decoder = Decoder.Create(64, data);
         decoder.IP = (ulong)virtualAddress;
         var endRip = decoder.IP + (uint)data.Length;
 

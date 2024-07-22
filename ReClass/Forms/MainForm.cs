@@ -1,8 +1,8 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using ReClass.AddressParser;
 using ReClass.CodeGenerator;
 using ReClass.Controls;
-using ReClass.Core;
 using ReClass.DataExchange.ReClass;
 using ReClass.Extensions;
 using ReClass.Memory;
@@ -24,8 +24,6 @@ public partial class MainForm : IconForm {
     private ClassNode? currentClassNode;
 
     private ReClassNetProject currentProject;
-
-    private Task? updateProcessInformationTask;
     public ReClassNetProject CurrentProject => currentProject;
 
     public ProjectView ProjectView { get; private set; }
@@ -53,7 +51,7 @@ public partial class MainForm : IconForm {
         isLittleEndianToolStripMenuItem.Checked = BitConverter.IsLittleEndian;
 
         Program.RemoteProcess.ProcessAttached += sender => {
-            var text = $"{sender.UnderlayingProcess.Name} (ID: {sender.UnderlayingProcess.Id})";
+            var text = $"{sender.UnderlayingProcess!.ProcessName} (ID: {sender.UnderlayingProcess.Id})";
             processInfoToolStripStatusLabel.Text = text;
             UpdateWindowTitle(text);
 
@@ -96,14 +94,14 @@ public partial class MainForm : IconForm {
             }
         }
 
+        if (!string.IsNullOrEmpty(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo])) {
+            AttachToProcess(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo]);
+        }
+
         if (createDefaultProject) {
             SetProject(new ReClassNetProject());
 
             LinkedWindowFeatures.CreateDefaultClass();
-        }
-
-        if (!string.IsNullOrEmpty(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo])) {
-            AttachToProcess(Program.CommandLineArgs[Constants.CommandLineOptions.AttachTo]);
         }
     }
 
@@ -113,30 +111,6 @@ public partial class MainForm : IconForm {
         GlobalWindowManager.RemoveWindow(this);
 
         base.OnFormClosed(e);
-    }
-
-    private async void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
-        // Stop the update timer
-        processUpdateTimer.Stop();
-
-        // and cancel all running tasks.
-        if (updateProcessInformationTask != null) {
-            e.Cancel = true;
-
-            Hide();
-
-            if (updateProcessInformationTask != null) {
-                try {
-                    await updateProcessInformationTask;
-                } catch {
-                    // ignored
-                }
-
-                updateProcessInformationTask = null;
-            }
-
-            Close();
-        }
     }
 
     private void MainForm_DragEnter(object sender, DragEventArgs e) {
@@ -158,14 +132,6 @@ public partial class MainForm : IconForm {
                 Program.Logger.Log(ex);
             }
         }
-    }
-
-    private void processUpdateTimer_Tick(object sender, EventArgs e) {
-        if (updateProcessInformationTask != null && !updateProcessInformationTask.IsCompleted) {
-            return;
-        }
-
-        updateProcessInformationTask = Program.RemoteProcess.UpdateProcessInformationsAsync();
     }
 
     private void classesView_ClassSelected(object sender, ClassNode? node) {
@@ -555,9 +521,9 @@ public partial class MainForm : IconForm {
 
     private void attachToProcessToolStripSplitButton_DropDownOpening(object sender, EventArgs e) {
         attachToProcessToolStripSplitButton.DropDownItems.AddRange(
-            Program.CoreFunctions.EnumerateProcesses()
-                .OrderBy(p => p.Name).ThenBy(p => p.Id)
-                .Select(p => new ToolStripMenuItem($"[{p.Id}] {p.Name}", p.Icon, (sender2, e2) => AttachToProcess(p)))
+            Process.GetProcesses()
+                .OrderBy(p => p.ProcessName).ThenBy(p => p.Id)
+                .Select(p => new ToolStripMenuItem($"[{p.Id}] {p.ProcessName}", p.GetIcon(), (sender2, e2) => AttachToProcess(p)))
                 .Cast<ToolStripItem>()
                 .ToArray()
         );

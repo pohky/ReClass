@@ -20,9 +20,9 @@ public class LinkedWindowFeatures {
     public static ClassNode CreateDefaultClass() {
         var address = ClassNode.DefaultAddress;
 
-        var mainModule = Program.RemoteProcess.GetModuleByName(Program.RemoteProcess.UnderlayingProcess?.Name);
+        var mainModule = Program.RemoteProcess.UnderlayingProcess?.MainModule;
         if (mainModule != null) {
-            address = mainModule.Start;
+            address = mainModule.BaseAddress;
         }
 
         return CreateClassAtAddress(address, true);

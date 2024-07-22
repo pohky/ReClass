@@ -30,24 +30,23 @@ public partial class MainForm {
         opener.Start();
     }
 
-    public void AttachToProcess(string processName) {
-        var info = Program.CoreFunctions.EnumerateProcesses().FirstOrDefault(p => string.Equals(p.Name, processName, StringComparison.OrdinalIgnoreCase));
-        if (info == null) {
-            MessageBox.Show($"Process '{processName}' could not be found.", Constants.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    public void AttachToProcess(string? processName) {
+        if (string.IsNullOrEmpty(processName))
+            return;
 
-            Program.Settings.LastProcess = string.Empty;
-        } else {
-            AttachToProcess(info);
-        }
+        var processes = Process.GetProcessesByName(processName);
+        if (processes.Length == 0)
+            return;
+
+        AttachToProcess(processes.First());
     }
 
-    public void AttachToProcess(ProcessInfo info) {
+    public void AttachToProcess(Process process) {
         Program.RemoteProcess.Close();
 
-        Program.RemoteProcess.Open(info);
-        Program.RemoteProcess.UpdateProcessInformations();
+        Program.RemoteProcess.Open(process);
 
-        Program.Settings.LastProcess = Program.RemoteProcess.UnderlayingProcess.Name;
+        Program.Settings.LastProcess = Program.RemoteProcess.UnderlayingProcess.ProcessName;
     }
 
     /// <summary>Sets the current project.</summary>

@@ -3,25 +3,31 @@ using ReClassNET.CodeGenerator;
 using ReClassNET.Controls;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Extensions;
-using ReClassNET.Logger;
 using ReClassNET.Memory;
 using ReClassNET.Nodes;
 using ReClassNET.Project;
-using ReClassNET.UI;
 
 namespace ReClassNET.Forms;
 
 public partial class MainForm {
-    public void ShowPartialCodeGeneratorForm(IReadOnlyList<ClassNode> partialClasses) {
-        ShowCodeGeneratorForm(partialClasses, [], new CppCodeGenerator(currentProject.TypeMapping));
+    public void OpenTempCode(IReadOnlyList<ClassNode> partialClasses) {
+        OpenTempCode(partialClasses, [], new CppCodeGenerator(currentProject.TypeMapping));
     }
 
-    public void ShowCodeGeneratorForm(ICodeGenerator generator) {
-        ShowCodeGeneratorForm(currentProject.Classes, currentProject.Enums, generator);
+    public void OpenTempCode(ICodeGenerator generator) {
+        OpenTempCode(currentProject.Classes, currentProject.Enums, generator);
     }
 
-    public void ShowCodeGeneratorForm(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ICodeGenerator generator) {
-        new CodeForm(generator, classes, enums, Program.Logger).Show();
+    public void OpenTempCode(IReadOnlyList<ClassNode> classes, IReadOnlyList<EnumDescription> enums, ICodeGenerator generator) {
+        var tempPath = Path.Join(Path.GetTempPath(), Path.ChangeExtension(Path.GetRandomFileName(), generator.Language.GetFileExtension()));
+
+        File.WriteAllText(tempPath, generator.GenerateCode(classes, enums, Program.Logger));
+        Program.TempFiles.Add(new FileInfo(tempPath));
+
+        using Process opener = new Process();
+        opener.StartInfo.FileName = "explorer";
+        opener.StartInfo.Arguments = "\"" + tempPath + "\"";
+        opener.Start();
     }
 
     public void AttachToProcess(string processName) {

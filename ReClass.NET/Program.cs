@@ -30,6 +30,8 @@ public static class Program {
 
     public static FontEx MonoSpaceFont { get; private set; }
 
+    public static List<FileInfo> TempFiles { get; } = [];
+
     [STAThread]
     private static void Main(string[] args) {
         DesignMode = false; // The designer doesn't call Main()
@@ -93,6 +95,13 @@ public static class Program {
 #endif
 
         SettingsSerializer.Save(Settings);
+
+        // clean up temp files
+        foreach (var fileInfo in TempFiles) {
+            try {
+                fileInfo.Delete();
+            } catch { }
+        }
     }
 
     /// <summary>Shows the exception in a special form.</summary>

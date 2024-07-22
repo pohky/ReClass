@@ -38,17 +38,6 @@
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="ColorCode">
-      <HintPath>..\Dependencies\ColorCode.dll</HintPath>
-    </Reference>
-    <Reference Include="Dia2Lib">
-      <HintPath>..\Dependencies\Dia2Lib.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.ExceptionMessageBox">
-      <HintPath>..\Dependencies\Microsoft.ExceptionMessageBox.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Controls\BannerBox.cs">

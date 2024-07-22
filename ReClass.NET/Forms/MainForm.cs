@@ -290,7 +290,7 @@ public partial class MainForm : IconForm {
             return;
         }
 
-        ShowPartialCodeGeneratorForm([classNode]);
+        OpenTempCode([classNode]);
     }
 
     private void enableHierarchyViewToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -524,11 +524,11 @@ public partial class MainForm : IconForm {
     }
 
     private void generateCppCodeToolStripMenuItem_Click(object sender, EventArgs e) {
-        ShowCodeGeneratorForm(new CppCodeGenerator(currentProject.TypeMapping));
+        OpenTempCode(new CppCodeGenerator(currentProject.TypeMapping));
     }
 
     private void generateCSharpCodeToolStripMenuItem_Click(object sender, EventArgs e) {
-        ShowCodeGeneratorForm(new CSharpCodeGenerator());
+        OpenTempCode(new CSharpCodeGenerator());
     }
 
     private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -709,7 +709,7 @@ public partial class MainForm : IconForm {
 
     private void showCodeOfClassToolStripMenuItem_Click(object sender, EventArgs e) {
         if (memoryViewControl.GetSelectedNodes().FirstOrDefault()?.Node is ClassNode node) {
-            ShowPartialCodeGeneratorForm([node]);
+            OpenTempCode([node]);
         }
     }
 

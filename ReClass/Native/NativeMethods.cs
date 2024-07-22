@@ -1,7 +1,10 @@
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.System.Diagnostics.ToolHelp;
+using Windows.Win32.System.Threading;
 using Windows.Win32.UI.Shell;
 
 namespace ReClass.Native;
@@ -74,5 +77,63 @@ public static class NativeMethods {
 
     private static unsafe void FireAssocChanged() {
         PInvoke.SHChangeNotify(SHCNE_ID.SHCNE_ASSOCCHANGED, SHCNF_FLAGS.SHCNF_IDLIST);
+    }
+
+    public static unsafe ProcessInfo[] GetProcesses() {
+        var handle = PInvoke.CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS.TH32CS_SNAPPROCESS, 0);
+        if (handle == HANDLE.INVALID_HANDLE_VALUE) {
+            return [];
+        }
+
+        var list = new List<ProcessInfo>();
+        var pe32 = new PROCESSENTRY32W {
+            dwSize = (uint)Marshal.SizeOf<PROCESSENTRY32W>()
+        };
+
+        const int capacity = 255;
+        var buffer = stackalloc char[capacity];
+
+        if (PInvoke.Process32FirstW(handle, ref pe32)) {
+            do {
+                var process = PInvoke.OpenProcess(
+                    PROCESS_ACCESS_RIGHTS.PROCESS_STANDARD_RIGHTS_REQUIRED |
+                    PROCESS_ACCESS_RIGHTS.PROCESS_TERMINATE |
+                    PROCESS_ACCESS_RIGHTS.PROCESS_QUERY_INFORMATION |
+                    PROCESS_ACCESS_RIGHTS.PROCESS_SYNCHRONIZE |
+                    PROCESS_ACCESS_RIGHTS.PROCESS_VM_READ,
+                    false,
+                    pe32.th32ProcessID);
+                if (process.IsNull || process == HANDLE.INVALID_HANDLE_VALUE) {
+                    continue;
+                }
+
+                if (PInvoke.IsWow64Process(process, out var wow64Process) && wow64Process) {
+                    PInvoke.CloseHandle(process);
+                    continue;
+                }
+
+                var retn = PInvoke.WaitForSingleObject(process, 0);
+                if (retn != WAIT_EVENT.WAIT_TIMEOUT) {
+                    PInvoke.CloseHandle(process);
+                    continue;
+                }
+
+                PInvoke.GetModuleFileNameEx(process, HMODULE.Null, buffer, capacity);
+                var path = new string(buffer);
+
+                list.Add(new() {
+                    Id = pe32.th32ProcessID,
+                    Name = Path.GetFileName(path),
+                    Path = path
+                });
+
+                PInvoke.CloseHandle(process);
+
+            } while (PInvoke.Process32NextW(handle, ref pe32));
+        }
+
+        PInvoke.CloseHandle(handle);
+
+        return [.. list];
     }
 }

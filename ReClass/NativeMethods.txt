@@ -17,6 +17,11 @@ TerminateProcess
 Thread32First
 Thread32Next
 OpenThread
+Process32FirstW
+Process32NextW
+GetModuleFileNameExW
+IsWow64Process
+INVALID_HANDLE_VALUE
 
 // shell32
 

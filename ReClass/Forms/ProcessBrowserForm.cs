@@ -1,6 +1,7 @@
 using System.Data;
 using System.Diagnostics;
 using ReClass.Extensions;
+using ReClass.Native;
 using ReClass.UI;
 
 namespace ReClass.Forms;
@@ -23,9 +24,20 @@ public partial class ProcessBrowserForm : IconForm {
     ];
 
     /// <summary>Gets the selected process.</summary>
-    public Process SelectedProcess => (processDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault()?.DataBoundItem as DataRowView)
-        ?.Row
-        ?.Field<Process>("process");
+    public Process? SelectedProcess {
+        get {
+            var row = processDataGridView.SelectedRows.Cast<DataGridViewRow>().FirstOrDefault();
+            if (row == null)
+                return null;
+
+            var dataRow = ((DataRowView)row.DataBoundItem)?.Row;
+            if (dataRow == null)
+                return null;
+
+            var pid = dataRow.Field<int>("id");
+            return Process.GetProcessById(pid);
+        }
+    }
 
     public ProcessBrowserForm(string previousProcess) {
         InitializeComponent();
@@ -63,25 +75,22 @@ public partial class ProcessBrowserForm : IconForm {
         dt.Columns.Add("name", typeof(string));
         dt.Columns.Add("id", typeof(int));
         dt.Columns.Add("path", typeof(string));
-        dt.Columns.Add("process", typeof(Process));
 
         var shouldFilter = filterCheckBox.Checked;
 
-        foreach (var p in Process.GetProcesses()) {
-            try {
-                if (shouldFilter && commonProcesses.Contains(p.ProcessName.ToLower()))
-                    continue;
+        foreach (var process in NativeMethods.GetProcesses()) {
+            if (process.Id == 0) // Idle process
+                continue;
 
-                var row = dt.NewRow();
-                row["icon"] = p.GetIcon();
-                row["name"] = p.ProcessName;
-                row["id"] = p.Id;
-                row["path"] = p.MainModule!.FileName;
-                row["process"] = p;
-                dt.Rows.Add(row);
-            } catch {
-                // might get access denied for system processes
-            }
+            if (shouldFilter && commonProcesses.Contains(process.Name.ToLower()))
+                continue;
+
+            var row = dt.NewRow();
+            row["icon"] = process.Icon;
+            row["name"] = process.Name;
+            row["id"] = process.Id;
+            row["path"] = process.Path;
+            dt.Rows.Add(row);
         }
 
         dt.DefaultView.Sort = "name ASC";

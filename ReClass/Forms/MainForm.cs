@@ -6,6 +6,7 @@ using ReClass.Controls;
 using ReClass.DataExchange.ReClass;
 using ReClass.Extensions;
 using ReClass.Memory;
+using ReClass.Native;
 using ReClass.Nodes;
 using ReClass.Plugins;
 using ReClass.Project;
@@ -521,9 +522,9 @@ public partial class MainForm : IconForm {
 
     private void attachToProcessToolStripSplitButton_DropDownOpening(object sender, EventArgs e) {
         attachToProcessToolStripSplitButton.DropDownItems.AddRange(
-            Process.GetProcesses()
-                .OrderBy(p => p.ProcessName).ThenBy(p => p.Id)
-                .Select(p => new ToolStripMenuItem($"[{p.Id}] {p.ProcessName}", p.GetIcon(), (sender2, e2) => AttachToProcess(p)))
+            NativeMethods.GetProcesses()
+                .OrderBy(p => p.Name).ThenBy(p => p.Id)
+                .Select(p => new ToolStripMenuItem($"[{p.Id}] {p.Name}", p.Icon, (sender2, e2) => AttachToProcess((int)p.Id)))
                 .Cast<ToolStripItem>()
                 .ToArray()
         );

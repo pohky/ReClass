@@ -29,6 +29,13 @@ public partial class MainForm {
         opener.Start();
     }
 
+    public void AttachToProcess(int processId) {
+        if (processId == 0)
+            return;
+
+        AttachToProcess(Process.GetProcessById(processId));
+    }
+
     public void AttachToProcess(string? processName) {
         if (string.IsNullOrEmpty(processName))
             return;

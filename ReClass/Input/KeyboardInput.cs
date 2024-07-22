@@ -1,0 +1,27 @@
+namespace ReClass.Input;
+
+public class KeyboardInput : IDisposable {
+    private readonly IntPtr handle;
+
+    public KeyboardInput() {
+        handle = Program.CoreFunctions.InitializeInput();
+    }
+
+    public void Dispose() {
+        ReleaseUnmanagedResources();
+
+        GC.SuppressFinalize(this);
+    }
+
+    ~KeyboardInput() {
+        ReleaseUnmanagedResources();
+    }
+
+    private void ReleaseUnmanagedResources() {
+        Program.CoreFunctions.ReleaseInput(handle);
+    }
+
+    public Keys[] GetPressedKeys() {
+        return Program.CoreFunctions.GetPressedKeys(handle);
+    }
+}

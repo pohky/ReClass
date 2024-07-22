@@ -118,8 +118,6 @@ public class CoreFunctionsManager : IDisposable {
 
     #region Internal Core Functions
 
-    public bool DisassembleCode(IntPtr address, int length, IntPtr virtualAddress, bool determineStaticInstructionBytes, EnumerateInstructionCallback callback) => internalCoreFunctions.DisassembleCode(address, length, virtualAddress, determineStaticInstructionBytes, callback);
-
     public IntPtr InitializeInput() => internalCoreFunctions.InitializeInput();
 
     public Keys[] GetPressedKeys(IntPtr handle) => internalCoreFunctions.GetPressedKeys(handle);

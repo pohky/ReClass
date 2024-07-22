@@ -1,6 +1,7 @@
 using ReClassNET.AddressParser;
 using ReClassNET.Core;
 using ReClassNET.Extensions;
+using ReClassNET.Native.Imports;
 using ReClassNET.Util.Conversion;
 
 namespace ReClassNET.Memory;
@@ -45,6 +46,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
 
     public bool IsValid => UnderlayingProcess != null && CoreFunctions.IsProcessValid(handle);
+    public bool Is64Bit => UnderlayingProcess != null && Kernel32.IsWow64Process(handle, out var wow64Process) && !wow64Process;
 
     public RemoteProcess(CoreFunctionsManager coreFunctions) {
         this.CoreFunctions = coreFunctions;

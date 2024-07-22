@@ -23,4 +23,7 @@ internal static unsafe class Kernel32 {
 
     [DllImport("kernel32")]
     public static extern bool FreeLibrary(nint hModule);
+
+    [DllImport("kernel32")]
+    public static extern bool IsWow64Process(nint hProcess, out bool wow64Process);
 }

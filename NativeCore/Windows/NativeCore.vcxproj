@@ -74,28 +74,28 @@
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
-    <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
-    <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
-    <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)</TargetName>
     <OutDir>..\..\bin</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformTarget)\$(MSBuildProjectName)\</IntDir>
-    <IncludePath>..\Dependencies\distorm\include;..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\Dependencies\beaengine\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -170,19 +170,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Dependencies\distorm\src\decoder.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\distorm.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\instructions.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\insts.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\mnemonics.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\operands.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\prefix.c" />
-    <ClCompile Include="..\Dependencies\distorm\src\textdefs.c" />
-    <ClCompile Include="..\Shared\DistormHelper.cpp" />
     <ClCompile Include="CloseRemoteProcess.cpp" />
     <ClCompile Include="ControlRemoteProcess.cpp" />
     <ClCompile Include="Debugger.cpp" />
-    <ClCompile Include="DisassembleCode.cpp" />
     <ClCompile Include="EnumerateProcesses.cpp" />
     <ClCompile Include="EnumerateRemoteSectionsAndModules.cpp" />
     <ClCompile Include="IsProcessValid.cpp" />
@@ -195,19 +185,7 @@
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Dependencies\distorm\include\distorm.h" />
-    <ClInclude Include="..\Dependencies\distorm\include\mnemonics.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\config.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\decoder.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\instructions.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\insts.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\operands.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\prefix.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\textdefs.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\wstring.h" />
-    <ClInclude Include="..\Dependencies\distorm\src\x86defs.h" />
     <ClInclude Include="..\ReClassNET_Plugin.hpp" />
-    <ClInclude Include="..\Shared\DistormHelper.hpp" />
     <ClInclude Include="..\Shared\Keys.hpp" />
     <ClInclude Include="NativeCore.hpp" />
   </ItemGroup>

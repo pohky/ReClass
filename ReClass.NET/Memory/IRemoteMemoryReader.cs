@@ -4,6 +4,7 @@ namespace ReClassNET.Memory;
 
 public interface IRemoteMemoryReader {
     EndianBitConverter BitConverter { get; set; }
+    bool Is64Bit { get; }
 
     /// <summary>Reads remote memory from the address into the buffer.</summary>
     /// <param name="address">The address to read from.</param>

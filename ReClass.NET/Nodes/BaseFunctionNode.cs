@@ -41,7 +41,7 @@ public abstract class BaseFunctionNode : BaseNode {
     protected void DisassembleRemoteCode(RemoteProcess process, IntPtr address, out int memorySize) {
         memorySize = 0;
 
-        var disassembler = new Disassembler(process.CoreFunctions);
+        var disassembler = new Disassembler();
         foreach (var instruction in disassembler.RemoteDisassembleFunction(process, address, 8192)) {
             memorySize += instruction.Length;
 

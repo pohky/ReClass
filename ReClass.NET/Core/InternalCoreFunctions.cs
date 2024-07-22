@@ -12,7 +12,6 @@ internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions
 
     private static readonly Keys[] empty = [];
 
-    private readonly DisassembleCodeDelegate disassembleCodeDelegate;
     private readonly GetPressedKeysDelegate getPressedKeysDelegate;
 
     private readonly IntPtr handle;
@@ -24,14 +23,10 @@ internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions
         : base(handle) {
         this.handle = handle;
 
-        disassembleCodeDelegate = GetFunctionDelegate<DisassembleCodeDelegate>(handle, "DisassembleCode");
-
         initializeInputDelegate = GetFunctionDelegate<InitializeInputDelegate>(handle, "InitializeInput");
         getPressedKeysDelegate = GetFunctionDelegate<GetPressedKeysDelegate>(handle, "GetPressedKeys");
         releaseInputDelegate = GetFunctionDelegate<ReleaseInputDelegate>(handle, "ReleaseInput");
     }
-
-    public bool DisassembleCode(IntPtr address, int length, IntPtr virtualAddress, bool determineStaticInstructionBytes, EnumerateInstructionCallback callback) => disassembleCodeDelegate(address, length, virtualAddress, determineStaticInstructionBytes, callback);
 
     public IntPtr InitializeInput() => initializeInputDelegate();
 
@@ -61,9 +56,6 @@ internal class InternalCoreFunctions : NativeCoreWrapper, IInternalCoreFunctions
 
         return new InternalCoreFunctions(handle);
     }
-
-    [return: MarshalAs(UnmanagedType.I1)]
-    private delegate bool DisassembleCodeDelegate(IntPtr address, IntPtr length, IntPtr virtualAddress, [MarshalAs(UnmanagedType.I1)] bool determineStaticInstructionBytes, [MarshalAs(UnmanagedType.FunctionPtr)] EnumerateInstructionCallback callback);
 
     private delegate IntPtr InitializeInputDelegate();
 

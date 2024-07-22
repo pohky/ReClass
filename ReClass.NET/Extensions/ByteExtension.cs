@@ -9,6 +9,6 @@ public static class ByteExtension {
     /// <param name="array"></param>
     [DebuggerStepThrough]
     public static void FillWithZero(this byte[] array) {
-        Array.Clear(array, 0, array.Length);
+        ((Span<byte>)array).Clear();
     }
 }

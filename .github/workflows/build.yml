@@ -27,9 +27,8 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
           cache: true
-          cache-dependency-path: ReClass.NET/packages.lock.json
+          cache-dependency-path: ReClass/packages.lock.json
 
       - name: Restore dependencies
         run: dotnet restore --locked-mode

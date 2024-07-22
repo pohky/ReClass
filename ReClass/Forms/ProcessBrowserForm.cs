@@ -9,8 +9,17 @@ public partial class ProcessBrowserForm : IconForm {
     private const string NoPreviousProcess = "No previous process";
 
     private static readonly string[] commonProcesses = [
-        "[system process]", "system", "svchost.exe", "services.exe", "wininit.exe",
-        "smss.exe", "csrss.exe", "lsass.exe", "winlogon.exe", "wininit.exe", "dwm.exe"
+        "[system process]",
+        "system",
+        "svchost.exe",
+        "services.exe",
+        "wininit.exe",
+        "smss.exe",
+        "csrss.exe",
+        "lsass.exe",
+        "winlogon.exe",
+        "wininit.exe",
+        "dwm.exe"
     ];
 
     /// <summary>Gets the selected process.</summary>
@@ -70,8 +79,7 @@ public partial class ProcessBrowserForm : IconForm {
                 row["path"] = p.MainModule!.FileName;
                 row["process"] = p;
                 dt.Rows.Add(row);
-            }
-            catch {
+            } catch {
                 // might get access denied for system processes
             }
         }

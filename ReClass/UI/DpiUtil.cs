@@ -4,25 +4,25 @@ using System.Drawing.Imaging;
 namespace ReClass.UI;
 
 public static class DpiUtil {
-    public const int DefalutDpi = 96;
+    public const int DefaultDpi = 96;
 
-    private static int _dpiX = DefalutDpi;
-    private static int _dpiY = DefalutDpi;
+    private static int _dpiX = DefaultDpi;
+    private static int _dpiY = DefaultDpi;
 
     private static double _scaleX = 1.0;
     private static double _scaleY = 1.0;
-    
+
     public static void SetDpi(int x, int y) {
         _dpiX = x;
         _dpiY = y;
 
         if (_dpiX <= 0 || _dpiY <= 0) {
-            _dpiX = DefalutDpi;
-            _dpiY = DefalutDpi;
+            _dpiX = DefaultDpi;
+            _dpiY = DefaultDpi;
         }
 
-        _scaleX = _dpiX / (double)DefalutDpi;
-        _scaleY = _dpiY / (double)DefalutDpi;
+        _scaleX = _dpiX / (double)DefaultDpi;
+        _scaleY = _dpiY / (double)DefaultDpi;
     }
 
     public static void TrySetDpiFromCurrentDesktop() {

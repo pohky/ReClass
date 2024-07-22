@@ -74,13 +74,13 @@ public static class Program {
 #if !DEBUG
         try {
 #endif
-            RemoteProcess = new RemoteProcess();
+        RemoteProcess = new RemoteProcess();
 
-            MainForm = new MainForm();
+        MainForm = new MainForm();
 
-            Application.Run(MainForm);
+        Application.Run(MainForm);
 
-            RemoteProcess.Dispose();
+        RemoteProcess.Dispose();
 #if !DEBUG
         }
         catch (Exception ex) {

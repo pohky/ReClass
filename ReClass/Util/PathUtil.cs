@@ -38,7 +38,7 @@ public class PathUtil {
 
         return Path.Combine(localApplicationData, Constants.ApplicationName);
     });
-    
+
     /// <summary>Gets the full pathname of the executable file.</summary>
     public static string ExecutablePath => executablePath.Value;
 

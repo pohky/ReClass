@@ -3,7 +3,6 @@ using ReClass.CodeGenerator;
 using ReClass.Controls;
 using ReClass.DataExchange.ReClass;
 using ReClass.Extensions;
-using ReClass.Memory;
 using ReClass.Nodes;
 using ReClass.Project;
 

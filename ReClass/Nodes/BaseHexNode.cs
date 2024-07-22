@@ -10,7 +10,14 @@ namespace ReClass.Nodes;
 public abstract class BaseHexNode : BaseNode {
     private static readonly Random highlightRandom = new();
     private static readonly Color[] highlightColors = [
-        Color.Aqua, Color.Aquamarine, Color.Blue, Color.BlueViolet, Color.Chartreuse, Color.Crimson, Color.LawnGreen, Color.Magenta
+        Color.Aqua,
+        Color.Aquamarine,
+        Color.Blue,
+        Color.BlueViolet,
+        Color.Chartreuse,
+        Color.Crimson,
+        Color.LawnGreen,
+        Color.Magenta
     ];
 
     private static readonly TimeSpan hightlightDuration = TimeSpan.FromSeconds(1);

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Reflection.Metadata;
 using ReClass.AddressParser;
 using ReClass.Extensions;
 using ReClass.Util.Conversion;
@@ -60,7 +59,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             var en = UnderlayingProcess.Modules.GetEnumerator();
             while (en.MoveNext()) {
                 var module = (ProcessModule)en.Current;
-                if (address >= module.BaseAddress && address < module.BaseAddress + module.ModuleMemorySize) 
+                if (address >= module.BaseAddress && address < module.BaseAddress + module.ModuleMemorySize)
                     return module;
             }
         }
@@ -158,7 +157,8 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         if (module != null) {
             return $"{module.ModuleName}.{address:X}";
         }
-        return null;
+
+        return string.Empty;
     }
 
     /// <summary>Parse the address formula.</summary>

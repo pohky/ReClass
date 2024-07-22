@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.SqlServer.MessageBox;
 using ReClassNET.Core;
 using ReClassNET.DataExchange.ReClass;
 using ReClassNET.Forms;
@@ -99,13 +98,16 @@ public static class Program {
     /// <summary>Shows the exception in a special form.</summary>
     /// <param name="ex">The exception.</param>
     public static void ShowException(Exception ex) {
-        ex.HelpLink = Constants.HelpUrl;
+        var closebutton = new TaskDialogButton("Close");
 
-        var msg = new ExceptionMessageBox(ex) {
-            Beep = false,
-            ShowToolBar = true,
-            Symbol = ExceptionMessageBoxSymbol.Error
-        };
-        msg.Show(null);
+        TaskDialog.ShowDialog(new() {
+            Caption = "ReClass Exception",
+            SizeToContent = true,
+            DefaultButton = closebutton,
+            Heading = ex.GetType().Name,
+            Text = ex.Message + "\n" + ex.StackTrace ?? "",
+            //Icon = TaskDialogIcon.Information, -- will invoke a beep
+            Buttons = [closebutton]
+        });
     }
 }

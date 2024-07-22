@@ -1,5 +1,3 @@
-using Microsoft.SqlServer.MessageBox;
-
 namespace ReClassNET.Logger;
 
 public abstract class BaseLogger : ILogger {
@@ -8,7 +6,7 @@ public abstract class BaseLogger : ILogger {
     public event NewLogEntryEventHandler? NewLogEntry;
 
     public void Log(Exception ex) {
-        Log(LogLevel.Error, ExceptionMessageBox.GetMessageText(ex), ex);
+        Log(LogLevel.Error, ex.Message, ex);
     }
 
     public void Log(LogLevel level, string message) {

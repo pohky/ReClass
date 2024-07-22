@@ -114,12 +114,6 @@ public class CoreFunctionsManager : IDisposable {
         CurrentFunctions.ControlRemoteProcess(process, action);
     }
 
-    public bool AttachDebuggerToProcess(IntPtr id) => CurrentFunctions.AttachDebuggerToProcess(id);
-
-    public void DetachDebuggerFromProcess(IntPtr id) {
-        CurrentFunctions.DetachDebuggerFromProcess(id);
-    }
-
     #endregion
 
     #region Internal Core Functions

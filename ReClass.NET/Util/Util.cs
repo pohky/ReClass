@@ -23,12 +23,6 @@ public static class Utils {
         return item2;
     }
 
-    public static void Swap<T>(ref T lhs, ref T rhs) {
-        var temp = lhs;
-        lhs = rhs;
-        rhs = temp;
-    }
-
     //thx again stack overflow https://stackoverflow.com/a/1344242
     public static string RandomString(int length) {
         const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

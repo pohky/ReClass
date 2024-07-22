@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using ReClassNET.Extensions;
 using ReClassNET.Native;
+using ReClassNET.Native.Imports;
 
 namespace ReClassNET.Core;
 
@@ -18,8 +19,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
         readRemoteMemoryDelegate = GetFunctionDelegate<ReadRemoteMemoryDelegate>(handle, "ReadRemoteMemory");
         writeRemoteMemoryDelegate = GetFunctionDelegate<WriteRemoteMemoryDelegate>(handle, "WriteRemoteMemory");
         controlRemoteProcessDelegate = GetFunctionDelegate<ControlRemoteProcessDelegate>(handle, "ControlRemoteProcess");
-        attachDebuggerToProcessDelegate = GetFunctionDelegate<AttachDebuggerToProcessDelegate>(handle, "AttachDebuggerToProcess");
-        detachDebuggerFromProcessDelegate = GetFunctionDelegate<DetachDebuggerFromProcessDelegate>(handle, "DetachDebuggerFromProcess");
     }
 
     public void EnumerateProcesses(EnumerateProcessCallback callbackProcess) {
@@ -32,7 +31,18 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
 
     public IntPtr OpenRemoteProcess(IntPtr pid, ProcessAccess desiredAccess) => openRemoteProcessDelegate(pid, desiredAccess);
 
-    public bool IsProcessValid(IntPtr process) => isProcessValidDelegate(process);
+    public bool IsProcessValid(nint process) {
+        if (process == nint.Zero) {
+            return false;
+        }
+
+        var retn = Kernel32.WaitForSingleObject(process, 0);
+        if (retn == 0xFFFFFFFF) { // WAIT_FAILED
+            return false;
+        }
+
+        return retn == 0x00000102L; // WAIT_TIMEOUT
+    }
 
     public void CloseRemoteProcess(IntPtr process) {
         closeRemoteProcessDelegate(process);
@@ -44,12 +54,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
 
     public void ControlRemoteProcess(IntPtr process, ControlRemoteProcessAction action) {
         controlRemoteProcessDelegate(process, action);
-    }
-
-    public bool AttachDebuggerToProcess(IntPtr id) => attachDebuggerToProcessDelegate(id);
-
-    public void DetachDebuggerFromProcess(IntPtr id) {
-        detachDebuggerFromProcessDelegate(id);
     }
 
     protected static TDelegate GetFunctionDelegate<TDelegate>(IntPtr handle, string function) {
@@ -94,8 +98,6 @@ public class NativeCoreWrapper : ICoreProcessFunctions {
     private readonly ReadRemoteMemoryDelegate readRemoteMemoryDelegate;
     private readonly WriteRemoteMemoryDelegate writeRemoteMemoryDelegate;
     private readonly ControlRemoteProcessDelegate controlRemoteProcessDelegate;
-    private readonly AttachDebuggerToProcessDelegate attachDebuggerToProcessDelegate;
-    private readonly DetachDebuggerFromProcessDelegate detachDebuggerFromProcessDelegate;
 
     #endregion
 

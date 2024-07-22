@@ -21,8 +21,6 @@ public class PathUtil {
 
     private static readonly Lazy<string> executableFolderPath = new(() => Path.GetDirectoryName(executablePath.Value));
 
-    private static readonly Lazy<string> temporaryFolderPath = new(Path.GetTempPath);
-
     private static readonly Lazy<string> settingsFolderPath = new(() => {
         string applicationData;
         try {
@@ -46,10 +44,6 @@ public class PathUtil {
 
     /// <summary>Gets the full pathname of the executable folder.</summary>
     public static string ExecutableFolderPath => executableFolderPath.Value;
-
-    /// <summary>Gets the full pathname of the temporary folder.</summary>
-    /// <remarks>%temp%</remarks>
-    public static string TemporaryFolderPath => temporaryFolderPath.Value;
 
     /// <summary>Gets the full pathname of the settings folder.</summary>
     /// <remarks>%localappdata%\ReClass.NET\</remarks>

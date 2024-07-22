@@ -3,15 +3,6 @@ using System.Runtime.InteropServices;
 namespace ReClassNET.Memory;
 
 [StructLayout(LayoutKind.Explicit)]
-public struct UInt8Data {
-    [FieldOffset(0)]
-    public sbyte SByteValue;
-
-    [FieldOffset(0)]
-    public byte ByteValue;
-}
-
-[StructLayout(LayoutKind.Explicit)]
 public struct UInt16Data {
     [FieldOffset(0)]
     public short ShortValue;

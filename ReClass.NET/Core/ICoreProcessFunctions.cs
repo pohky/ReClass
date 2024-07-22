@@ -22,8 +22,4 @@ public interface ICoreProcessFunctions {
     bool WriteRemoteMemory(IntPtr process, IntPtr address, ref byte[] buffer, int offset, int size);
 
     void ControlRemoteProcess(IntPtr process, ControlRemoteProcessAction action);
-
-    bool AttachDebuggerToProcess(IntPtr id);
-
-    void DetachDebuggerFromProcess(IntPtr id);
 }

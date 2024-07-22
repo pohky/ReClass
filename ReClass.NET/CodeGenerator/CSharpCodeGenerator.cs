@@ -15,19 +15,19 @@ public class CSharpCodeGenerator : ICodeGenerator {
         [typeof(Int16Node)] = "short",
         [typeof(Int32Node)] = "int",
         [typeof(Int64Node)] = "long",
-        [typeof(NIntNode)] = "IntPtr",
+        [typeof(NIntNode)] = "nint",
         [typeof(UInt8Node)] = "byte",
         [typeof(UInt16Node)] = "ushort",
         [typeof(UInt32Node)] = "uint",
         [typeof(UInt64Node)] = "ulong",
-        [typeof(NUIntNode)] = "UIntPtr",
+        [typeof(NUIntNode)] = "nuint",
 
-        [typeof(FunctionPtrNode)] = "IntPtr",
-        [typeof(Utf8TextPtrNode)] = "IntPtr",
-        [typeof(Utf16TextPtrNode)] = "IntPtr",
-        [typeof(Utf32TextPtrNode)] = "IntPtr",
-        [typeof(PointerNode)] = "IntPtr",
-        [typeof(VirtualMethodTableNode)] = "IntPtr",
+        [typeof(FunctionPtrNode)] = "nint",
+        [typeof(Utf8TextPtrNode)] = "byte*",
+        [typeof(Utf16TextPtrNode)] = "char*",
+        [typeof(Utf32TextPtrNode)] = "nint",
+        [typeof(PointerNode)] = "nint",
+        [typeof(VirtualMethodTableNode)] = "nint",
 
         [typeof(Vector2Node)] = "Vector2",
         [typeof(Vector3Node)] = "Vector3",
@@ -146,9 +146,10 @@ public class CSharpCodeGenerator : ICodeGenerator {
     /// <param name="class">The class to output.</param>
     /// <param name="logger">The logger.</param>
     private static void WriteClass(IndentedTextWriter writer, ClassNode @class, ILogger logger) {
-        writer.WriteLine("[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]");
-        writer.Write("public struct ");
+        writer.WriteLine($"[StructLayout(LayoutKind.Explicit, Size = 0x{@class.MemorySize:X})]");
+        writer.Write("public unsafe struct ");
         writer.Write(@class.Name);
+        writer.Write(" {");
 
         if (!string.IsNullOrEmpty(@class.Comment)) {
             writer.Write(" // ");
@@ -157,7 +158,6 @@ public class CSharpCodeGenerator : ICodeGenerator {
 
         writer.WriteLine();
 
-        writer.WriteLine("{");
         writer.Indent++;
 
         var nodes = @class.Nodes
@@ -169,10 +169,10 @@ public class CSharpCodeGenerator : ICodeGenerator {
                     writer.WriteLine(attribute);
                 }
 
-                writer.WriteLine($"[FieldOffset(0x{node.Offset:X})]");
-                writer.Write($"public readonly {type} {node.Name};");
+                writer.Write($"[FieldOffset(0x{node.Offset:X})] public {type} {node.Name};");
+
                 if (!string.IsNullOrEmpty(node.Comment)) {
-                    writer.Write(" //");
+                    writer.Write(" // ");
                     writer.Write(node.Comment);
                 }
                 writer.WriteLine();

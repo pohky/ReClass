@@ -400,7 +400,7 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The new x coordinate after drawing the comment.</returns>
     protected virtual int AddComment(DrawContext context, int x, int y) {
-        x = AddText(context, x, y, context.Settings.CommentColor, HotSpot.NoneId, "//");
+        x = AddText(context, x, y, context.Settings.CommentColor, HotSpot.NoneId, "//") + context.Font.Width;
         x = AddText(context, x, y, context.Settings.CommentColor, HotSpot.CommentId, Comment) + context.Font.Width;
 
         return x;

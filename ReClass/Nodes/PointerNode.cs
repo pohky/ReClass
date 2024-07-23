@@ -34,7 +34,7 @@ public class PointerNode : BaseWrapperNode {
 
         address = spot.Memory.ReadIntPtr(Offset);
 
-        return spot.Process.GetNamedAddress(address) != null;
+        return !string.IsNullOrEmpty(spot.Process.GetNamedAddress(address));
     }
 
     public override bool CanChangeInnerNodeTo(BaseNode node) =>

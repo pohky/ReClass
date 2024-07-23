@@ -18,7 +18,7 @@ public class Hex32Node : BaseHexCommentNode {
 
         address = value.IntPtr;
 
-        return spot.Process?.GetNamedAddress(value.IntPtr) != null;
+        return !string.IsNullOrEmpty(spot.Process?.GetNamedAddress(value.IntPtr));
     }
 
     public override string GetToolTipText(HotSpot spot) {

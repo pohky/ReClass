@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using ReClass.Extensions;
+using ReClass.Native;
 using ReClass.Nodes;
 
 namespace ReClass.Memory;
@@ -84,7 +85,6 @@ public class NodeDissector {
             return false;
         }
 
-        /*
         var section = process.GetSectionToPointer(address);
         if (section == null) {
             return false;
@@ -122,7 +122,6 @@ public class NodeDissector {
             node = new PointerNode();
             return true;
         }
-        */
 
         return false;
     }

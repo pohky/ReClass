@@ -243,7 +243,7 @@ public static class NativeMethods {
             var sectionHeaders = new IMAGE_SECTION_HEADER[imageNtHeaders.FileHeader.NumberOfSections];
 
             fixed (void* sectionHeadersPtr = sectionHeaders)
-                PInvoke.ReadProcessMemory(processHandle, (void*)((nuint)ntHeaderPtr + ImageNtHeaders64Size), sectionHeadersPtr, imageNtHeaders.FileHeader.NumberOfSections * ImageNtHeaders64Size);
+                PInvoke.ReadProcessMemory(processHandle, (void*)((nuint)ntHeaderPtr + ImageNtHeaders64Size), sectionHeadersPtr, imageNtHeaders.FileHeader.NumberOfSections * ImageSectionHeaderSize);
 
             foreach (var sectionHeader in sectionHeaders) {
                 var sectionAddress = module.BaseAddress + sectionHeader.VirtualAddress;

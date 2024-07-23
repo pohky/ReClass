@@ -194,9 +194,10 @@ public static class NativeMethods {
         if (PInvoke.Module32FirstW(handle, ref me32)) {
             do {
                 list.Add(new() {
-                    BaseAddress = (nuint)me32.modBaseAddr,
+                    BaseAddress = (nint)me32.modBaseAddr,
                     Size = me32.modBaseSize,
-                    Path = me32.szExePath.ToString()
+                    Path = me32.szExePath.ToString(),
+                    Name = Path.GetFileName(me32.szExePath.ToString())
                 });
             } while (PInvoke.Module32NextW(handle, ref me32));
         }
@@ -216,16 +217,15 @@ public static class NativeMethods {
         while (PInvoke.VirtualQueryEx(processHandle, (void*)address, out var memory, MemoryBasicInformationSize) != 0 && address + memory.RegionSize > address) {
             if (memory.State == VIRTUAL_ALLOCATION_TYPE.MEM_COMMIT) {
                 sections.Add(new() {
-                    Start = (nuint)memory.BaseAddress,
-                    End = (nuint)memory.BaseAddress + memory.RegionSize,
-                    Size = memory.RegionSize,
+                    Start = (nint)memory.BaseAddress,
+                    End = (nint)memory.BaseAddress + (nint)memory.RegionSize,
+                    Size = (nint)memory.RegionSize,
                     Category = memory.Type == PAGE_TYPE.MEM_PRIVATE ? SectionCategory.HEAP : SectionCategory.Unknown
                 });
             }
 
             address = (nuint)memory.BaseAddress + memory.RegionSize;
         }
-
 
         var modules = GetModules(processHandle);
 
@@ -234,7 +234,7 @@ public static class NativeMethods {
             if (!PInvoke.ReadProcessMemory(processHandle, (void*)module.BaseAddress, &imageDosHeader, ImageDosHeaderSize))
                 continue;
 
-            var ntHeaderPtr = (void*)(module.BaseAddress + (nuint)imageDosHeader.e_lfanew);
+            var ntHeaderPtr = (void*)(module.BaseAddress + imageDosHeader.e_lfanew);
 
             var imageNtHeaders = new IMAGE_NT_HEADERS64();
             if (!PInvoke.ReadProcessMemory(processHandle, ntHeaderPtr, &imageNtHeaders, ImageNtHeaders64Size))

@@ -25,6 +25,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     public Process? UnderlayingProcess { get; private set; }
     public HANDLE Handle { get; private set; } = HANDLE.Null;
     public SectionInfo[] Sections { get; private set; } = [];
+    public ModuleInfo[] Modules { get; private set; } = [];
 
     /// <summary>A map of named addresses.</summary>
     public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
@@ -35,36 +36,18 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         Close();
     }
 
-    public unsafe SectionInfo? GetSectionToPointer(nuint address) {
-        var index = Sections.BinarySearch(
-            s => address.CompareToRange(s.Start, s.End));
+    public unsafe SectionInfo? GetSectionToPointer(nint address) {
+        var index = Sections.BinarySearch(s => address.CompareToRange(s.Start, s.End));
         return index < 0 ? null : Sections[index];
     }
 
-    public ProcessModule? GetModuleToPointer(nint address) {
-        if (UnderlayingProcess != null) {
-            var en = UnderlayingProcess.Modules.GetEnumerator();
-            while (en.MoveNext()) {
-                var module = (ProcessModule)en.Current;
-                if (address >= module.BaseAddress && address < module.BaseAddress + module.ModuleMemorySize)
-                    return module;
-            }
-        }
-
-        return null;
+    public ModuleInfo? GetModuleToPointer(nint address) {
+        var index = Modules.BinarySearch(m => address.CompareToRange(m.BaseAddress, m.BaseAddress + (nint)m.Size));
+        return index < 0 ? null : Modules[index];
     }
 
-    public ProcessModule? GetModuleByName(string name) {
-        if (UnderlayingProcess != null) {
-            var en = UnderlayingProcess.Modules.GetEnumerator();
-            while (en.MoveNext()) {
-                var module = (ProcessModule)en.Current;
-                if (module.ModuleName == name)
-                    return module;
-            }
-        }
-
-        return null;
+    public ModuleInfo? GetModuleByName(string name) {
+        return Modules.FirstOrDefault(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public EndianBitConverter BitConverter { get; set; } = EndianBitConverter.System;
@@ -103,22 +86,25 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         UnderlayingProcess = process;
         Handle = NativeMethods.OpenProcess((uint)process.Id, ProcessAccess.Full);
         Sections = NativeMethods.GetSections(Handle);
+        Modules = NativeMethods.GetModules(Handle);
 
         ProcessAttached?.Invoke(this);
     }
 
     /// <summary>Closes the underlaying process. If the debugger is attached, it will automaticly detached.</summary>
     public void Close() {
-        if (UnderlayingProcess != null) {
-            ProcessClosing?.Invoke(this);
+        if (UnderlayingProcess == null)
+            return;
 
-            PInvoke.CloseHandle(Handle);
-            UnderlayingProcess = null;
-            Handle = HANDLE.Null;
-            Sections = [];
+        ProcessClosing?.Invoke(this);
 
-            ProcessClosed?.Invoke(this);
-        }
+        PInvoke.CloseHandle(Handle);
+        UnderlayingProcess = null;
+        Handle = HANDLE.Null;
+        Sections = [];
+        Modules = [];
+
+        ProcessClosed?.Invoke(this);
     }
 
     /// <summary>Tries to map the given address to a section or a module of the process.</summary>
@@ -129,7 +115,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             return namedAddress;
         }
 
-        var section = GetSectionToPointer((nuint)address);
+        var section = GetSectionToPointer(address);
         if (section != null) {
             if (section.Category == SectionCategory.CODE || section.Category == SectionCategory.DATA) {
                 // Code and Data sections belong to a module.
@@ -142,7 +128,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
         var module = GetModuleToPointer(address);
         if (module != null) {
-            return $"{module.ModuleName}.{address:X}";
+            return $"{module.Name}.{address:X}";
         }
 
         return string.Empty;

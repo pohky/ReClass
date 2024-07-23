@@ -1,8 +1,8 @@
-using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using ReClass.Extensions;
 using ReClass.Memory;
+using ReClass.Native;
 
 namespace ReClass.AddressParser;
 
@@ -66,7 +66,7 @@ public class DynamicCompiler : IExecutor {
                     var getModuleByNameFunc = typeof(IProcessReader).GetRuntimeMethod(nameof(IProcessReader.GetModuleByName), [typeof(string)]);
                     var moduleNameConstant = Expression.Constant(moduleExpression.Name);
 
-                    var moduleVariable = Expression.Variable(typeof(ProcessModule));
+                    var moduleVariable = Expression.Variable(typeof(ModuleInfo));
                     var assignExpression = Expression.Assign(moduleVariable, Expression.Call(processParameter, getModuleByNameFunc, moduleNameConstant));
 
                     return Expression.Block(
@@ -75,7 +75,7 @@ public class DynamicCompiler : IExecutor {
                         Expression.Condition(
                             Expression.Equal(moduleVariable, Expression.Constant(null)),
                             Expression.Constant(IntPtr.Zero),
-                            Expression.MakeMemberAccess(moduleVariable, typeof(ProcessModule).GetProperty(nameof(ProcessModule.BaseAddress))!)
+                            Expression.MakeMemberAccess(moduleVariable, typeof(ModuleInfo).GetProperty(nameof(ModuleInfo.BaseAddress))!)
                         )
                     );
                 }

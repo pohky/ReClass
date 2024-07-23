@@ -1,6 +1,5 @@
 using System.Data;
 using System.Diagnostics;
-using ReClass.Extensions;
 using ReClass.Native;
 using ReClass.UI;
 

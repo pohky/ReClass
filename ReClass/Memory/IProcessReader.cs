@@ -1,11 +1,12 @@
 using System.Diagnostics;
+using ReClass.Native;
 
 namespace ReClass.Memory;
 
 public interface IProcessReader : IRemoteMemoryReader {
-    Section? GetSectionToPointer(IntPtr address);
+    SectionInfo? GetSectionToPointer(nuint address);
 
-    ProcessModule? GetModuleToPointer(IntPtr address);
+    ProcessModule? GetModuleToPointer(nint address);
 
     ProcessModule? GetModuleByName(string name);
 }

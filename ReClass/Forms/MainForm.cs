@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using ReClass.AddressParser;
 using ReClass.CodeGenerator;
 using ReClass.Controls;

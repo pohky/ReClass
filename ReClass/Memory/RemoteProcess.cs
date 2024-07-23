@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ReClass.AddressParser;
 using ReClass.Extensions;
+using ReClass.Native;
 using ReClass.Util.Conversion;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -23,37 +24,21 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
     public Process? UnderlayingProcess { get; private set; }
     public HANDLE Handle { get; private set; } = HANDLE.Null;
+    public SectionInfo[] Sections { get; private set; } = [];
 
     /// <summary>A map of named addresses.</summary>
     public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
 
-    public bool IsValid {
-        get {
-            if (Handle.IsNull)
-                return false;
-
-            var result = PInvoke.WaitForSingleObject(Handle, 0);
-            if (result == WAIT_EVENT.WAIT_FAILED)
-                return false;
-
-            return result == WAIT_EVENT.WAIT_TIMEOUT;
-        }
-    }
+    public bool IsValid => NativeMethods.IsValidProcess(Handle);
 
     public void Dispose() {
         Close();
     }
 
-    public Section? GetSectionToPointer(IntPtr address) {
-        // TODO: reimplement
-        return null;
-
-        /*
-        lock (sections) {
-            var index = sections.BinarySearch(s => address.CompareToRange(s.Start, s.End));
-            return index < 0 ? null : sections[index];
-        }
-        */
+    public unsafe SectionInfo? GetSectionToPointer(nuint address) {
+        var index = Sections.BinarySearch(
+            s => address.CompareToRange(s.Start, s.End));
+        return index < 0 ? null : Sections[index];
     }
 
     public ProcessModule? GetModuleToPointer(nint address) {
@@ -116,7 +101,8 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         Close();
 
         UnderlayingProcess = process;
-        Handle = PInvoke.OpenProcess(PROCESS_ACCESS_RIGHTS.PROCESS_ALL_ACCESS, false, (uint)process.Id);
+        Handle = NativeMethods.OpenProcess((uint)process.Id, ProcessAccess.Full);
+        Sections = NativeMethods.GetSections(Handle);
 
         ProcessAttached?.Invoke(this);
     }
@@ -129,6 +115,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             PInvoke.CloseHandle(Handle);
             UnderlayingProcess = null;
             Handle = HANDLE.Null;
+            Sections = [];
 
             ProcessClosed?.Invoke(this);
         }
@@ -142,8 +129,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
             return namedAddress;
         }
 
-        /*
-        var section = GetSectionToPointer(address);
+        var section = GetSectionToPointer((nuint)address);
         if (section != null) {
             if (section.Category == SectionCategory.CODE || section.Category == SectionCategory.DATA) {
                 // Code and Data sections belong to a module.
@@ -153,7 +139,6 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
                 return $"<HEAP>{address:X}";
             }
         }
-        */
 
         var module = GetModuleToPointer(address);
         if (module != null) {

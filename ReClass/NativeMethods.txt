@@ -19,9 +19,16 @@ Thread32Next
 OpenThread
 Process32FirstW
 Process32NextW
+Module32FirstW
+Module32NextW
 GetModuleFileNameExW
 IsWow64Process
+VirtualQueryEx
 INVALID_HANDLE_VALUE
+IMAGE_DOS_HEADER
+IMAGE_NT_HEADERS64
+IMAGE_SECTION_HEADER
+MODULEENTRY32W
 
 // shell32
 

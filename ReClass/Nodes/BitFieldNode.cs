@@ -33,7 +33,7 @@ public class BitFieldNode : BaseNode {
     public override int MemorySize => size;
 
     public BitFieldNode() {
-        Bits = IntPtr.Size * 8;
+        Bits = nint.Size * 8;
 
         LevelsOpen.DefaultValue = true;
     }

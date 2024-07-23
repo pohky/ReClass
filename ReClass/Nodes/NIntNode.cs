@@ -8,7 +8,7 @@ using ReClass.UI;
 namespace ReClass.Nodes;
 
 public class NIntNode : BaseNumericNode {
-    public override int MemorySize => IntPtr.Size;
+    public override int MemorySize => nint.Size;
 
     public override void GetUserInterfaceInfo(out string name, out Image icon) {
         name = "NInt";
@@ -16,8 +16,8 @@ public class NIntNode : BaseNumericNode {
     }
 
     public override Size Draw(DrawContext context, int x, int y) {
-        var value = ReadValueFromMemory(context.Memory).ToInt64();
-        return DrawNumeric(context, x, y, context.IconProvider.Signed, "NInt", value.ToString(), $"0x{value:X}");
+        var value = ReadValueFromMemory(context.Memory);
+        return DrawNumeric(context, x, y, IconProvider.Signed, "NInt", value.ToString(), $"0x{value:X}");
     }
 
     public override void Update(HotSpot spot) {
@@ -30,5 +30,5 @@ public class NIntNode : BaseNumericNode {
         }
     }
 
-    public IntPtr ReadValueFromMemory(MemoryBuffer memory) => memory.ReadIntPtr(Offset);
+    public IntPtr ReadValueFromMemory(MemoryBuffer memory) => memory.ReadNInt(Offset);
 }

@@ -17,7 +17,7 @@ public class UInt64Node : BaseNumericNode {
 
     public override Size Draw(DrawContext context, int x, int y) {
         var value = ReadValueFromMemory(context.Memory);
-        return DrawNumeric(context, x, y, context.IconProvider.Unsigned, "UInt64", value.ToString(), $"0x{value:X}");
+        return DrawNumeric(context, x, y, IconProvider.Unsigned, "UInt64", value.ToString(), $"0x{value:X}");
     }
 
     public override void Update(HotSpot spot) {

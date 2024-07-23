@@ -13,7 +13,7 @@ public abstract class BaseLogger : ILogger {
         Log(level, message, null);
     }
 
-    private void Log(LogLevel level, string message, Exception ex) {
+    private void Log(LogLevel level, string message, Exception? ex) {
         lock (sync) {
             NewLogEntry?.Invoke(level, message, ex);
         }

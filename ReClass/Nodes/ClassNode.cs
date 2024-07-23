@@ -8,7 +8,7 @@ public delegate void ClassCreatedEventHandler(ClassNode node);
 public class ClassNode : BaseContainerNode {
     public static event ClassCreatedEventHandler? ClassCreated;
 
-    public static IntPtr DefaultAddress { get; } = (IntPtr)0x140000000;
+    public static nint DefaultAddress { get; } = (nint)0x140000000;
     public static string DefaultAddressFormula { get; } = "140000000";
 
     public override int MemorySize => Nodes.Sum(n => n.MemorySize);
@@ -64,7 +64,7 @@ public class ClassNode : BaseContainerNode {
 
         var tx = x;
 
-        x = AddIcon(context, x, y, context.IconProvider.Class, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Class, HotSpot.NoneId, HotSpotType.None);
         x = AddText(context, x, y, context.Settings.OffsetColor, 0, AddressFormula) + context.Font.Width;
 
         x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, "Class") + context.Font.Width;

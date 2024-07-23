@@ -37,7 +37,7 @@ public partial class LogForm : IconForm {
         RefreshDataBinding();
     }
 
-    public void Add(LogLevel level, string message, Exception ex) {
+    public void Add(LogLevel level, string message, Exception? ex) {
         Image icon;
         switch (level) {
             case LogLevel.Error:
@@ -67,11 +67,11 @@ public partial class LogForm : IconForm {
     }
 
     private class LogItem {
-        public Image Icon { get; set; }
+        public required Image Icon { get; set; }
 
-        public string Message { get; set; }
+        public required string Message { get; set; }
 
-        public Exception Exception { get; set; }
+        public Exception? Exception { get; set; }
     }
 
     #region Event Handler

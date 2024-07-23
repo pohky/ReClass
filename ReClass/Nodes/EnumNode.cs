@@ -122,7 +122,7 @@ public class EnumNode : BaseNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Enum, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Enum, HotSpot.NoneId, HotSpotType.None);
 
         x = AddAddressOffset(context, x, y);
 
@@ -131,7 +131,7 @@ public class EnumNode : BaseNode {
             x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name) + context.Font.Width;
         }
         x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<{Enum.Name}>") + context.Font.Width;
-        x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeEnumType) + context.Font.Width;
+        x = AddIcon(context, x, y, IconProvider.Change, 4, HotSpotType.ChangeEnumType) + context.Font.Width;
 
         x = AddText(context, x, y, context.Settings.TextColor, HotSpot.NoneId, "=") + context.Font.Width;
 

@@ -1,77 +1,31 @@
 namespace ReClass.AddressParser;
 
-public interface IExpression {
+public interface IExpression;
+
+public abstract class BinaryExpression(IExpression lhs, IExpression rhs) : IExpression {
+    public IExpression Lhs { get; } = lhs;
+    public IExpression Rhs { get; } = rhs;
 }
 
-public abstract class BinaryExpression : IExpression {
-    public IExpression Lhs { get; }
-    public IExpression Rhs { get; }
+public class AddExpression(IExpression lhs, IExpression rhs) : BinaryExpression(lhs, rhs);
+public class SubtractExpression(IExpression lhs, IExpression rhs) : BinaryExpression(lhs, rhs);
+public class MultiplyExpression(IExpression lhs, IExpression rhs) : BinaryExpression(lhs, rhs);
+public class DivideExpression(IExpression lhs, IExpression rhs) : BinaryExpression(lhs, rhs);
 
-    protected BinaryExpression(IExpression lhs, IExpression rhs) {
-        Lhs = lhs;
-        Rhs = rhs;
-    }
+public class ConstantExpression(long value) : IExpression {
+    public long Value { get; } = value;
 }
 
-public class AddExpression : BinaryExpression {
-    public AddExpression(IExpression lhs, IExpression rhs)
-        : base(lhs, rhs) {
-    }
+public abstract class UnaryExpression(IExpression expression) : IExpression {
+    public IExpression Expression { get; } = expression;
 }
 
-public class SubtractExpression : BinaryExpression {
-    public SubtractExpression(IExpression lhs, IExpression rhs)
-        : base(lhs, rhs) {
-    }
+public class NegateExpression(IExpression expression) : UnaryExpression(expression);
+
+public class ReadMemoryExpression(IExpression expression, int byteCount) : UnaryExpression(expression) {
+    public int ByteCount { get; } = byteCount;
 }
 
-public class MultiplyExpression : BinaryExpression {
-    public MultiplyExpression(IExpression lhs, IExpression rhs)
-        : base(lhs, rhs) {
-    }
-}
-
-public class DivideExpression : BinaryExpression {
-    public DivideExpression(IExpression lhs, IExpression rhs)
-        : base(lhs, rhs) {
-    }
-}
-
-public class ConstantExpression : IExpression {
-    public long Value { get; }
-
-    public ConstantExpression(long value) {
-        Value = value;
-    }
-}
-
-public abstract class UnaryExpression : IExpression {
-    public IExpression Expression { get; }
-
-    protected UnaryExpression(IExpression expression) {
-        Expression = expression;
-    }
-}
-
-public class NegateExpression : UnaryExpression {
-    public NegateExpression(IExpression expression)
-        : base(expression) {
-    }
-}
-
-public class ReadMemoryExpression : UnaryExpression {
-    public int ByteCount { get; }
-
-    public ReadMemoryExpression(IExpression expression, int byteCount)
-        : base(expression) {
-        ByteCount = byteCount;
-    }
-}
-
-public class ModuleExpression : IExpression {
-    public string Name { get; }
-
-    public ModuleExpression(string name) {
-        Name = name;
-    }
+public class ModuleExpression(string name) : IExpression {
+    public string Name { get; } = name;
 }

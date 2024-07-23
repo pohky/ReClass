@@ -9,5 +9,5 @@ public interface IRemoteMemoryWriter {
     /// <param name="address">The address to write to.</param>
     /// <param name="data">The data to write.</param>
     /// <returns>True if it succeeds, false if it fails.</returns>
-    bool WriteRemoteMemory(IntPtr address, byte[] data);
+    bool WriteRemoteMemory(nint address, byte[] data);
 }

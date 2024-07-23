@@ -3,7 +3,7 @@ using ReClass.Controls;
 namespace ReClass.Nodes;
 
 public class VirtualMethodNode : BaseFunctionPtrNode {
-    public string MethodName => string.IsNullOrEmpty(Name) ? $"Function{Offset / IntPtr.Size}" : Name;
+    public string MethodName => string.IsNullOrEmpty(Name) ? $"Function{Offset / nint.Size}" : Name;
 
     public VirtualMethodNode() {
         Name = string.Empty;
@@ -13,5 +13,5 @@ public class VirtualMethodNode : BaseFunctionPtrNode {
         throw new InvalidOperationException($"The '{nameof(VirtualMethodNode)}' node should not be accessible from the ui.");
     }
 
-    public override Size Draw(DrawContext context, int x, int y) => Draw(context, x, y, $"({Offset / IntPtr.Size})", MethodName);
+    public override Size Draw(DrawContext context, int x, int y) => Draw(context, x, y, $"({Offset / nint.Size})", MethodName);
 }

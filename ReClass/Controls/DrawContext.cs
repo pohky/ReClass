@@ -7,17 +7,16 @@ public class DrawContext {
     public Settings Settings { get; set; }
 
     public Graphics Graphics { get; set; }
-    public FontEx Font { get; set; }
-    public IconProvider IconProvider { get; set; }
+    public required FontEx Font { get; set; }
 
     public RemoteProcess Process { get; set; }
-    public MemoryBuffer Memory { get; set; }
+    public MemoryBuffer Memory { get; set; } = new();
 
     public DateTime CurrentTime { get; set; }
 
     public Rectangle ClientArea { get; set; }
-    public List<HotSpot> HotSpots { get; set; }
-    public IntPtr Address { get; set; }
+    public List<HotSpot> HotSpots { get; set; } = [];
+    public nint Address { get; set; }
     public int Level { get; set; }
     public bool MultipleNodesSelected { get; set; }
 
@@ -25,7 +24,6 @@ public class DrawContext {
         Settings = Settings,
         Graphics = Graphics,
         Font = Font,
-        IconProvider = IconProvider,
         Process = Process,
         Memory = Memory,
         CurrentTime = CurrentTime,

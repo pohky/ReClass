@@ -13,14 +13,6 @@ public class Hex32Node : BaseHexCommentNode {
         icon = Resources.B16x16_Button_Hex_32;
     }
 
-    public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
-        var value = ReadFromBuffer(spot.Memory, Offset);
-
-        address = value.IntPtr;
-
-        return !string.IsNullOrEmpty(spot.Process?.GetNamedAddress(value.IntPtr));
-    }
-
     public override string GetToolTipText(HotSpot spot) {
         var value = ReadFromBuffer(spot.Memory, Offset);
 
@@ -38,7 +30,7 @@ public class Hex32Node : BaseHexCommentNode {
 
         var value = ReadFromBuffer(context.Memory, Offset);
 
-        x = AddComment(context, x, y, value.FloatValue, value.IntPtr, value.UIntPtr);
+        x = AddComment(context, x, y, value.FloatValue, 0, 0);
 
         return x;
     }

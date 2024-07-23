@@ -8,7 +8,7 @@ namespace ReClass.Nodes;
 public class PointerNode : BaseWrapperNode {
     private readonly MemoryBuffer memory = new();
 
-    public override int MemorySize => IntPtr.Size;
+    public override int MemorySize => nint.Size;
 
     protected override bool PerformCycleCheck => false;
 
@@ -19,7 +19,7 @@ public class PointerNode : BaseWrapperNode {
     public override void Initialize() {
         var node = new ClassInstanceNode();
         node.Initialize();
-        ((BaseContainerNode)node.InnerNode).AddBytes(16 * IntPtr.Size);
+        ((BaseContainerNode)node.InnerNode).AddBytes(16 * nint.Size);
 
         ChangeInnerNode(node);
     }
@@ -29,10 +29,10 @@ public class PointerNode : BaseWrapperNode {
         icon = Resources.B16x16_Button_Pointer;
     }
 
-    public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
+    public override bool UseMemoryPreviewToolTip(HotSpot spot, out nint address) {
         // TODO Should the preview be disabled if an inner node is set?
 
-        address = spot.Memory.ReadIntPtr(Offset);
+        address = spot.Memory.ReadNInt(Offset);
 
         return !string.IsNullOrEmpty(spot.Process.GetNamedAddress(address));
     }
@@ -59,7 +59,7 @@ public class PointerNode : BaseWrapperNode {
         } else {
             x = AddIconPadding(context, x);
         }
-        x = AddIcon(context, x, y, context.IconProvider.Pointer, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Pointer, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
         x = AddAddressOffset(context, x, y);
@@ -71,9 +71,9 @@ public class PointerNode : BaseWrapperNode {
         if (InnerNode == null) {
             x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, "<void>") + context.Font.Width;
         }
-        x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType) + context.Font.Width;
+        x = AddIcon(context, x, y, IconProvider.Change, 4, HotSpotType.ChangeWrappedType) + context.Font.Width;
 
-        var ptr = context.Memory.ReadIntPtr(Offset);
+        var ptr = context.Memory.ReadNInt(Offset);
 
         x = AddText(context, x, y, context.Settings.OffsetColor, HotSpot.NoneId, "->") + context.Font.Width;
         x = AddText(context, x, y, context.Settings.ValueColor, 0, "0x" + ptr.ToString(Constants.AddressHexFormat)) + context.Font.Width;

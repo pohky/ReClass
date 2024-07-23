@@ -72,7 +72,6 @@ public partial class MemoryViewControl : UserControl {
             Settings = args.Settings,
             Graphics = e.Graphics,
             Font = font,
-            IconProvider = args.IconProvider,
             Process = args.Process,
             Memory = args.Memory,
             CurrentTime = args.CurrentTime,
@@ -181,33 +180,25 @@ public partial class MemoryViewControl : UserControl {
     /// <summary>
     ///     Contains informations about a selected node.
     /// </summary>
-    public class SelectedNodeInfo {
+    public class SelectedNodeInfo(BaseNode node, RemoteProcess process, MemoryBuffer memory, nint address, int level) {
         /// <summary>
         ///     The selected node.
         /// </summary>
-        public BaseNode Node { get; }
+        public BaseNode Node { get; } = node;
 
-        public RemoteProcess Process { get; }
+        public RemoteProcess Process { get; } = process;
 
         /// <summary>
         ///     The memory this node uses.
         /// </summary>
-        public MemoryBuffer Memory { get; }
+        public MemoryBuffer Memory { get; } = memory;
 
         /// <summary>
         ///     The address of the node in the remote process.
         /// </summary>
-        public IntPtr Address { get; }
+        public nint Address { get; } = address;
 
-        public int Level { get; }
-
-        public SelectedNodeInfo(BaseNode node, RemoteProcess process, MemoryBuffer memory, IntPtr address, int level) {
-            Node = node;
-            Process = process;
-            Memory = memory;
-            Address = address;
-            Level = level;
-        }
+        public int Level { get; } = level;
     }
 
     #region Process Input

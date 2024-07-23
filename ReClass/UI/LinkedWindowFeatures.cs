@@ -3,13 +3,13 @@ using ReClass.Nodes;
 namespace ReClass.UI;
 
 public class LinkedWindowFeatures {
-    public static ClassNode CreateClassAtAddress(IntPtr address, bool addDefaultBytes) {
+    public static ClassNode CreateClassAtAddress(nint address, bool addDefaultBytes) {
         var classView = Program.MainForm.ProjectView;
 
         var node = ClassNode.Create();
         node.AddressFormula = address.ToString("X");
         if (addDefaultBytes) {
-            node.AddBytes(16 * IntPtr.Size);
+            node.AddBytes(16 * nint.Size);
         }
 
         classView.SelectedClass = node;
@@ -26,14 +26,5 @@ public class LinkedWindowFeatures {
         }
 
         return CreateClassAtAddress(address, true);
-    }
-
-    public static void SetCurrentClassAddress(IntPtr address) {
-        var classNode = Program.MainForm.ProjectView.SelectedClass;
-        if (classNode == null) {
-            return;
-        }
-
-        classNode.AddressFormula = address.ToString("X");
     }
 }

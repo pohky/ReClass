@@ -46,7 +46,7 @@ public class NodeDissector {
         }
 
         if (is8ByteAligned) {
-            if (GuessPointerNode(data64.IntPtr, reader, out guessedNode)) {
+            if (GuessPointerNode(data64.NIntValue, reader, out guessedNode)) {
                 return true;
             }
         }
@@ -78,10 +78,10 @@ public class NodeDissector {
         return false;
     }
 
-    private static bool GuessPointerNode(IntPtr address, IProcessReader process, [NotNullWhen(returnValue: true)] out BaseNode? node) {
+    private static bool GuessPointerNode(nint address, IProcessReader process, [NotNullWhen(returnValue: true)] out BaseNode? node) {
         node = null;
 
-        if (address.IsNull()) {
+        if (address == 0) {
             return false;
         }
 
@@ -99,16 +99,16 @@ public class NodeDissector {
         // If the section contains data, it is at least a pointer to a class or something.
         if (section.Category == SectionCategory.DATA || section.Category == SectionCategory.HEAP) {
             // Check if it is a vtable. Check if the first 3 values are pointers to a code section.
-            if (process.GetSectionToPointer(process.ReadRemoteIntPtr(address))?.Category == SectionCategory.CODE
-                && process.GetSectionToPointer(process.ReadRemoteIntPtr(address + IntPtr.Size))?.Category == SectionCategory.CODE
-                && process.GetSectionToPointer(process.ReadRemoteIntPtr(address + 2 * IntPtr.Size))?.Category == SectionCategory.CODE) {
+            if (process.GetSectionToPointer(process.ReadRemoteNInt(address))?.Category == SectionCategory.CODE
+                && process.GetSectionToPointer(process.ReadRemoteNInt(address + nint.Size))?.Category == SectionCategory.CODE
+                && process.GetSectionToPointer(process.ReadRemoteNInt(address + 2 * nint.Size))?.Category == SectionCategory.CODE) {
                 node = new VirtualMethodTableNode();
                 return true;
             }
 
             // Check if it is a string.
-            var data = process.ReadRemoteMemory(address, IntPtr.Size * 2);
-            if (data.Take(IntPtr.Size).InterpretAsSingleByteCharacter().IsLikelyPrintableData()) {
+            var data = process.ReadRemoteMemory(address, nint.Size * 2);
+            if (data.Take(nint.Size).InterpretAsSingleByteCharacter().IsLikelyPrintableData()) {
                 node = new Utf8TextPtrNode();
                 return true;
             }

@@ -49,7 +49,7 @@ public class MemoryBuffer {
         };
     }
 
-    public void UpdateFrom(IRemoteMemoryReader reader, IntPtr address) {
+    public void UpdateFrom(IRemoteMemoryReader reader, nint address) {
         if (reader == null) {
             data.FillWithZero();
 
@@ -249,20 +249,19 @@ public class MemoryBuffer {
         return BitConverter.ToDouble(data, offset);
     }
 
-    /// <summary>Reads a <see cref="IntPtr" /> from the specific offset.</summary>
+    /// <summary>Reads a <see cref="nint" /> from the specific offset.</summary>
     /// <param name="offset">The offset into the data.</param>
-    /// <returns>The data read as <see cref="IntPtr" /> or 0 if the offset is outside the data.</returns>
-    public IntPtr ReadIntPtr(int offset) {
-        return (IntPtr)ReadInt64(offset);
+    /// <returns>The data read as <see cref="nint" /> or 0 if the offset is outside the data.</returns>
+    public nint ReadNInt(int offset) {
+        return (nint)ReadInt64(offset);
     }
 
-    /// <summary>Reads a <see cref="UIntPtr" /> from the specific offset.</summary>
+    /// <summary>Reads a <see cref="nuint" /> from the specific offset.</summary>
     /// <param name="offset">The offset into the data.</param>
-    /// <returns>The data read as <see cref="UIntPtr" /> or 0 if the offset is outside the data.</returns>
-    public UIntPtr ReadUIntPtr(int offset) {
-        return (UIntPtr)ReadUInt64(offset);
+    /// <returns>The data read as <see cref="nuint" /> or 0 if the offset is outside the data.</returns>
+    public nuint ReadNUIntPtr(int offset) {
+        return (nuint)ReadUInt64(offset);
     }
 
     #endregion
-
 }

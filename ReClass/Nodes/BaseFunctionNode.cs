@@ -7,7 +7,7 @@ namespace ReClass.Nodes;
 public abstract class BaseFunctionNode : BaseNode {
     protected readonly List<FunctionNodeInstruction> Instructions = [];
 
-    protected IntPtr Address = IntPtr.Zero;
+    protected nint Address = 0;
 
     protected Size DrawInstructions(DrawContext view, int tx, int y) {
         var origY = y;
@@ -38,7 +38,7 @@ public abstract class BaseFunctionNode : BaseNode {
         return new Size(maxWidth, y - origY);
     }
 
-    protected void DisassembleRemoteCode(RemoteProcess process, IntPtr address, out int memorySize) {
+    protected void DisassembleRemoteCode(RemoteProcess process, nint address, out int memorySize) {
         memorySize = 0;
 
         var disassembler = new Disassembler();
@@ -54,8 +54,8 @@ public abstract class BaseFunctionNode : BaseNode {
     }
 
     protected class FunctionNodeInstruction {
-        public string Address { get; set; }
-        public string Data { get; set; }
-        public string Instruction { get; set; }
+        public required string Address { get; set; }
+        public required string Data { get; set; }
+        public required string Instruction { get; set; }
     }
 }

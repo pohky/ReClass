@@ -33,7 +33,7 @@ public abstract class BaseWrapperArrayNode : BaseWrapperNode {
         AddSelection(context, x, y, context.Font.Height);
 
         x = AddOpenCloseIcon(context, x, y);
-        x = AddIcon(context, x, y, context.IconProvider.Array, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Array, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
         x = AddAddressOffset(context, x, y);
@@ -46,14 +46,14 @@ public abstract class BaseWrapperArrayNode : BaseWrapperNode {
         x = AddText(context, x, y, context.Settings.IndexColor, IsReadOnly ? HotSpot.NoneId : 0, Count.ToString());
         x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "]");
 
-        x = AddIcon(context, x, y, context.IconProvider.LeftArrow, 2, HotSpotType.Click);
+        x = AddIcon(context, x, y, IconProvider.LeftArrow, 2, HotSpotType.Click);
         x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, "(");
         x = AddText(context, x, y, context.Settings.IndexColor, 1, CurrentIndex.ToString());
         x = AddText(context, x, y, context.Settings.IndexColor, HotSpot.NoneId, ")");
-        x = AddIcon(context, x, y, context.IconProvider.RightArrow, 3, HotSpotType.Click) + context.Font.Width;
+        x = AddIcon(context, x, y, IconProvider.RightArrow, 3, HotSpotType.Click) + context.Font.Width;
 
         x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<Size={MemorySize}>") + context.Font.Width;
-        x = AddIcon(context, x + 2, y, context.IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
+        x = AddIcon(context, x + 2, y, IconProvider.Change, 4, HotSpotType.ChangeWrappedType);
 
         x += context.Font.Width;
         x = AddComment(context, x, y);

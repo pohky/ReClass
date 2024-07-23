@@ -27,7 +27,7 @@ public static class DpiUtil {
 
     public static void TrySetDpiFromCurrentDesktop() {
         try {
-            using var g = Graphics.FromHwnd(IntPtr.Zero);
+            using var g = Graphics.FromHwnd(0);
 
             SetDpi((int)g.DpiX, (int)g.DpiY);
         } catch {

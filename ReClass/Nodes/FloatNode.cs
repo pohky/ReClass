@@ -14,7 +14,7 @@ public class FloatNode : BaseNumericNode {
         icon = Resources.B16x16_Button_Float;
     }
 
-    public override Size Draw(DrawContext context, int x, int y) => DrawNumeric(context, x, y, context.IconProvider.Float, "Float", ReadValueFromMemory(context.Memory).ToString("0.000"), null);
+    public override Size Draw(DrawContext context, int x, int y) => DrawNumeric(context, x, y, IconProvider.Float, "Float", ReadValueFromMemory(context.Memory).ToString("0.000"), null);
 
     public override void Update(HotSpot spot) {
         base.Update(spot);

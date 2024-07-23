@@ -17,7 +17,7 @@ public class UInt8Node : BaseNumericNode {
 
     public override Size Draw(DrawContext context, int x, int y) {
         var value = ReadValueFromMemory(context.Memory);
-        return DrawNumeric(context, x, y, context.IconProvider.Unsigned, "UInt8", value.ToString(), $"0x{value:X}");
+        return DrawNumeric(context, x, y, IconProvider.Unsigned, "UInt8", value.ToString(), $"0x{value:X}");
     }
 
     public override void Update(HotSpot spot) {

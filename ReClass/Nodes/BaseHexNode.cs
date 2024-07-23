@@ -22,7 +22,7 @@ public abstract class BaseHexNode : BaseNode {
 
     private static readonly TimeSpan hightlightDuration = TimeSpan.FromSeconds(1);
 
-    private static readonly Dictionary<IntPtr, ValueTypeWrapper<DateTime>> highlightTimer = [];
+    private static readonly Dictionary<nint, ValueTypeWrapper<DateTime>> highlightTimer = [];
 
     private readonly byte[] buffer;
 

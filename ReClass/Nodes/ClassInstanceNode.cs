@@ -25,7 +25,7 @@ public class ClassInstanceNode : BaseClassWrapperNode {
         AddSelection(context, x, y, context.Font.Height);
 
         x = AddOpenCloseIcon(context, x, y);
-        x = AddIcon(context, x, y, context.IconProvider.Class, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Class, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
         x = AddAddressOffset(context, x, y);
@@ -35,7 +35,7 @@ public class ClassInstanceNode : BaseClassWrapperNode {
             x = AddText(context, x, y, context.Settings.NameColor, HotSpot.NameId, Name) + context.Font.Width;
         }
         x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, $"<{InnerNode.Name}>") + context.Font.Width;
-        x = AddIcon(context, x, y, context.IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
+        x = AddIcon(context, x, y, IconProvider.Change, 4, HotSpotType.ChangeClassType) + context.Font.Width;
 
         x = AddComment(context, x, y);
 

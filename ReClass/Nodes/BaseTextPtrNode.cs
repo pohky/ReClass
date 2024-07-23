@@ -8,7 +8,7 @@ namespace ReClass.Nodes;
 public abstract class BaseTextPtrNode : BaseNode {
     private const int MaxStringCharacterCount = 256;
 
-    public override int MemorySize => IntPtr.Size;
+    public override int MemorySize => nint.Size;
 
     /// <summary>The encoding of the string.</summary>
     public abstract Encoding Encoding { get; }
@@ -24,7 +24,7 @@ public abstract class BaseTextPtrNode : BaseNode {
             return DrawHidden(context, x, y);
         }
 
-        var ptr = context.Memory.ReadIntPtr(Offset);
+        var ptr = context.Memory.ReadNInt(Offset);
         var text = context.Process.ReadRemoteString(ptr, Encoding, MaxStringCharacterCount);
 
         var origX = x;
@@ -33,7 +33,7 @@ public abstract class BaseTextPtrNode : BaseNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Text, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Text, HotSpot.NoneId, HotSpotType.None);
         x = AddAddressOffset(context, x, y);
 
         x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;

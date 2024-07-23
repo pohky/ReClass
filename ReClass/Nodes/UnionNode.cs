@@ -26,7 +26,7 @@ public class UnionNode : BaseContainerNode {
     }
 
     public override void Initialize() {
-        AddNode(CreateDefaultNodeForSize(IntPtr.Size));
+        AddNode(CreateDefaultNodeForSize(nint.Size));
     }
 
     public override void UpdateOffsets() {
@@ -46,7 +46,7 @@ public class UnionNode : BaseContainerNode {
         AddSelection(context, x, y, context.Font.Height);
 
         x = AddOpenCloseIcon(context, x, y);
-        x = AddIcon(context, x, y, context.IconProvider.Union, -1, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Union, -1, HotSpotType.None);
 
         var tx = x;
         x = AddAddressOffset(context, x, y);

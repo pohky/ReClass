@@ -36,7 +36,7 @@ public class HotSpot {
 
     public Rectangle Rect { get; set; }
 
-    public IntPtr Address { get; set; }
+    public nint Address { get; set; }
 
     public RemoteProcess Process { get; set; }
 

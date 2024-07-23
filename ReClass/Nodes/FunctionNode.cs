@@ -1,5 +1,4 @@
 using ReClass.Controls;
-using ReClass.Extensions;
 using ReClass.Memory;
 using ReClass.Properties;
 using ReClass.UI;
@@ -7,7 +6,7 @@ using ReClass.UI;
 namespace ReClass.Nodes;
 
 public class FunctionNode : BaseFunctionNode {
-    private int memorySize = IntPtr.Size;
+    private int memorySize = nint.Size;
     public string Signature { get; set; } = "void function()";
 
     public ClassNode? BelongsToClass { get; set; }
@@ -35,7 +34,7 @@ public class FunctionNode : BaseFunctionNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Function, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Function, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
 
@@ -69,7 +68,7 @@ public class FunctionNode : BaseFunctionNode {
             y += context.Font.Height;
             x = AddText(context, tx, y, context.Settings.TextColor, HotSpot.NoneId, "Belongs to: ");
             x = AddText(context, x, y, context.Settings.ValueColor, HotSpot.NoneId, BelongsToClass == null ? "<None>" : $"<{BelongsToClass.Name}>") + context.Font.Width;
-            x = AddIcon(context, x, y, context.IconProvider.Change, 1, HotSpotType.ChangeClassType);
+            x = AddIcon(context, x, y, IconProvider.Change, 1, HotSpotType.ChangeClassType);
             size.Width = Math.Max(size.Width, x - origX);
             size.Height += context.Font.Height;
 
@@ -102,13 +101,13 @@ public class FunctionNode : BaseFunctionNode {
         }
     }
 
-    private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
+    private void DisassembleRemoteCode(RemoteProcess process, nint address) {
         if (Address != address) {
             Instructions.Clear();
 
             Address = address;
 
-            if (!address.IsNull() && process.IsValid) {
+            if (address != 0 && process.IsValid) {
                 DisassembleRemoteCode(process, address, out memorySize);
             }
 

@@ -1,13 +1,10 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using ReClass.AddressParser;
 using ReClass.Extensions;
 using ReClass.Native;
 using ReClass.Util.Conversion;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.System.Diagnostics.ToolHelp;
-using Windows.Win32.System.Threading;
 
 namespace ReClass.Memory;
 
@@ -20,7 +17,7 @@ public enum ControlRemoteProcessAction {
 }
 
 public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWriter, IProcessReader {
-    private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = [];
+    private readonly Dictionary<string, Func<RemoteProcess, nint>> formulaCache = [];
     private readonly System.Timers.Timer updateTimer = new();
 
     public Process? UnderlayingProcess { get; private set; }
@@ -29,7 +26,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     public ModuleInfo[] Modules { get; private set; } = [];
 
     /// <summary>A map of named addresses.</summary>
-    public Dictionary<IntPtr, string> NamedAddresses { get; } = [];
+    public Dictionary<nint, string> NamedAddresses { get; } = [];
 
     public bool IsValid => NativeMethods.IsValidProcess(Handle);
 
@@ -120,7 +117,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     /// <summary>Tries to map the given address to a section or a module of the process.</summary>
     /// <param name="address">The address to map.</param>
     /// <returns>The named address or null if no mapping exists.</returns>
-    public string GetNamedAddress(IntPtr address) {
+    public string GetNamedAddress(nint address) {
         if (NamedAddresses.TryGetValue(address, out var namedAddress)) {
             return namedAddress;
         }
@@ -146,8 +143,8 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
     /// <summary>Parse the address formula.</summary>
     /// <param name="addressFormula">The address formula.</param>
-    /// <returns>The result of the parsed address or <see cref="IntPtr.Zero" />.</returns>
-    public IntPtr ParseAddress(string addressFormula) {
+    /// <returns>The result of the parsed address or <see cref="nint.Zero" />.</returns>
+    public nint ParseAddress(string addressFormula) {
         if (!formulaCache.TryGetValue(addressFormula, out var func)) {
             var expression = Parser.Parse(addressFormula);
 
@@ -160,53 +157,17 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
     }
 
     public void ControlRemoteProcess(ControlRemoteProcessAction action) {
-        if (!IsValid || UnderlayingProcess == null) {
-            return;
-        }
-
-        if (action == ControlRemoteProcessAction.Terminate) {
-            PInvoke.TerminateProcess(Handle, 0);
+        if (!NativeMethods.ControlRemoteProcess(Handle, action))
             Close();
-            return;
-        }
-
-        var snapshotHandle = PInvoke.CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS.TH32CS_SNAPTHREAD, 0);
-        if (snapshotHandle.IsNull)
-            return;
-
-        var te32 = new THREADENTRY32();
-        te32.dwSize = (uint)Marshal.SizeOf(te32);
-
-        if (PInvoke.Thread32First(snapshotHandle, ref te32)) {
-            do {
-                if (te32.th32OwnerProcessID == UnderlayingProcess.Id) {
-                    var threadHandle = PInvoke.OpenThread(THREAD_ACCESS_RIGHTS.THREAD_SUSPEND_RESUME, false, te32.th32ThreadID);
-                    if (!threadHandle.IsNull) {
-                        switch (action) {
-                            case ControlRemoteProcessAction.Suspend:
-                                PInvoke.SuspendThread(threadHandle);
-                                break;
-                            case ControlRemoteProcessAction.Resume:
-                                PInvoke.ResumeThread(threadHandle);
-                                break;
-                        }
-
-                        PInvoke.CloseHandle(threadHandle);
-                    }
-                }
-            } while (PInvoke.Thread32Next(snapshotHandle, ref te32));
-        }
-
-        PInvoke.CloseHandle(snapshotHandle);
     }
 
     #region ReadMemory
 
-    public bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer) {
+    public bool ReadRemoteMemoryIntoBuffer(nint address, ref byte[] buffer) {
         return ReadRemoteMemoryIntoBuffer(address, ref buffer, 0, buffer.Length);
     }
 
-    public unsafe bool ReadRemoteMemoryIntoBuffer(IntPtr address, ref byte[] buffer, int offset, int length) {
+    public unsafe bool ReadRemoteMemoryIntoBuffer(nint address, ref byte[] buffer, int offset, int length) {
         buffer.FillWithZero();
 
         if (!IsValid) {
@@ -229,12 +190,11 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         return false;
     }
 
-    public byte[] ReadRemoteMemory(IntPtr address, int size) {
+    public byte[] ReadRemoteMemory(nint address, int size) {
         var data = new byte[size];
         ReadRemoteMemoryIntoBuffer(address, ref data);
         return data;
     }
 
     #endregion
-
 }

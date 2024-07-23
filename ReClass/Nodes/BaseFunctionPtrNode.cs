@@ -1,15 +1,14 @@
 using ReClass.Controls;
-using ReClass.Extensions;
 using ReClass.Memory;
 using ReClass.UI;
 
 namespace ReClass.Nodes;
 
 public abstract class BaseFunctionPtrNode : BaseFunctionNode {
-    public override int MemorySize => IntPtr.Size;
+    public override int MemorySize => nint.Size;
 
     public override string GetToolTipText(HotSpot spot) {
-        var ptr = spot.Memory.ReadIntPtr(Offset);
+        var ptr = spot.Memory.ReadNInt(Offset);
 
         DisassembleRemoteCode(spot.Process, ptr);
 
@@ -27,7 +26,7 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Function, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Function, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
 
@@ -49,7 +48,7 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
         var size = new Size(x - origX, context.Font.Height);
 
         if (LevelsOpen[context.Level]) {
-            var ptr = context.Memory.ReadIntPtr(Offset);
+            var ptr = context.Memory.ReadNInt(Offset);
 
             DisassembleRemoteCode(context.Process, ptr);
 
@@ -74,15 +73,16 @@ public abstract class BaseFunctionPtrNode : BaseFunctionNode {
         return height;
     }
 
-    private void DisassembleRemoteCode(RemoteProcess process, IntPtr address) {
-        if (Address != address) {
-            Instructions.Clear();
+    private void DisassembleRemoteCode(RemoteProcess process, nint address) {
+        if (Address == address)
+            return;
 
-            Address = address;
+        Instructions.Clear();
 
-            if (!address.IsNull() && process.IsValid) {
-                DisassembleRemoteCode(process, address, out _);
-            }
+        Address = address;
+
+        if (address != 0 && process.IsValid) {
+            DisassembleRemoteCode(process, address, out _);
         }
     }
 }

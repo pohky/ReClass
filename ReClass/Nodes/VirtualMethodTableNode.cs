@@ -8,7 +8,7 @@ namespace ReClass.Nodes;
 public class VirtualMethodTableNode : BaseContainerNode {
     private readonly MemoryBuffer memory = new();
 
-    public override int MemorySize => IntPtr.Size;
+    public override int MemorySize => nint.Size;
 
     protected override bool ShouldCompensateSizeChanges => false;
 
@@ -21,7 +21,7 @@ public class VirtualMethodTableNode : BaseContainerNode {
 
     public override void Initialize() {
         for (var i = 0; i < 10; ++i) {
-            AddNode(CreateDefaultNodeForSize(IntPtr.Size));
+            AddNode(CreateDefaultNodeForSize(nint.Size));
         }
     }
 
@@ -36,7 +36,7 @@ public class VirtualMethodTableNode : BaseContainerNode {
         AddSelection(context, x, y, context.Font.Height);
 
         x = AddOpenCloseIcon(context, x, y);
-        x = AddIcon(context, x, y, context.IconProvider.VirtualTable, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.VirtualTable, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
         x = AddAddressOffset(context, x, y);
@@ -57,9 +57,9 @@ public class VirtualMethodTableNode : BaseContainerNode {
         var size = new Size(x - origX, y - origY);
 
         if (LevelsOpen[context.Level]) {
-            var ptr = context.Memory.ReadIntPtr(Offset);
+            var ptr = context.Memory.ReadNInt(Offset);
 
-            memory.Size = Nodes.Count * IntPtr.Size;
+            memory.Size = Nodes.Count * nint.Size;
             memory.UpdateFrom(context.Process, ptr);
 
             var innerContext = context.Clone();

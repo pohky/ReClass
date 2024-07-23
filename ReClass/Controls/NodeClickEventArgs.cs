@@ -3,24 +3,16 @@ using ReClass.Nodes;
 
 namespace ReClass.Controls;
 
-public class NodeClickEventArgs : EventArgs {
-    public BaseNode Node { get; }
+public class NodeClickEventArgs(BaseNode node, nint address, MemoryBuffer memory, MouseButtons button, Point location) : EventArgs {
+    public BaseNode Node { get; } = node;
 
-    public IntPtr Address { get; }
+    public nint Address { get; } = address;
 
-    public MemoryBuffer Memory { get; }
+    public MemoryBuffer Memory { get; } = memory;
 
-    public MouseButtons Button { get; }
+    public MouseButtons Button { get; } = button;
 
-    public Point Location { get; }
-
-    public NodeClickEventArgs(BaseNode node, IntPtr address, MemoryBuffer memory, MouseButtons button, Point location) {
-        Node = node;
-        Address = address;
-        Memory = memory;
-        Button = button;
-        Location = location;
-    }
+    public Point Location { get; } = location;
 }
 
 public delegate void NodeClickEventHandler(object sender, NodeClickEventArgs args);

@@ -13,12 +13,12 @@ public class Hex64Node : BaseHexCommentNode {
         icon = Resources.B16x16_Button_Hex_64;
     }
 
-    public override bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
+    public override bool UseMemoryPreviewToolTip(HotSpot spot, out nint address) {
         var value = ReadFromBuffer(spot.Memory, Offset);
 
-        address = value.IntPtr;
+        address = value.NIntValue;
 
-        return spot.Process.GetSectionToPointer(value.IntPtr) != null;
+        return spot.Process.GetSectionToPointer(value.NIntValue) != null;
     }
 
     public override string GetToolTipText(HotSpot spot) {
@@ -38,7 +38,7 @@ public class Hex64Node : BaseHexCommentNode {
 
         var value = ReadFromBuffer(context.Memory, Offset);
 
-        x = AddComment(context, x, y, value.FloatValue, value.IntPtr, value.UIntPtr);
+        x = AddComment(context, x, y, value.FloatValue, value.NIntValue, value.NUIntValue);
 
         return x;
     }

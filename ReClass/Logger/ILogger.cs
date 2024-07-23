@@ -1,6 +1,6 @@
 namespace ReClass.Logger;
 
-public delegate void NewLogEntryEventHandler(LogLevel level, string message, Exception ex);
+public delegate void NewLogEntryEventHandler(LogLevel level, string message, Exception? ex);
 
 public interface ILogger {
     /// <summary>Gets triggered every time a new entry is created.</summary>

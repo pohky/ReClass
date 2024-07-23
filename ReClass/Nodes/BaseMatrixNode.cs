@@ -24,7 +24,7 @@ public abstract class BaseMatrixNode : BaseNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Matrix, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Matrix, HotSpot.NoneId, HotSpotType.None);
 
         var tx = x;
 
@@ -81,7 +81,7 @@ public abstract class BaseMatrixNode : BaseNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Vector, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Vector, HotSpot.NoneId, HotSpotType.None);
         x = AddAddressOffset(context, x, y);
 
         x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;

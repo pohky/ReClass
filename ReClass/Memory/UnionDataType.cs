@@ -19,12 +19,8 @@ public struct UInt32FloatData {
     [FieldOffset(0)]
     public int IntValue;
 
-    public IntPtr IntPtr => IntValue;
-
     [FieldOffset(0)]
     public uint UIntValue;
-
-    public UIntPtr UIntPtr => UIntValue;
 
     [FieldOffset(0)]
     public float FloatValue;
@@ -41,12 +37,14 @@ public struct UInt64FloatDoubleData {
     [FieldOffset(0)]
     public long LongValue;
 
-    public IntPtr IntPtr => (IntPtr)LongValue;
+    [FieldOffset(0)]
+    public nint NIntValue;
 
     [FieldOffset(0)]
     public ulong ULongValue;
 
-    public UIntPtr UIntPtr => (UIntPtr)ULongValue;
+    [FieldOffset(0)]
+    public nuint NUIntValue;
 
     [FieldOffset(0)]
     public float FloatValue;

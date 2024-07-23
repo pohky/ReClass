@@ -43,3 +43,9 @@ BCM_SETSHIELD
 
 UnDecorateSymbolName
 UNDNAME_NAME_ONLY
+
+// winuser.h
+
+EM_GETRECT
+EM_SETRECT
+RECT

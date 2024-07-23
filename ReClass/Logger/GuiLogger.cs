@@ -21,7 +21,7 @@ public class GuiLogger : BaseLogger {
         NewLogEntry += OnNewLogEntry;
     }
 
-    private void OnNewLogEntry(LogLevel level, string message, Exception ex) {
+    private void OnNewLogEntry(LogLevel level, string message, Exception? ex) {
         if (level < Level) {
             return;
         }

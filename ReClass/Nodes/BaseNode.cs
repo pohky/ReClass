@@ -47,7 +47,7 @@ public abstract class BaseNode {
     }
 
     /// <summary>Gets or sets the parent node.</summary>
-    public BaseNode ParentNode { get; internal set; }
+    public BaseNode? ParentNode { get; internal set; }
 
     /// <summary>Gets a value indicating whether this node is wrapped into an other node.</summary>
     public bool IsWrapped => ParentNode is BaseWrapperNode;
@@ -79,7 +79,7 @@ public abstract class BaseNode {
     /// </summary>
     /// <param name="nodeType">The <see cref="Type" /> of the node.</param>
     /// <returns>An instance of the node type or null if the type is not a valid node type.</returns>
-    public static BaseNode CreateInstanceFromType(Type nodeType) => CreateInstanceFromType(nodeType, true);
+    public static BaseNode? CreateInstanceFromType(Type nodeType) => CreateInstanceFromType(nodeType, true);
 
     /// <summary>
     ///     Creates an instance of the specific node type.
@@ -87,7 +87,7 @@ public abstract class BaseNode {
     /// <param name="nodeType">The <see cref="Type" /> of the node.</param>
     /// <param name="callInitialize">If true <see cref="Initialize" /> gets called for the new node.</param>
     /// <returns>An instance of the node type or null if the type is not a valid node type.</returns>
-    public static BaseNode CreateInstanceFromType(Type nodeType, bool callInitialize) {
+    public static BaseNode? CreateInstanceFromType(Type nodeType, bool callInitialize) {
         var node = Activator.CreateInstance(nodeType) as BaseNode;
         if (callInitialize) {
             node?.Initialize();
@@ -97,8 +97,8 @@ public abstract class BaseNode {
 
     public abstract void GetUserInterfaceInfo(out string name, out Image icon);
 
-    public virtual bool UseMemoryPreviewToolTip(HotSpot spot, out IntPtr address) {
-        address = IntPtr.Zero;
+    public virtual bool UseMemoryPreviewToolTip(HotSpot spot, out nint address) {
+        address = 0;
 
         return false;
     }
@@ -107,7 +107,7 @@ public abstract class BaseNode {
     /// <param name="spot">The spot.</param>
     /// <returns>The information to show in a tool tip or null if no information should be shown.</returns>
     public virtual string GetToolTipText(HotSpot spot) {
-        return null;
+        return string.Empty;
     }
 
     /// <summary>Called when the node was created. Does not get called after loading a project.</summary>
@@ -126,7 +126,7 @@ public abstract class BaseNode {
     ///     Gets the parent container of the node.
     /// </summary>
     /// <returns></returns>
-    public BaseContainerNode GetParentContainer() {
+    public BaseContainerNode? GetParentContainer() {
         var parentNode = ParentNode;
         while (parentNode != null) {
             if (parentNode is BaseContainerNode containerNode) {
@@ -147,7 +147,7 @@ public abstract class BaseNode {
     ///     Gets the parent class of the node.
     /// </summary>
     /// <returns></returns>
-    public ClassNode GetParentClass() {
+    public ClassNode? GetParentClass() {
         var parentNode = ParentNode;
         while (parentNode != null) {
             if (parentNode is ClassNode classNode) {
@@ -164,8 +164,8 @@ public abstract class BaseNode {
     ///     Gets the root wrapper node if this node is the inner node of a wrapper chain.
     /// </summary>
     /// <returns>The root <see cref="BaseWrapperNode" /> or null if this node is not wrapped or isn't itself a wrapper node.</returns>
-    public BaseWrapperNode GetRootWrapperNode() {
-        BaseWrapperNode rootWrapperNode = null;
+    public BaseWrapperNode? GetRootWrapperNode() {
+        BaseWrapperNode? rootWrapperNode = null;
 
         var parentNode = ParentNode;
         while (parentNode is BaseWrapperNode wrapperNode) {
@@ -325,7 +325,7 @@ public abstract class BaseNode {
         AddHotSpot(context, new Rectangle(0, y, context.ClientArea.Right - (IsSelected ? 16 : 0), height), string.Empty, HotSpot.NoneId, HotSpotType.Select);
     }
 
-    protected int AddIconPadding(DrawContext view, int x) => x + view.IconProvider.Dimensions;
+    protected int AddIconPadding(DrawContext context, int x) => x + IconProvider.Dimensions;
 
     /// <summary>
     ///     Draws an icon and adds a <see cref="HotSpot" /> if <paramref name="id" /> is not <see cref="HotSpot.NoneId" />
@@ -339,7 +339,7 @@ public abstract class BaseNode {
     /// <param name="type">The type of the spot.</param>
     /// <returns>The new x coordinate after drawing the icon.</returns>
     protected int AddIcon(DrawContext context, int x, int y, Image icon, int id, HotSpotType type) {
-        var size = context.IconProvider.Dimensions;
+        var size = IconProvider.Dimensions;
 
         if (y > context.ClientArea.Bottom || y + size < 0) {
             return x + size;
@@ -360,11 +360,11 @@ public abstract class BaseNode {
     /// <param name="y">The y coordinate.</param>
     /// <returns>The new x coordinate after drawing the icon.</returns>
     protected int AddOpenCloseIcon(DrawContext context, int x, int y) {
-        if (y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0) {
-            return x + context.IconProvider.Dimensions;
+        if (y > context.ClientArea.Bottom || y + IconProvider.Dimensions < 0) {
+            return x + IconProvider.Dimensions;
         }
 
-        var icon = LevelsOpen[context.Level] ? context.IconProvider.OpenCloseOpen : context.IconProvider.OpenCloseClosed;
+        var icon = LevelsOpen[context.Level] ? IconProvider.OpenCloseOpen : IconProvider.OpenCloseClosed;
         return AddIcon(context, x, y, icon, 0, HotSpotType.OpenClose);
     }
 
@@ -372,12 +372,12 @@ public abstract class BaseNode {
     /// <param name="context">The drawing context.</param>
     /// <param name="y">The y coordinate.</param>
     protected void AddContextDropDownIcon(DrawContext context, int y) {
-        if (context.MultipleNodesSelected || y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0 || IsWrapped) {
+        if (context.MultipleNodesSelected || y > context.ClientArea.Bottom || y + IconProvider.Dimensions < 0 || IsWrapped) {
             return;
         }
 
         if (IsSelected) {
-            AddIcon(context, 0, y, context.IconProvider.DropArrow, 0, HotSpotType.Context);
+            AddIcon(context, 0, y, IconProvider.DropArrow, 0, HotSpotType.Context);
         }
     }
 
@@ -385,12 +385,12 @@ public abstract class BaseNode {
     /// <param name="context">The drawing context.</param>
     /// <param name="y">The y coordinate.</param>
     protected void AddDeleteIcon(DrawContext context, int y) {
-        if (y > context.ClientArea.Bottom || y + context.IconProvider.Dimensions < 0 || IsWrapped) {
+        if (y > context.ClientArea.Bottom || y + IconProvider.Dimensions < 0 || IsWrapped) {
             return;
         }
 
         if (IsSelected) {
-            AddIcon(context, context.ClientArea.Right - context.IconProvider.Dimensions, y, context.IconProvider.Delete, 0, HotSpotType.Delete);
+            AddIcon(context, context.ClientArea.Right - IconProvider.Dimensions, y, IconProvider.Delete, 0, HotSpotType.Delete);
         }
     }
 

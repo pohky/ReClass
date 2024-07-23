@@ -35,7 +35,7 @@ public abstract class BaseTextNode : BaseNode {
 
         x = AddIconPadding(context, x);
 
-        x = AddIcon(context, x, y, context.IconProvider.Text, HotSpot.NoneId, HotSpotType.None);
+        x = AddIcon(context, x, y, IconProvider.Text, HotSpot.NoneId, HotSpotType.None);
         x = AddAddressOffset(context, x, y);
 
         x = AddText(context, x, y, context.Settings.TypeColor, HotSpot.NoneId, type) + context.Font.Width;

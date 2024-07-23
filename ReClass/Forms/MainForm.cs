@@ -16,8 +16,6 @@ using ReClass.Util.Conversion;
 namespace ReClass.Forms;
 
 public partial class MainForm : IconForm {
-    private readonly IconProvider iconProvider = new();
-
     private readonly MemoryBuffer memoryViewBuffer = new();
     private readonly PluginManager pluginManager;
 
@@ -332,16 +330,15 @@ public partial class MainForm : IconForm {
 
         memoryViewBuffer.Size = classNode.MemorySize;
 
-        IntPtr address;
+        nint address;
         try {
             address = process.ParseAddress(classNode.AddressFormula);
         } catch (ParseException) {
-            address = IntPtr.Zero;
+            address = 0;
         }
         memoryViewBuffer.UpdateFrom(process, address);
 
         args.Settings = Program.Settings;
-        args.IconProvider = iconProvider;
         args.Process = process;
         args.Memory = memoryViewBuffer;
         args.Node = classNode;

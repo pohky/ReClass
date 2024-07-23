@@ -3,8 +3,10 @@ using System.Text.RegularExpressions;
 
 namespace ReClass.Extensions;
 
-public static class StringExtension {
-    private static readonly Regex hexadecimalValueRegex = new("^(0x|h)?([0-9A-F]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+public static partial class StringExtension {
+    [GeneratedRegex("^(0x|h)?([0-9A-F]+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "de-DE")]
+    private static partial Regex HexadecimalValueRegex();
+
     [DebuggerStepThrough]
     public static bool IsPrintable(this char c) => ((' ' <= c && c <= '~') || ('\xA1' <= c && c <= '\xFF')) && c != '\xFFFD' /* Unicode REPLACEMENT CHARACTER � */;
 
@@ -63,10 +65,11 @@ public static class StringExtension {
         }
         return s.Substring(0, length);
     }
-    public static bool TryGetHexString(this string s, out string value) {
-        var match = hexadecimalValueRegex.Match(s);
-        value = match.Success ? match.Groups[2].Value : null;
 
-        return match.Success;
+    public static bool TryGetHexString(this string s, out string value) {
+        var match = HexadecimalValueRegex().Match(s);
+        var success = match.Success;
+        value = (success ? match?.Groups[2].Value : null) ?? string.Empty;
+        return success;
     }
 }

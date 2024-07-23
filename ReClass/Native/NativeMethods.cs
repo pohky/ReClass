@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32;
+using ReClass.Memory;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Diagnostics.Debug;
@@ -274,5 +275,48 @@ public static class NativeMethods {
         }
 
         return [.. sections.OrderBy(section => section.Start)];
+    }
+
+    public static bool ControlRemoteProcess(HANDLE processHandle, ControlRemoteProcessAction action) {
+        if (!IsValidProcess(processHandle)) {
+            return false;
+        }
+
+        if (action == ControlRemoteProcessAction.Terminate) {
+            PInvoke.TerminateProcess(processHandle, 0);
+            return false;
+        }
+
+        var snapshotHandle = PInvoke.CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS.TH32CS_SNAPTHREAD, 0);
+        if (snapshotHandle.IsNull)
+            return false;
+
+        var pid = PInvoke.GetProcessId(processHandle);
+
+        var te32 = new THREADENTRY32();
+        te32.dwSize = (uint)Marshal.SizeOf(te32);
+
+        if (PInvoke.Thread32First(snapshotHandle, ref te32)) {
+            do {
+                if (te32.th32OwnerProcessID == pid) {
+                    var threadHandle = PInvoke.OpenThread(THREAD_ACCESS_RIGHTS.THREAD_SUSPEND_RESUME, false, te32.th32ThreadID);
+                    if (!threadHandle.IsNull) {
+                        switch (action) {
+                            case ControlRemoteProcessAction.Suspend:
+                                PInvoke.SuspendThread(threadHandle);
+                                break;
+                            case ControlRemoteProcessAction.Resume:
+                                PInvoke.ResumeThread(threadHandle);
+                                break;
+                        }
+
+                        PInvoke.CloseHandle(threadHandle);
+                    }
+                }
+            } while (PInvoke.Thread32Next(snapshotHandle, ref te32));
+        }
+
+        PInvoke.CloseHandle(snapshotHandle);
+        return true;
     }
 }

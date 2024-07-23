@@ -1,4 +1,3 @@
-using ReClass.Extensions;
 using ReClass.Memory;
 using ReClass.UI;
 
@@ -29,7 +28,7 @@ public partial class NamedAddressesForm : IconForm {
 
     private void DisplayNamedAddresses() {
         namedAddressesListBox.DataSource = process.NamedAddresses
-            .Select(kv => new BindingDisplayWrapper<KeyValuePair<IntPtr, string>>(kv, v => $"0x{v.Key.ToString(Constants.AddressHexFormat)}: {v.Value}"))
+            .Select(kv => new BindingDisplayWrapper<KeyValuePair<nint, string>>(kv, v => $"0x{v.Key.ToString(Constants.AddressHexFormat)}: {v.Value}"))
             .ToList();
 
         namedAddressesListBox_SelectedIndexChanged(null, null);
@@ -40,7 +39,7 @@ public partial class NamedAddressesForm : IconForm {
             var address = process.ParseAddress(addressTextBox.Text.Trim());
             var name = nameTextBox.Text.Trim();
 
-            return !address.IsNull() && !string.IsNullOrEmpty(name);
+            return address != 0 && !string.IsNullOrEmpty(name);
         } catch {
             return false;
         }
@@ -72,7 +71,7 @@ public partial class NamedAddressesForm : IconForm {
     }
 
     private void removeAddressIconButton_Click(object sender, EventArgs e) {
-        if (namedAddressesListBox.SelectedItem is BindingDisplayWrapper<KeyValuePair<IntPtr, string>> namedAddress) {
+        if (namedAddressesListBox.SelectedItem is BindingDisplayWrapper<KeyValuePair<nint, string>> namedAddress) {
             process.NamedAddresses.Remove(namedAddress.Value.Key);
 
             DisplayNamedAddresses();

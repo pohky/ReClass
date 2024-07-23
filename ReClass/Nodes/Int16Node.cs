@@ -17,7 +17,7 @@ public class Int16Node : BaseNumericNode {
 
     public override Size Draw(DrawContext context, int x, int y) {
         var value = ReadValueFromMemory(context.Memory);
-        return DrawNumeric(context, x, y, context.IconProvider.Signed, "Int16", value.ToString(), $"0x{value:X}");
+        return DrawNumeric(context, x, y, IconProvider.Signed, "Int16", value.ToString(), $"0x{value:X}");
     }
 
     public override void Update(HotSpot spot) {

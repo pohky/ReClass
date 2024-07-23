@@ -14,7 +14,7 @@ public class ArrayNode : BaseWrapperArrayNode {
     }
 
     public override void Initialize() {
-        ChangeInnerNode(IntPtr.Size == 4 ? new Hex32Node() : new Hex64Node());
+        ChangeInnerNode(nint.Size == 4 ? new Hex32Node() : new Hex64Node());
     }
 
     public override Size Draw(DrawContext context, int x, int y) => Draw(context, x, y, "Array");

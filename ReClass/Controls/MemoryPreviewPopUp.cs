@@ -24,12 +24,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
             nodes = [];
 
             DrawContext = new DrawContext {
-                Font = font,
-                IconProvider = new IconProvider(), // TODO use single instance
-
-                Memory = new MemoryBuffer(),
-
-                HotSpots = []
+                Font = font
             };
 
             SetNodeCount(MinNodeCount);
@@ -42,7 +37,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
         private void SetNodeCount(int count) {
             BaseHexNode CreateNode(int index) {
                 return new Hex64Node {
-                    Offset = index * IntPtr.Size
+                    Offset = index * nint.Size
                 };
             }
 
@@ -108,7 +103,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
 
     private readonly MemoryPreviewPanel panel;
 
-    private IntPtr memoryAddress;
+    private nint memoryAddress;
 
     protected override CreateParams CreateParams {
         get {
@@ -167,7 +162,7 @@ public class MemoryPreviewPopUp : ToolStripDropDown {
     /// <summary>Initializes the memory buffer.</summary>
     /// <param name="process">The process to use.</param>
     /// <param name="address">The address to read from.</param>
-    public void InitializeMemory(RemoteProcess process, IntPtr address) {
+    public void InitializeMemory(RemoteProcess process, nint address) {
         memoryAddress = address;
 
         panel.DrawContext.Process = process;

@@ -20,7 +20,7 @@ public class Tokenizer : ITokenizer {
 
     public Token Token { get; private set; }
 
-    public string Identifier { get; private set; }
+    public string Identifier { get; private set; } = string.Empty;
 
     public long Number { get; private set; }
 
@@ -29,7 +29,7 @@ public class Tokenizer : ITokenizer {
 
         if (currentCharacter == '\0') {
             Token = Token.None;
-            Identifier = null;
+            Identifier = string.Empty;
             Number = 0;
 
             return;

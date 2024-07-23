@@ -1,12 +1,6 @@
 namespace ReClass.AddressParser;
 
-public class Parser {
-    private readonly ITokenizer tokenizer;
-
-    public Parser(ITokenizer tokenizer) {
-        this.tokenizer = tokenizer;
-    }
-
+public class Parser(ITokenizer tokenizer) {
     public IExpression ParseExpression() {
         var expr = ParseAddSubtract();
 
@@ -108,7 +102,7 @@ public class Parser {
 
                     var node = ParseAddSubtract();
 
-                    var byteCount = IntPtr.Size;
+                    var byteCount = nint.Size;
                     if (tokenizer.Token == Token.Comma) {
                         tokenizer.ReadNextToken();
 
@@ -147,7 +141,6 @@ public class Parser {
 
     public static IExpression Parse(string str) {
         using var sr = new StringReader(str);
-
         return Parse(new Tokenizer(sr));
     }
 

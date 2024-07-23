@@ -21,6 +21,7 @@ public enum ControlRemoteProcessAction {
 
 public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWriter, IProcessReader {
     private readonly Dictionary<string, Func<RemoteProcess, IntPtr>> formulaCache = [];
+    private readonly System.Timers.Timer updateTimer = new();
 
     public Process? UnderlayingProcess { get; private set; }
     public HANDLE Handle { get; private set; } = HANDLE.Null;
@@ -85,8 +86,11 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
         UnderlayingProcess = process;
         Handle = NativeMethods.OpenProcess((uint)process.Id, ProcessAccess.Full);
-        Sections = NativeMethods.GetSections(Handle);
-        Modules = NativeMethods.GetModules(Handle);
+        UpdateProcessInformation();
+
+        updateTimer.Elapsed += (_, _) => UpdateProcessInformation();
+        updateTimer.Interval = 5000;
+        updateTimer.Start();
 
         ProcessAttached?.Invoke(this);
     }
@@ -98,6 +102,7 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
 
         ProcessClosing?.Invoke(this);
 
+        updateTimer.Stop();
         PInvoke.CloseHandle(Handle);
         UnderlayingProcess = null;
         Handle = HANDLE.Null;
@@ -105,6 +110,11 @@ public class RemoteProcess : IDisposable, IRemoteMemoryReader, IRemoteMemoryWrit
         Modules = [];
 
         ProcessClosed?.Invoke(this);
+    }
+
+    public void UpdateProcessInformation() {
+        Sections = NativeMethods.GetSections(Handle);
+        Modules = NativeMethods.GetModules(Handle);
     }
 
     /// <summary>Tries to map the given address to a section or a module of the process.</summary>

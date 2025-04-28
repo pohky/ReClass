@@ -32,6 +32,20 @@ public partial class ClassSelectionForm : IconForm {
         ShowFilteredClasses();
     }
 
+    private void filterNameTextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        switch (e.KeyCode)
+        {
+            case Keys.Down when classesListBox.SelectedIndex + 1 < classesListBox.Items.Count:
+                classesListBox.SelectedIndex++;
+                break;
+
+            case Keys.Up when classesListBox.SelectedIndex > 0:
+                classesListBox.SelectedIndex--;
+                break;
+        }
+    }
+
     private void classesListBox_SelectedIndexChanged(object sender, EventArgs e) {
         selectButton.Enabled = SelectedClass != null;
     }
